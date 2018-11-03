@@ -1,0 +1,1 @@
+export type DataCallback<T> = (arg: T) => void;

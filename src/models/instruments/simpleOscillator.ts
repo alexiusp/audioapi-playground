@@ -4,16 +4,24 @@ export class SimpleOscillator implements BaseInstrument {
   context: AudioContext;
   oscillator?: OscillatorNode;
   gain?: GainNode;
+  analyser?: AnalyserNode;
 
-  constructor(ctx: AudioContext) {
+  constructor(ctx: AudioContext, analyser?: AnalyserNode) {
     this.context = ctx;
+    this.analyser = analyser;
   }
 
   private init() {
     console.log('osc.init', this.context);
     this.oscillator = this.context.createOscillator();
     this.gain = this.context.createGain();
-    this.oscillator.connect(this.gain);
+    this.gain.gain.value = 0;
+    if (this.analyser) {
+      this.oscillator.connect(this.analyser);
+      this.analyser.connect(this.gain);
+    } else {
+      this.oscillator.connect(this.gain);
+    }
     this.gain.connect(this.context.destination);
     this.oscillator.type = 'sine';
   }
