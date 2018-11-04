@@ -1,29 +1,33 @@
-import { BaseInstrument } from './base';
+import { getUID } from '../../utils/utils';
+import { IOutputInstrument, InstrumentType } from '../base';
 
-export class SimpleOscillator implements BaseInstrument {
+export default class SimpleOscillator implements IOutputInstrument {
+  id: string;
+  type = InstrumentType.SimpleOscillator;
+  output?: AudioNode;
   context: AudioContext;
   oscillator?: OscillatorNode;
   gain?: GainNode;
-  analyser?: AnalyserNode;
 
-  constructor(ctx: AudioContext, analyser?: AnalyserNode) {
+  constructor(ctx: AudioContext) {
+    this.id = getUID('osc');
     this.context = ctx;
-    this.analyser = analyser;
   }
 
   private init() {
     console.log('osc.init', this.context);
     this.oscillator = this.context.createOscillator();
+    this.oscillator.type = 'sine';
     this.gain = this.context.createGain();
     this.gain.gain.value = 0;
-    if (this.analyser) {
-      this.oscillator.connect(this.analyser);
-      this.analyser.connect(this.gain);
-    } else {
-      this.oscillator.connect(this.gain);
+    this.oscillator.connect(this.gain);
+    if (this.output) {
+      this.gain.connect(this.output);
     }
-    this.gain.connect(this.context.destination);
-    this.oscillator.type = 'sine';
+  }
+
+  connect(output: AudioNode) {
+    this.output = output;
   }
 
   play(freq: number = 440, time: number = 1) {

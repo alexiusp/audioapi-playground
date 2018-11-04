@@ -1,0 +1,21 @@
+.mixer-panel {
+  display: flex;
+  height: 50px;
+  padding: 5px;
+}
+
+.mixer-control {
+  margin: 0 10px;
+}
+
+.volume-control {
+  width: 200px;
+  padding: 10px 0;
+}
+
+#master-visualizer {
+  height: 40px;
+  width: 200px;
+  float: right;
+  margin: 0;
+}
