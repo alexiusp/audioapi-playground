@@ -3,6 +3,7 @@ import { BaseAudioDevice, IInputInstrument, InstrumentType } from './base';
 
 export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   id: string;
+  name = 'Master';
   type = InstrumentType.MasterMixer;
   // osciloscope/frequency bar graph
   private analyser: AnalyserNode;

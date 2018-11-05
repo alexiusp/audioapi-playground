@@ -16,7 +16,12 @@ export default class RackUI extends React.Component<Props> {
   renderInstrument(instrument: IInstrument) {
     switch (instrument.type) {
       case InstrumentType.SimpleOscillator:
-        return (<SimpleOscillatorUI key={instrument.id} instrument={instrument} />);
+        return (
+          <SimpleOscillatorUI
+            key={instrument.id}
+            instrument={instrument}
+            rack={this.props.rack} />
+        );
     }
     return null;
   }
@@ -29,7 +34,7 @@ export default class RackUI extends React.Component<Props> {
     return (
       <Panel>
         <div className="instruments-rack">
-        {instruments}
+          {instruments}
         </div>
       </Panel>
     );

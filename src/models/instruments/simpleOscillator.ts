@@ -1,10 +1,11 @@
 import { getUID } from '../../utils/utils';
-import { IOutputInstrument, InstrumentType } from '../base';
+import { IOutputInstrument, InstrumentType, IInputInstrument } from '../base';
 
 export default class SimpleOscillator implements IOutputInstrument {
   id: string;
+  name = 'SimpleOscillator';
   type = InstrumentType.SimpleOscillator;
-  output?: AudioNode;
+  output?: IInputInstrument;
   context: AudioContext;
   oscillator?: OscillatorNode;
   gain?: GainNode;
@@ -22,11 +23,11 @@ export default class SimpleOscillator implements IOutputInstrument {
     this.gain.gain.value = 0;
     this.oscillator.connect(this.gain);
     if (this.output) {
-      this.gain.connect(this.output);
+      this.gain.connect(this.output.getInput());
     }
   }
 
-  connect(output: AudioNode) {
+  connect(output: IInputInstrument) {
     this.output = output;
   }
 

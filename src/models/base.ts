@@ -5,12 +5,13 @@ export enum InstrumentType {
 
 export interface IInstrument {
   id: string;
+  name: string;
   type: InstrumentType;
 }
 
 export interface IOutputInstrument extends IInstrument {
-  output?: AudioNode;
-  connect: (output: AudioNode) => void;
+  output?: IInputInstrument;
+  connect: (output: IInputInstrument) => void;
 }
 
 export interface IInputInstrument extends IInstrument {
