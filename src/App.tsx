@@ -18,7 +18,7 @@ class App extends Component {
   render() {
     return (
       <Grid fluid={true}>
-        <Navbar>
+        <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
               <Glyphicon glyph="music" />

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon, Panel } from 'react-bootstrap';
 
 import SimpleOscillator from '../../models/instruments/simpleOscillator';
 import { IInstrument } from '../../models/base';
@@ -14,9 +14,9 @@ export default function SimpleOscillatorUI(props: Props) {
     osc.play();
   }
   return (
-    <div className="instrument simple-oscillator">
+    <Panel className="instrument simple-oscillator">
       SimpleOscillator {osc.id}
       <Button onClick={play}><Glyphicon glyph="play" /></Button>
-    </div>
+    </Panel>
   );
 }

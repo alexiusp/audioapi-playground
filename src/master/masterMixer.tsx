@@ -13,6 +13,7 @@ export interface Props {
 
 export interface State {
   isOn: boolean;
+  volume: number;
 }
 
 export default class MasterMixerUI extends React.Component<Props, State> {
@@ -23,7 +24,7 @@ export default class MasterMixerUI extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.canvas = React.createRef();
-    this.state = { isOn: false };
+    this.state = { isOn: false, volume: props.master.getVolume() };
   }
 
   public componentDidMount() {
@@ -107,17 +108,20 @@ export default class MasterMixerUI extends React.Component<Props, State> {
   changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
     const volume = +e.target.value / 100;
     this.props.master.setVolume(volume);
+    this.setState({volume});
   }
 
   render() {
     const volume = Math.ceil(this.props.master.getVolume() * 100).toString();
     const isOn = this.state.isOn;
     return (
-      <Navbar fixedBottom={true} className="master-mixer">
+      <Navbar fluid fixedBottom={true} className="master-mixer">
         <div className="mixer-panel">
           <Button className="mixer-control" active={isOn} bsSize="small" bsStyle="primary" onClick={this.playToggle}><Glyphicon glyph="play" /></Button>
           <div className="mixer-control volume-control">
-            <input type="range" defaultValue={volume} onChange={this.changeVolume} />
+            <span>Volume:</span>
+            <input type="range" min="0" max="100" step="1" defaultValue={volume} onChange={this.changeVolume} />
+            <span>{volume}</span>
           </div>
           <div className="mixer-control">
             <canvas id="master-visualizer" ref={this.canvas} />

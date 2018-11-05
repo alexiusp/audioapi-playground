@@ -43,7 +43,7 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   }
 
   public setVolume(volume: number) {
-    console.log('setVolume', volume);
+    // console.log('setVolume', volume);
     this.volume = volume;
     if (this._isOn) {
       this.gain.gain.setValueAtTime(volume, this.context.currentTime);
@@ -51,7 +51,7 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   }
 
   public getVolume() {
-    console.log('getVolume', this.volume);
+    // console.log('getVolume', this.volume);
     return this.volume;
   }
 

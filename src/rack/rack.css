@@ -1,0 +1,10 @@
+.instruments-rack {
+  display: flex;
+  flex-wrap: wrap;
+}
+.instrument {
+  flex: 0 0 auto;
+  width: 200px;
+  height: 80px;
+  margin-bottom: 0;
+}

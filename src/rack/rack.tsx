@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Panel } from 'react-bootstrap';
 
+import './rack.css';
+
 import { IInstrument, InstrumentType } from '../models/base';
 import { InstrumentsRack } from '../models/instrumentsRack';
 import SimpleOscillatorUI from './instruments/simpleOscillator';
