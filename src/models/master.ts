@@ -16,7 +16,7 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
 
   constructor(ctx: AudioContext) {
     super(ctx);
-    this.id = getUID('osc');
+    this.id = 'master';
     this.analyser = ctx.createAnalyser();
     this.analyser.fftSize = 4096;
     this.analyser.minDecibels = -90;

@@ -31,7 +31,11 @@ export default class SimpleOscillator implements IOutputInstrument {
     this.output = output;
   }
 
-  play(freq: number = 440, time: number = 1) {
+  disconnect() {
+    this.output = undefined;
+  }
+
+  play = (freq: number = 440, time: number = 1) => {
     console.log('osc.play', freq, time);
     this.init();
 

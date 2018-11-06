@@ -6,6 +6,7 @@ import './rack.css';
 import { IInstrument, InstrumentType } from '../models/base';
 import { InstrumentsRack } from '../models/instrumentsRack';
 import SimpleOscillatorUI from './instruments/simpleOscillator';
+import SimpleOscillator from '../models/instruments/simpleOscillator';
 
 export interface Props {
   rack: InstrumentsRack;
@@ -16,10 +17,12 @@ export default class RackUI extends React.Component<Props> {
   renderInstrument(instrument: IInstrument) {
     switch (instrument.type) {
       case InstrumentType.SimpleOscillator:
+        const osc = instrument as SimpleOscillator;
         return (
           <SimpleOscillatorUI
-            key={instrument.id}
-            instrument={instrument}
+            key={osc.id}
+            onPlay={osc.play}
+            instrument={osc}
             rack={this.props.rack} />
         );
     }

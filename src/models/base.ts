@@ -12,6 +12,7 @@ export interface IInstrument {
 export interface IOutputInstrument extends IInstrument {
   output?: IInputInstrument;
   connect: (output: IInputInstrument) => void;
+  disconnect: () => void;
 }
 
 export interface IInputInstrument extends IInstrument {
