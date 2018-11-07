@@ -1,22 +1,25 @@
 import * as React from 'react';
-import { Navbar, Nav, NavItem, Glyphicon, Button } from 'react-bootstrap';
+import { Navbar, Glyphicon, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
 import './masterMixer.css';
 
-import { MasterMixer } from '../models/master';
-import { Callback } from '../models/types';
+import Rack from '../models/instrumentsRack';
+import { Callback, DataCallback } from '../models/types';
+import { startPlayAction, stopPlayAction, changeVolumeAction } from '../store/master/actions';
+import { getVolume, isPlaying } from '../store/master/selectors';
+import IState from '../store/state';
 
 export interface Props {
-  master: MasterMixer;
-  onPlay?: Callback;
-}
-
-export interface State {
-  isOn: boolean;
+  onPlay: Callback;
+  onStop: Callback;
+  onVolumeChange: DataCallback<number>;
+  playing: boolean;
   volume: number;
 }
 
-export default class MasterMixerUI extends React.Component<Props, State> {
+export class MasterMixerComponent extends React.Component<Props> {
   private canvas: React.RefObject<HTMLCanvasElement>;
   private canvasContext?: CanvasRenderingContext2D;
   private drawHandle?: number;
@@ -24,7 +27,6 @@ export default class MasterMixerUI extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.canvas = React.createRef();
-    this.state = { isOn: false, volume: props.master.getVolume() };
   }
 
   public componentDidMount() {
@@ -33,94 +35,97 @@ export default class MasterMixerUI extends React.Component<Props, State> {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         this.canvasContext = ctx;
-        const WIDTH = ctx.canvas.width;
-        const HEIGHT = ctx.canvas.height;
-        ctx.fillStyle = "rgb(255, 255, 255)";
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'rgb(0, 0, 0)';
-        ctx.beginPath();
-        ctx.moveTo(0, HEIGHT/2);
-        ctx.lineTo(WIDTH, HEIGHT/2);
-        ctx.stroke();
+        this.prepareCanvas();
         return;
       }
     }
     throw new Error('can not get rendering context!');
   }
 
-  play() {
-    this.setState({ isOn: true });
-    console.log('MasterMixerUI.play');
-    const master = this.props.master;
-    master.play();
-    if (this.props.onPlay) {
-      this.props.onPlay();
-    }
-    this.draw();
-  }
-
-  stop() {
-    this.setState({ isOn: false });
-    console.log('MasterMixerUI.stop');
-    this.props.master.stop();
-    if (this.drawHandle) {
-      cancelAnimationFrame(this.drawHandle);
-    }
+  prepareCanvas() {
+    const ctx = this.canvasContext!;
+    const WIDTH = ctx.canvas.width;
+    const HEIGHT = ctx.canvas.height;
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgb(0, 0, 0)';
+    ctx.beginPath();
+    ctx.moveTo(0, HEIGHT / 2);
+    ctx.lineTo(WIDTH, HEIGHT / 2);
+    ctx.stroke();
   }
 
   draw = () => {
     this.drawHandle = requestAnimationFrame(this.draw);
-    const drawContext = this.canvasContext!;
-    const WIDTH = drawContext.canvas.width;
-    const HEIGHT = drawContext.canvas.height;
-    const data = this.props.master.getAnalyserData();
-    drawContext.fillRect(0, 0, WIDTH, HEIGHT);
-    drawContext.beginPath();
+    const ctx = this.canvasContext!;
+    const WIDTH = ctx.canvas.width;
+    const HEIGHT = ctx.canvas.height;
+    const data = Rack.master.getAnalyserData();
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.beginPath();
     const sliceWidth = WIDTH * 1.0 / data.length;
     let x = 0;
-    for(var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
 
       var v = data[i] / 128.0;
-      var y = v * HEIGHT/2;
+      var y = v * HEIGHT / 2;
 
-      if(i === 0) {
-        drawContext.moveTo(x, y);
+      if (i === 0) {
+        ctx.moveTo(x, y);
       } else {
-        drawContext.lineTo(x, y);
+        ctx.lineTo(x, y);
       }
 
       x += sliceWidth;
     }
 
-    drawContext.lineTo(WIDTH, HEIGHT/2);
-    drawContext.stroke();
+    ctx.lineTo(WIDTH, HEIGHT / 2);
+    ctx.stroke();
   }
 
   playToggle = () => {
-    if (this.state.isOn) {
-      this.stop();
+    if (this.props.playing) {
+      console.log('MasterMixerUI -> stop');
+      this.props.onStop();
+      if (this.drawHandle) {
+        cancelAnimationFrame(this.drawHandle);
+      }
     } else {
-      this.play();
+      console.log('MasterMixerUI -> play');
+      this.props.onPlay();
+      this.draw();
     }
   }
 
   changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
     const volume = +e.target.value / 100;
-    this.props.master.setVolume(volume);
-    this.setState({volume});
+    this.props.onVolumeChange(volume);
   }
 
   render() {
-    const volume = Math.ceil(this.props.master.getVolume() * 100).toString();
-    const isOn = this.state.isOn;
+    const volume = Math.ceil(this.props.volume * 100).toString();
     return (
       <Navbar fluid fixedBottom={true} className="master-mixer">
         <div className="mixer-panel">
-          <Button className="mixer-control" active={isOn} bsSize="small" bsStyle="primary" onClick={this.playToggle}><Glyphicon glyph="play" /></Button>
+          <Button
+            className="mixer-control"
+            active={this.props.playing}
+            bsSize="small"
+            bsStyle="primary"
+            onClick={this.playToggle}>
+            <Glyphicon glyph="play" />
+          </Button>
           <div className="mixer-control volume-control">
-            <span>Volume:</span>
-            <input type="range" min="0" max="100" step="1" defaultValue={volume} onChange={this.changeVolume} />
+            <label htmlFor="volume-control">Volume:</label>
+            <input
+              name="volume-control"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              defaultValue={volume}
+              onChange={this.changeVolume} />
             <span>{volume}</span>
           </div>
           <div className="mixer-control">
@@ -130,5 +135,17 @@ export default class MasterMixerUI extends React.Component<Props, State> {
       </Navbar>
     );
   }
-
 }
+
+export const mapStateToProps = (state: IState) => ({
+  volume: getVolume(state),
+  playing: isPlaying(state),
+});
+
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onPlay: () => dispatch(startPlayAction()),
+  onStop: () => dispatch(stopPlayAction()),
+  onVolumeChange: (volume: number) => dispatch(changeVolumeAction(volume)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MasterMixerComponent);

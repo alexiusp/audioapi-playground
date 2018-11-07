@@ -9,10 +9,6 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   private analyser: AnalyserNode;
   // master volume control
   private gain: GainNode;
-  // volume value control
-  private volume: number;
-  // on/off control
-  private _isOn: boolean;
 
   constructor(ctx: AudioContext) {
     super(ctx);
@@ -27,9 +23,6 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
     this.gain.gain.value = 0;
     this.analyser.connect(this.gain);
     this.gain.connect(ctx.destination);
-    // default initial state
-    this.volume = 1;
-    this._isOn = false;
   }
 
   public getAnalyserData() {
@@ -44,32 +37,18 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   }
 
   public setVolume(volume: number) {
-    // console.log('setVolume', volume);
-    this.volume = volume;
-    if (this._isOn) {
-      this.gain.gain.setValueAtTime(volume, this.context.currentTime);
-    }
+    console.log('setVolume', volume);
+    this.gain.gain.setValueAtTime(volume, this.context.currentTime);
   }
 
-  public getVolume() {
-    // console.log('getVolume', this.volume);
-    return this.volume;
-  }
-
-  public isOn() {
-    return this._isOn;
-  }
-
-  public play() {
+  public play(volume: number) {
     console.log('MasterMixer.play');
-    this.gain.gain.value = this.volume;
-    this._isOn = true;
+    this.gain.gain.value = volume;
   }
 
   public stop() {
     console.log('MasterMixer.stop');
     this.gain.gain.value = 0;
-    this._isOn = false;
   }
 
 }

@@ -37,3 +37,7 @@ export class InstrumentsRack {
   }
 
 }
+
+const Rack = new InstrumentsRack();
+Rack.initDefault();
+export default Rack;

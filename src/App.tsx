@@ -4,17 +4,9 @@ import { Grid, Navbar, Glyphicon, Row, Col, Nav, NavItem, Panel } from 'react-bo
 import './App.css';
 import RackUI from './rack/rack';
 import MasterMixerUI from './master/masterMixer';
-import { InstrumentsRack } from './models/instrumentsRack';
+import Rack from './models/instrumentsRack';
 
 class App extends Component {
-  private rack: InstrumentsRack;
-
-  constructor(props: any) {
-    super(props);
-    this.rack = new InstrumentsRack();
-    this.rack.initDefault();
-  }
-
   render() {
     return (
       <Grid fluid={true}>
@@ -27,10 +19,10 @@ class App extends Component {
         </Navbar>
         <Row>
           <Col sm={12}>
-            <RackUI rack={this.rack} />
+            <RackUI rack={Rack} />
           </Col>
         </Row>
-        <MasterMixerUI master={this.rack.master} />
+        <MasterMixerUI />
       </Grid>
     );
   }
