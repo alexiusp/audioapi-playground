@@ -1,9 +1,9 @@
-import { IOutput, IInstrument, InstrumentEnum } from '../base';
+import { IInstrument, InstrumentEnum, ISimpleOscillator } from '../base';
 import SimpleOscillator from './simpleOscillator';
 import Rack from '../instrumentsRack';
 
-export function buildSimpleOscillator(data: IOutput) {
-  const instrument = new SimpleOscillator(Rack.context, data.id);
+export function buildSimpleOscillator(data: ISimpleOscillator) {
+  const instrument = new SimpleOscillator(Rack.context, data.id, data.volume);
   if (data.output) {
     instrument.connect(data.output);
   }
@@ -13,7 +13,7 @@ export function buildSimpleOscillator(data: IOutput) {
 export function buildInstrument(data: IInstrument) {
   switch (data.instrument) {
     case InstrumentEnum.SimpleOscillator:
-      return buildSimpleOscillator(data as IOutput);
+      return buildSimpleOscillator(data as ISimpleOscillator);
     case InstrumentEnum.MasterMixer:
       return Rack.master;
   }
