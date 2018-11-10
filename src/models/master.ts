@@ -1,6 +1,6 @@
-import { BaseAudioDevice, IInputInstrument, InstrumentEnum, IPlayable } from './base';
+import { BaseAudioDevice, InstrumentEnum, IMasterMixer } from './base';
 
-export class MasterMixer extends BaseAudioDevice implements IInputInstrument, IPlayable {
+export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
   id: string;
   type: "Input";
   instrument = InstrumentEnum.MasterMixer;

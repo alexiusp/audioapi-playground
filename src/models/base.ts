@@ -39,7 +39,9 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export type IInstrument = IInputInstrument | IOutputInstrument | IGain;
+export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable {}
+export interface IMasterMixer extends IInputInstrument, IPlayable {}
+export type IInstrument = ISimpleOscillator | IMasterMixer;
 
 export class BaseAudioDevice {
   context: AudioContext;

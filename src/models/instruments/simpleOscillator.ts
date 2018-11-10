@@ -1,7 +1,7 @@
-import { IOutputInstrument, IInputInstrument, InstrumentEnum, ID, IPlayable, IGain } from '../base';
+import { IInputInstrument, InstrumentEnum, ID, ISimpleOscillator } from '../base';
 import Rack from '../instrumentsRack';
 
-export default class SimpleOscillator implements IOutputInstrument, IPlayable, IGain {
+export default class SimpleOscillator implements ISimpleOscillator {
   instrument = InstrumentEnum.SimpleOscillator;
   type: "Output" = "Output";
   output?: ID;
