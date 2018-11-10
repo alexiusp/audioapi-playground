@@ -1,6 +1,6 @@
 import IInstrumentsState from './state';
-import { InstrumentEnum, IOutput, IGain, IConnectable, IInput } from '../../models/base';
-import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE } from './actions';
+import { InstrumentEnum, IOutput, IGain, IConnectable, IInput, IInstrument, IOscillator } from '../../models/base';
+import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE } from './actions';
 
 export const initialInstrumentsState: IInstrumentsState = {
   instruments: {},
@@ -35,7 +35,7 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       instruments = {
         ...instruments,
         [id]: {
-          ...instrument,
+          ...(instrument as IInstrument),
         },
       }
       return {
@@ -50,7 +50,22 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const instruments = {
         ...state.instruments,
         [id]: {
-          ...instrument,
+          ...(instrument as IInstrument),
+        }
+      }
+      return {
+        ...state,
+        instruments,
+      }
+    }
+    case INSTRUMENT_SET_OSCILLATOR_TYPE: {
+      const { id, type } = action.payload;
+      const instrument = state.instruments[id] as IOscillator;
+      instrument.oscillatorType = type;
+      const instruments = {
+        ...state.instruments,
+        [id]: {
+          ...(instrument as IInstrument),
         }
       }
       return {

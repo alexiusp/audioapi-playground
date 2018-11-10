@@ -1,5 +1,6 @@
 import { IInputInstrument, InstrumentEnum, ID, ISimpleOscillator } from '../base';
 import Rack from '../instrumentsRack';
+import { OscillatorType } from '../types';
 
 export default class SimpleOscillator implements ISimpleOscillator {
   instrument = InstrumentEnum.SimpleOscillator;
@@ -11,14 +12,15 @@ export default class SimpleOscillator implements ISimpleOscillator {
   constructor(
     protected context: AudioContext,
     public id: ID,
-    public volume: number = 1
+    public volume: number = 1,
+    public oscillatorType: OscillatorType = 'sine'
     ) {
   }
 
   private init() {
-    console.log('osc.init', this.id);
+    console.log('osc.init', this.id, this.oscillatorType);
     this.oscillator = this.context.createOscillator();
-    this.oscillator.type = 'sine';
+    this.oscillator.type = this.oscillatorType;
     this.gain = this.context.createGain();
     this.gain.gain.value = 0;
     this.oscillator.connect(this.gain);

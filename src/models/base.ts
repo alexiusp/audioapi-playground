@@ -23,6 +23,10 @@ export type IConnectable = IInput | IOutput;
 
 export interface IGain extends IBaseInstrument {
   volume: number;
+
+}
+export interface IOscillator extends IBaseInstrument {
+  oscillatorType: OscillatorType;
 }
 
 // behavior models
@@ -39,7 +43,7 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable {}
+export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator {}
 export interface IMasterMixer extends IInputInstrument, IPlayable {}
 export type IInstrument = ISimpleOscillator | IMasterMixer;
 

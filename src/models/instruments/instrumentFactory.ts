@@ -3,7 +3,7 @@ import SimpleOscillator from './simpleOscillator';
 import Rack from '../instrumentsRack';
 
 export function buildSimpleOscillator(data: ISimpleOscillator) {
-  const instrument = new SimpleOscillator(Rack.context, data.id, data.volume);
+  const instrument = new SimpleOscillator(Rack.context, data.id, data.volume, data.oscillatorType);
   if (data.output) {
     instrument.connect(data.output);
   }

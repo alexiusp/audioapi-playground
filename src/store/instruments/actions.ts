@@ -1,5 +1,6 @@
 import { Action, ActionCreator } from 'redux';
 import { ID, IInstrument } from '../../models/base';
+import { OscillatorType } from '../../models/types';
 
 export const INSTRUMENT_ADD = 'INSTRUMENT_ADD';
 export type INSTRUMENT_ADD = typeof INSTRUMENT_ADD;
@@ -57,8 +58,26 @@ export const changeVolumeInstrumentAction: ActionCreator<IChangeVolumeInstrument
   },
 });
 
+export const INSTRUMENT_SET_OSCILLATOR_TYPE = 'INSTRUMENT_SET_OSCILLATOR_TYPE';
+export type INSTRUMENT_SET_OSCILLATOR_TYPE = typeof INSTRUMENT_SET_OSCILLATOR_TYPE;
+export interface ISetOscillatorTypeInstrumentAction extends Action<INSTRUMENT_SET_OSCILLATOR_TYPE> {
+  type: INSTRUMENT_SET_OSCILLATOR_TYPE;
+  payload: {
+    id: ID;
+    type: OscillatorType;
+  };
+}
+export const setOscillatorTypeInstrumentAction: ActionCreator<ISetOscillatorTypeInstrumentAction> = (id: ID, type: OscillatorType) => ({
+  type: INSTRUMENT_SET_OSCILLATOR_TYPE,
+  payload: {
+    id,
+    type,
+  },
+});
+
 export type InstrumentAction =
   IAddInstrumentAction |
   IChangeVolumeInstrumentAction |
   IStartPlayInstrumentAction |
-  ISetOutputInstrumentAction;
+  ISetOutputInstrumentAction |
+  ISetOscillatorTypeInstrumentAction;

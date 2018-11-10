@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import { DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
 import { DataCallback } from '../models/types';
 import { ID, IInput } from '../models/base';
 
@@ -28,11 +28,12 @@ export default function OutputSelector(props: Props) {
   outputOptions.unshift(
     (<MenuItem active={!props.active} key="none" eventKey={null}>None</MenuItem>)
   )
-  const title = props.active ? props.active : 'None';
+  const outputTitle = props.active ? props.active : 'None';
+  const title = (<span><Glyphicon glyph="random" /> {outputTitle}</span>);
   return (
     <DropdownButton
       onSelect={props.onSelect}
-      title={`Output: ${title}`}
+      title={title}
       id={props.id}>
       {outputOptions}
     </DropdownButton>
