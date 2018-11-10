@@ -23,4 +23,24 @@ export const startPlayInstrumentAction: ActionCreator<IStartPlayInstrumentAction
   payload: id,
 });
 
-export type InstrumentAction = IAddInstrumentAction | IStartPlayInstrumentAction;
+export const INSTRUMENT_SET_OUTPUT = 'INSTRUMENT_SET_OUTPUT';
+export type INSTRUMENT_SET_OUTPUT = typeof INSTRUMENT_SET_OUTPUT;
+export interface ISetOutputInstrumentAction extends Action<INSTRUMENT_SET_OUTPUT> {
+  type: INSTRUMENT_SET_OUTPUT;
+  payload: {
+    id: ID;
+    output: ID | null;
+  };
+}
+export const setOutputInstrumentAction: ActionCreator<ISetOutputInstrumentAction> = (id: ID, output: ID | null) => ({
+  type: INSTRUMENT_SET_OUTPUT,
+  payload: {
+    id,
+    output,
+  },
+});
+
+export type InstrumentAction =
+  IAddInstrumentAction |
+  IStartPlayInstrumentAction |
+  ISetOutputInstrumentAction;

@@ -1,6 +1,6 @@
 import IInstrumentsState from './state';
 import { InstrumentEnum, IOutput } from '../../models/base';
-import { InstrumentAction, INSTRUMENT_ADD } from './actions';
+import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
 
 export const initialInstrumentsState: IInstrumentsState = {
   instruments: {},
@@ -21,6 +21,26 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
         ...state,
         instruments,
         outputs,
+      }
+    }
+    case INSTRUMENT_SET_OUTPUT: {
+      const { id, output } = action.payload;
+      let instruments = state.instruments;
+      const instrument = instruments[id] as IOutput;
+      if (output) {
+        instrument.output = output;
+      } else {
+        delete instrument.output;
+      }
+      instruments = {
+        ...instruments,
+        [id]: {
+          ...instrument,
+        },
+      }
+      return {
+        ...state,
+        instruments,
       }
     }
   }

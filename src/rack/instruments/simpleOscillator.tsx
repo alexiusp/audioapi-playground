@@ -8,7 +8,7 @@ import { Callback, DataCallback } from '../../models/types';
 import IState from '../../store/state';
 import { connect } from 'react-redux';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
-import { startPlayInstrumentAction } from '../../store/instruments/actions';
+import { startPlayInstrumentAction, setOutputInstrumentAction } from '../../store/instruments/actions';
 import { Dispatch } from 'redux';
 import Rack from '../../models/instrumentsRack';
 
@@ -26,18 +26,6 @@ export interface Props extends OwnProps {
 export function SimpleOscillatorUI(props: Props) {
   const osc = props.instrument as SimpleOscillator;
   const outputs = [Rack.master, ...props.outputs];
-  /*
-  const selectOutput = (eventKey: string) => {
-    console.log('selectOutput', eventKey);
-    if (eventKey === '0') {
-      osc.disconnect();
-      console.log('disconnect', osc.output);
-    } else {
-      osc.connect(props.rack.outputs.get(eventKey as string)!);
-      console.log('connect', osc.output);
-    }
-  }
-  */
   return (
     <Panel className="instrument simple-oscillator">
       <Panel.Heading>SimpleOscillator {osc.id}</Panel.Heading>
@@ -66,7 +54,7 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
-    onSelectOutput: (output: ID) => console.log('onSelectOutput', id, output),
+    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
   }
 }
 

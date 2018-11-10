@@ -7,6 +7,7 @@ import reducer from './reducer';
 import rootSaga from './saga';
 import { addInstrumentAction } from './instruments/actions';
 import { InstrumentEnum, IOutput } from '../models/base';
+import { getUID } from '../utils/utils';
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store<IState, Action> = createStore(
@@ -15,7 +16,7 @@ const store: Store<IState, Action> = createStore(
 );
 sagaMiddleware.run(rootSaga);
 store.dispatch(addInstrumentAction({
-  id: 'asd',
+  id: getUID('osc'),
   instrument: InstrumentEnum.SimpleOscillator,
   type: "Output",
   output: 'master',
