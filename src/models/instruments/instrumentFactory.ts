@@ -6,6 +6,8 @@ export function buildSimpleOscillator(data: IOutput) {
   const instrument = new SimpleOscillator(Rack.context, data.id);
   if (data.output) {
     instrument.connect(data.output);
+  } else {
+    instrument.connect('master');
   }
   return instrument;
 }

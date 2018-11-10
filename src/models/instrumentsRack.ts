@@ -29,7 +29,13 @@ export class InstrumentsRack {
   }
 
   public getInstrument(id: ID) {
+    // console.log('getInstrument', id, this.instruments.has(id));
     return this.instruments.get(id);
+  }
+
+  public getOutput(id: ID) {
+    // console.log('getOutput', id, this.outputs.has(id));
+    return this.outputs.get(id);
   }
 
 }

@@ -22,8 +22,8 @@ export default class SimpleOscillator implements IOutputInstrument, IPlayable {
     this.gain.gain.value = 0;
     this.oscillator.connect(this.gain);
     if (this.output) {
-      const outputNode = Rack.getInstrument(this.output) as IInputInstrument;
-      this.gain.connect(outputNode.getInput());
+      const outputInstrument = Rack.getOutput(this.output) as IInputInstrument;
+      this.gain.connect(outputInstrument.getInput());
     }
   }
 
