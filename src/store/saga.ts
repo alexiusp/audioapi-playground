@@ -1,6 +1,10 @@
-import { fork } from 'redux-saga/effects'
+import { all, fork } from 'redux-saga/effects'
 import masterSaga from './master/saga';
+import instrumentsSaga from './instruments/saga';
 
 export default function* rootSaga() {
-  yield fork(masterSaga);
+  yield all([
+    yield fork(masterSaga),
+    yield fork(instrumentsSaga),
+  ]);
 }

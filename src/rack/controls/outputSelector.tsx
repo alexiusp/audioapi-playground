@@ -22,12 +22,12 @@ export default function OutputSelector(props: Props) {
           active={isActive}
           key={instrument.id}
           eventKey={instrument.id}>
-          {instrument.name}
+          {instrument.id}
         </MenuItem>
       );
     });
   }
-  const title = props.active ? props.active.name : 'None';
+  const title = props.active ? props.active.id : 'None';
   return (
     <DropdownButton
       onSelect={(eventKey: any) => props.onSelect(eventKey.toString())}

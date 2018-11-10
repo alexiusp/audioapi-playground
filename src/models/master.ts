@@ -1,10 +1,9 @@
-import { getUID } from '../utils/utils';
-import { BaseAudioDevice, IInputInstrument, InstrumentType } from './base';
+import { BaseAudioDevice, IInputInstrument, InstrumentEnum, IPlayable } from './base';
 
-export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
+export class MasterMixer extends BaseAudioDevice implements IInputInstrument, IPlayable {
   id: string;
-  name = 'Master';
-  type = InstrumentType.MasterMixer;
+  type: "Input";
+  instrument = InstrumentEnum.MasterMixer;
   // osciloscope/frequency bar graph
   private analyser: AnalyserNode;
   // master volume control
@@ -13,6 +12,7 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
   constructor(ctx: AudioContext) {
     super(ctx);
     this.id = 'master';
+    this.type = "Input";
     this.analyser = ctx.createAnalyser();
     this.analyser.fftSize = 4096;
     this.analyser.minDecibels = -90;
@@ -41,7 +41,7 @@ export class MasterMixer extends BaseAudioDevice implements IInputInstrument {
     this.gain.gain.setValueAtTime(volume, this.context.currentTime);
   }
 
-  public play(volume: number) {
+  public play(volume: number = 1) {
     console.log('MasterMixer.play');
     this.gain.gain.value = volume;
   }

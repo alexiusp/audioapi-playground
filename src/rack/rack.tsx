@@ -3,27 +3,25 @@ import { Panel } from 'react-bootstrap';
 
 import './rack.css';
 
-import { IInstrument, InstrumentType } from '../models/base';
-import { InstrumentsRack } from '../models/instrumentsRack';
+import { InstrumentEnum, IBaseInstrument } from '../models/base';
 import SimpleOscillatorUI from './instruments/simpleOscillator';
 import SimpleOscillator from '../models/instruments/simpleOscillator';
+import IState from '../store/state';
+import { getInstrumentsList } from '../store/instruments/selectors';
+import { connect } from 'react-redux';
+import Rack from '../models/instrumentsRack';
 
 export interface Props {
-  rack: InstrumentsRack;
+  instruments: IBaseInstrument[];
 }
 
-export default class RackUI extends React.Component<Props> {
+export class RackUI extends React.Component<Props> {
 
-  renderInstrument(instrument: IInstrument) {
-    switch (instrument.type) {
-      case InstrumentType.SimpleOscillator:
-        const osc = instrument as SimpleOscillator;
+  renderInstrument(instrument: IBaseInstrument) {
+    switch (instrument.instrument) {
+      case InstrumentEnum.SimpleOscillator:
         return (
-          <SimpleOscillatorUI
-            key={osc.id}
-            onPlay={osc.play}
-            instrument={osc}
-            rack={this.props.rack} />
+          <SimpleOscillatorUI id={instrument.id} key={instrument.id} />
         );
     }
     return null;
@@ -31,7 +29,7 @@ export default class RackUI extends React.Component<Props> {
 
   render() {
     const instruments = [];
-    for (let [id, instrument] of this.props.rack.instruments) {
+    for (let instrument of this.props.instruments) {
       instruments.push(this.renderInstrument(instrument));
     }
     return (
@@ -43,3 +41,12 @@ export default class RackUI extends React.Component<Props> {
     );
   }
 }
+
+export const mapStateToProps = (state: IState) => {
+  const instruments = getInstrumentsList(state);
+  return {
+    instruments,
+  }
+}
+
+export default connect(mapStateToProps)(RackUI);

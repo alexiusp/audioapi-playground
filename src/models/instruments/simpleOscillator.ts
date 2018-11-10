@@ -1,18 +1,17 @@
-import { getUID } from '../../utils/utils';
-import { IOutputInstrument, InstrumentType, IInputInstrument } from '../base';
+import { IOutputInstrument, IInputInstrument, InstrumentEnum, ID, IPlayable } from '../base';
+import Rack from '../instrumentsRack';
 
-export default class SimpleOscillator implements IOutputInstrument {
-  id: string;
-  name = 'SimpleOscillator';
-  type = InstrumentType.SimpleOscillator;
-  output?: IInputInstrument;
-  context: AudioContext;
+export default class SimpleOscillator implements IOutputInstrument, IPlayable {
+  instrument = InstrumentEnum.SimpleOscillator;
+  type: "Output" = "Output";
+  output?: ID;
   oscillator?: OscillatorNode;
   gain?: GainNode;
 
-  constructor(ctx: AudioContext) {
-    this.id = getUID('osc');
-    this.context = ctx;
+  constructor(
+    protected context: AudioContext,
+    public id: ID
+    ) {
   }
 
   private init() {
@@ -23,11 +22,12 @@ export default class SimpleOscillator implements IOutputInstrument {
     this.gain.gain.value = 0;
     this.oscillator.connect(this.gain);
     if (this.output) {
-      this.gain.connect(this.output.getInput());
+      const outputNode = Rack.getInstrument(this.output) as IInputInstrument;
+      this.gain.connect(outputNode.getInput());
     }
   }
 
-  connect(output: IInputInstrument) {
+  connect(output: ID) {
     this.output = output;
   }
 

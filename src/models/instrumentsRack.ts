@@ -1,43 +1,38 @@
-import { IOutputInstrument, IInstrument, IInputInstrument } from './base';
+import { IInstrument, IInputInstrument, ID, IInput } from './base';
 import { MasterMixer } from './master';
-import SimpleOscillator from './instruments/simpleOscillator';
 
 export class InstrumentsRack {
   // all instruments map
-  public instruments: Map<string, IInstrument>;
+  public instruments: Map<ID, IInstrument>;
   // possible outputs (instruments with inputs)
-  public outputs: Map<string, IInputInstrument>;
+  public outputs: Map<ID, IInput>;
 
-  private context: AudioContext;
+  public context: AudioContext;
   public master: MasterMixer;
 
   constructor() {
-    this.instruments = new Map<string, IInstrument>();
+    this.instruments = new Map<ID, IInstrument>();
     // @ts-ignore
     const ctx: AudioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.master = new MasterMixer(ctx);
     this.context = ctx;
-    this.outputs = new Map<string, IInputInstrument>();
+    this.outputs = new Map<ID, IInputInstrument>();
     this.outputs.set(this.master.id, this.master);
   }
 
   public addInstrument(instrument: IInstrument) {
     this.instruments.set(instrument.id, instrument);
     // if instrument has input - add it to the outputs map
-    if ((instrument as IInputInstrument).getInput) {
-      this.outputs.set(instrument.id, instrument as IInputInstrument);
+    if (instrument.type && instrument.type === "Input") {
+      this.outputs.set(instrument.id, instrument);
     }
   }
 
-  initDefault() {
-    // initialize default configuration
-    const osc = new SimpleOscillator(this.context);
-    osc.connect(this.master);
-    this.addInstrument(osc);
+  public getInstrument(id: ID) {
+    return this.instruments.get(id);
   }
 
 }
 
 const Rack = new InstrumentsRack();
-Rack.initDefault();
 export default Rack;

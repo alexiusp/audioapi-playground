@@ -1,0 +1,26 @@
+import { Action, ActionCreator } from 'redux';
+import { ID, IInstrument } from '../../models/base';
+
+export const INSTRUMENT_ADD = 'INSTRUMENT_ADD';
+export type INSTRUMENT_ADD = typeof INSTRUMENT_ADD;
+export interface IAddInstrumentAction extends Action<INSTRUMENT_ADD> {
+  type: INSTRUMENT_ADD;
+  payload: IInstrument;
+}
+export const addInstrumentAction: ActionCreator<IAddInstrumentAction> = (instrument: IInstrument) => ({
+  type: INSTRUMENT_ADD,
+  payload: instrument,
+});
+
+export const INSTRUMENT_PLAY_START = 'INSTRUMENT_PLAY_START';
+export type INSTRUMENT_PLAY_START = typeof INSTRUMENT_PLAY_START;
+export interface IStartPlayInstrumentAction extends Action<INSTRUMENT_PLAY_START> {
+  type: INSTRUMENT_PLAY_START;
+  payload: ID;
+}
+export const startPlayInstrumentAction: ActionCreator<IStartPlayInstrumentAction> = (id: ID) => ({
+  type: INSTRUMENT_PLAY_START,
+  payload: id,
+});
+
+export type InstrumentAction = IAddInstrumentAction | IStartPlayInstrumentAction;

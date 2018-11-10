@@ -4,7 +4,6 @@ import { Grid, Navbar, Glyphicon, Row, Col, Nav, NavItem, Panel } from 'react-bo
 import './App.css';
 import RackUI from './rack/rack';
 import MasterMixerUI from './master/masterMixer';
-import Rack from './models/instrumentsRack';
 
 class App extends Component {
   render() {
@@ -19,7 +18,7 @@ class App extends Component {
         </Navbar>
         <Row>
           <Col sm={12}>
-            <RackUI rack={Rack} />
+            <RackUI />
           </Col>
         </Row>
         <MasterMixerUI />
