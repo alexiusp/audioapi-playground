@@ -1,6 +1,6 @@
 import IInstrumentsState from './state';
-import { InstrumentEnum, IOutput } from '../../models/base';
-import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
+import { InstrumentEnum, IOutput, IGain, IConnectable, IInput } from '../../models/base';
+import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE } from './actions';
 
 export const initialInstrumentsState: IInstrumentsState = {
   instruments: {},
@@ -14,8 +14,8 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const instruments = state.instruments;
       instruments[instrument.id] = instrument;
       const outputs = state.outputs;
-      if (instrument.type && instrument.type === "Input") {
-        outputs.push(instrument);
+      if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
+        outputs.push(instrument as IInput);
       }
       return {
         ...state,
@@ -37,6 +37,21 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
         [id]: {
           ...instrument,
         },
+      }
+      return {
+        ...state,
+        instruments,
+      }
+    }
+    case INSTRUMENT_VOLUME_CHANGE: {
+      const { id, volume } = action.payload;
+      const instrument = state.instruments[id] as IGain;
+      instrument.volume = volume;
+      const instruments = {
+        ...state.instruments,
+        [id]: {
+          ...instrument,
+        }
       }
       return {
         ...state,

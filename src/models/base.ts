@@ -21,11 +21,15 @@ export interface IOutput extends IBaseInstrument {
 }
 export type IConnectable = IInput | IOutput;
 
+export interface IGain extends IBaseInstrument {
+  volume: number;
+}
+
+// behavior models
 export interface IPlayable {
   play: () => void;
 }
 
-// behavior models
 export interface IOutputInstrument extends IOutput {
   connect: (output: ID) => void;
   disconnect: () => void;
@@ -35,7 +39,7 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export type IInstrument = IInputInstrument | IOutputInstrument;
+export type IInstrument = IInputInstrument | IOutputInstrument | IGain;
 
 export class BaseAudioDevice {
   context: AudioContext;

@@ -40,7 +40,25 @@ export const setOutputInstrumentAction: ActionCreator<ISetOutputInstrumentAction
   },
 });
 
+export const INSTRUMENT_VOLUME_CHANGE = 'INSTRUMENT_VOLUME_CHANGE';
+export type INSTRUMENT_VOLUME_CHANGE = typeof INSTRUMENT_VOLUME_CHANGE;
+export interface IChangeVolumeInstrumentAction extends Action<INSTRUMENT_VOLUME_CHANGE> {
+  type: INSTRUMENT_VOLUME_CHANGE;
+  payload: {
+    id: ID,
+    volume: number
+  };
+}
+export const changeVolumeInstrumentAction: ActionCreator<IChangeVolumeInstrumentAction> = (id: ID, volume: number) => ({
+  type: INSTRUMENT_VOLUME_CHANGE,
+  payload: {
+    id,
+    volume,
+  },
+});
+
 export type InstrumentAction =
   IAddInstrumentAction |
+  IChangeVolumeInstrumentAction |
   IStartPlayInstrumentAction |
   ISetOutputInstrumentAction;

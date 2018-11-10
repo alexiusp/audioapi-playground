@@ -1,7 +1,7 @@
-import { IOutputInstrument, IInputInstrument, InstrumentEnum, ID, IPlayable } from '../base';
+import { IOutputInstrument, IInputInstrument, InstrumentEnum, ID, IPlayable, IGain } from '../base';
 import Rack from '../instrumentsRack';
 
-export default class SimpleOscillator implements IOutputInstrument, IPlayable {
+export default class SimpleOscillator implements IOutputInstrument, IPlayable, IGain {
   instrument = InstrumentEnum.SimpleOscillator;
   type: "Output" = "Output";
   output?: ID;
@@ -10,12 +10,13 @@ export default class SimpleOscillator implements IOutputInstrument, IPlayable {
 
   constructor(
     protected context: AudioContext,
-    public id: ID
+    public id: ID,
+    public volume: number = 1
     ) {
   }
 
   private init() {
-    console.log('osc.init', this.context);
+    console.log('osc.init', this.id);
     this.oscillator = this.context.createOscillator();
     this.oscillator.type = 'sine';
     this.gain = this.context.createGain();
@@ -36,13 +37,13 @@ export default class SimpleOscillator implements IOutputInstrument, IPlayable {
   }
 
   play = (freq: number = 440, time: number = 1) => {
-    console.log('osc.play', freq, time);
+    console.log('osc.play', freq, time, this.volume);
     this.init();
 
     this.oscillator!.frequency.value = freq;
     const startTime = this.context.currentTime;
 
-    this.gain!.gain.setValueAtTime(1, startTime);
+    this.gain!.gain.setValueAtTime(this.volume, startTime);
     this.oscillator!.start(startTime);
     this.stop(time);
   }

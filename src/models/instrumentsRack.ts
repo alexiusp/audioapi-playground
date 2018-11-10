@@ -1,4 +1,4 @@
-import { IInstrument, IInputInstrument, ID, IInput } from './base';
+import { IInstrument, IInputInstrument, ID, IInput, IConnectable, IOutput, IOutputInstrument } from './base';
 import { MasterMixer } from './master';
 
 export class InstrumentsRack {
@@ -23,8 +23,8 @@ export class InstrumentsRack {
   public addInstrument(instrument: IInstrument) {
     this.instruments.set(instrument.id, instrument);
     // if instrument has input - add it to the outputs map
-    if (instrument.type && instrument.type === "Input") {
-      this.outputs.set(instrument.id, instrument);
+    if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
+      this.outputs.set(instrument.id, instrument as IInputInstrument);
     }
   }
 

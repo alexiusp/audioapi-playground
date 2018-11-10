@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataCallback } from '../models/types';
 
 export interface Props {
-  className: string;
+  className?: string;
   volume: number;
   onVolumeChange: DataCallback<number>;
 }
