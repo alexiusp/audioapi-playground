@@ -3,7 +3,7 @@ import { Button, Glyphicon, Panel } from 'react-bootstrap';
 
 import SimpleOscillator from '../../models/instruments/simpleOscillator';
 import { ID, IOutput, IInput } from '../../models/base';
-import OutputSelector from '../controls/outputSelector';
+import OutputSelector from '../../controls/outputSelector';
 import { Callback, DataCallback } from '../../models/types';
 import IState from '../../store/state';
 import { connect } from 'react-redux';

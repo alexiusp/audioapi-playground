@@ -10,6 +10,7 @@ import { Callback, DataCallback } from '../models/types';
 import { startPlayAction, stopPlayAction, changeVolumeAction } from '../store/master/actions';
 import { getVolume, isPlaying } from '../store/master/selectors';
 import IState from '../store/state';
+import VolumeControl from '../controls/volumeControl';
 
 export interface Props {
   onPlay: Callback;
@@ -116,18 +117,10 @@ export class MasterMixerComponent extends React.Component<Props> {
             onClick={this.playToggle}>
             <Glyphicon glyph="play" />
           </Button>
-          <div className="mixer-control volume-control">
-            <label htmlFor="volume-control">Volume:</label>
-            <input
-              name="volume-control"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              defaultValue={volume}
-              onChange={this.changeVolume} />
-            <span>{volume}</span>
-          </div>
+          <VolumeControl
+            volume={this.props.volume}
+            onVolumeChange={this.props.onVolumeChange}
+            className="mixer-control"/>
           <div className="mixer-control">
             <canvas id="master-visualizer" ref={this.canvas} />
           </div>
