@@ -18,5 +18,6 @@ store.dispatch(addInstrumentAction({
   id: 'asd',
   instrument: InstrumentEnum.SimpleOscillator,
   type: "Output",
+  output: 'master',
 } as IOutput))
 export default store;

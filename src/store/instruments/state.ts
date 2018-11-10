@@ -1,5 +1,8 @@
-import { IBaseInstrument } from '../../models/base';
+import { IInput, IConnectable } from '../../models/base';
 
 export default interface IInstrumentsState {
-  [id: string]: IBaseInstrument;
+  outputs: IInput[];
+  instruments: {
+    [id: string]: IConnectable;
+  }
 }

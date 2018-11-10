@@ -1,4 +1,4 @@
-export type DataCallback<T> = (arg: T) => void;
+export type DataCallback<T = any> = (arg: T) => void;
 
 export type Callback = () => void;
 
