@@ -75,9 +75,27 @@ export const setOscillatorTypeInstrumentAction: ActionCreator<ISetOscillatorType
   },
 });
 
+export const INSTRUMENT_SET_OSCILLATOR_FREQUENCY = 'INSTRUMENT_SET_OSCILLATOR_FREQUENCY';
+export type INSTRUMENT_SET_OSCILLATOR_FREQUENCY = typeof INSTRUMENT_SET_OSCILLATOR_FREQUENCY;
+export interface ISetOscillatorFrequencyInstrumentAction extends Action<INSTRUMENT_SET_OSCILLATOR_FREQUENCY> {
+  type: INSTRUMENT_SET_OSCILLATOR_FREQUENCY;
+  payload: {
+    id: ID;
+    freq: number;
+  };
+}
+export const setOscillatorFrequencyInstrumentAction: ActionCreator<ISetOscillatorFrequencyInstrumentAction> = (id: ID, freq: number) => ({
+  type: INSTRUMENT_SET_OSCILLATOR_FREQUENCY,
+  payload: {
+    id,
+    freq,
+  },
+});
+
 export type InstrumentAction =
   IAddInstrumentAction |
   IChangeVolumeInstrumentAction |
   IStartPlayInstrumentAction |
   ISetOutputInstrumentAction |
-  ISetOscillatorTypeInstrumentAction;
+  ISetOscillatorTypeInstrumentAction |
+  ISetOscillatorFrequencyInstrumentAction;

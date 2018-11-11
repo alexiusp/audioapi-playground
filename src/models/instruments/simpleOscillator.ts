@@ -13,7 +13,8 @@ export default class SimpleOscillator implements ISimpleOscillator {
     protected context: AudioContext,
     public id: ID,
     public volume: number = 1,
-    public oscillatorType: OscillatorType = 'sine'
+    public oscillatorType: OscillatorType = 'sine',
+    public frequency: number = 440
     ) {
   }
 
@@ -38,16 +39,21 @@ export default class SimpleOscillator implements ISimpleOscillator {
     this.output = undefined;
   }
 
-  play = (freq: number = 440, time: number = 1) => {
-    console.log('osc.play', freq, time, this.volume);
+  play = (freq?: number, time?: number) => {
+    const frequency = freq || this.frequency;
+    // temporary solution until start/stop properly implemented with mouse events
+    const end = time || 1;
+    console.log('osc.play', frequency, time, this.volume);
     this.init();
 
-    this.oscillator!.frequency.value = freq;
+    this.oscillator!.frequency.value = frequency;
     const startTime = this.context.currentTime;
 
     this.gain!.gain.setValueAtTime(this.volume, startTime);
     this.oscillator!.start(startTime);
-    this.stop(time);
+    if (end) {
+      this.stop(end);
+    }
   }
 
   private stop(time: number) {

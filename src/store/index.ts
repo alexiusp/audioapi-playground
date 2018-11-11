@@ -22,5 +22,6 @@ store.dispatch(addInstrumentAction({
   output: 'master',
   volume: 1,
   oscillatorType: 'sine',
+  frequency: 440,
 } as ISimpleOscillator))
 export default store;

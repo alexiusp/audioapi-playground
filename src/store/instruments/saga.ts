@@ -1,6 +1,6 @@
 import { all, takeEvery } from 'redux-saga/effects'
 import Rack from '../../models/instrumentsRack';
-import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction } from './actions';
+import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction, ISetOscillatorFrequencyInstrumentAction, INSTRUMENT_SET_OSCILLATOR_FREQUENCY } from './actions';
 import InstrumentFactory from '../../models/instruments/instrumentFactory';
 
 export function* instrumentPlaySaga(action: IStartPlayInstrumentAction) {
@@ -39,6 +39,12 @@ export function* instrumentSetOscillatorTypeSaga(action: ISetOscillatorTypeInstr
   instrument.oscillatorType = type;
 }
 
+export function* instrumentSetOscillatorFrequencySaga(action: ISetOscillatorFrequencyInstrumentAction) {
+  const { id, freq } = action.payload;
+  const instrument = yield Rack.getInstrument(id);
+  instrument.frequency = freq;
+}
+
 export default function* instrumentsSaga() {
   return yield all([
     yield takeEvery(INSTRUMENT_PLAY_START, instrumentPlaySaga),
@@ -46,5 +52,6 @@ export default function* instrumentsSaga() {
     yield takeEvery(INSTRUMENT_SET_OUTPUT, instrumentSetOutputSaga),
     yield takeEvery(INSTRUMENT_VOLUME_CHANGE, instrumentSetVolumeSaga),
     yield takeEvery(INSTRUMENT_SET_OSCILLATOR_TYPE, instrumentSetOscillatorTypeSaga),
+    yield takeEvery(INSTRUMENT_SET_OSCILLATOR_FREQUENCY, instrumentSetOscillatorFrequencySaga),
   ]);
 }

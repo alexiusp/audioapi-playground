@@ -27,6 +27,7 @@ export interface IGain extends IBaseInstrument {
 }
 export interface IOscillator extends IBaseInstrument {
   oscillatorType: OscillatorType;
+  frequency: number;
 }
 
 // behavior models

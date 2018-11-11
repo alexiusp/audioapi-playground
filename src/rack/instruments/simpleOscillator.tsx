@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Glyphicon, Panel, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Button, Glyphicon, Panel, DropdownButton, MenuItem, FormControl, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
@@ -14,6 +14,7 @@ import {
   setOutputInstrumentAction,
   changeVolumeInstrumentAction,
   setOscillatorTypeInstrumentAction,
+  setOscillatorFrequencyInstrumentAction,
 } from '../../store/instruments/actions';
 import OutputSelector from '../../controls/outputSelector';
 import VolumeControl from '../../controls/volumeControl';
@@ -29,6 +30,7 @@ export interface Props extends OwnProps {
   onSelectOutput: DataCallback;
   onChangeVolume: DataCallback<number>;
   onSetOscType: DataCallback<any>;
+  onChangeFrequency: DataCallback<number>;
 }
 
 export function SimpleOscillatorUI(props: Props) {
@@ -37,24 +39,38 @@ export function SimpleOscillatorUI(props: Props) {
   return (
     <Panel className="instrument simple-oscillator">
       <Panel.Heading>SimpleOscillator {osc.id}</Panel.Heading>
-      <div>
-        <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
-        <DropdownButton
-          onSelect={props.onSetOscType}
-          title={osc.oscillatorType}
-          id={`${osc.id}-type-selector`}>
-          <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
-          <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
-          <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
-          <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
-        </DropdownButton>
-        <OutputSelector
-          id={`${osc.id}-output-select`}
-          active={osc.output}
-          options={outputs}
-          onSelect={props.onSelectOutput} />
-        <Button onClick={props.onPlay}><Glyphicon glyph="play" /></Button>
-      </div>
+      <Panel.Body>
+        <Row>
+          <Col xs={6}>
+            <FormControl
+              type="number"
+              value={osc.frequency}
+              onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
+          </Col>
+          <Col xs={6}>
+            <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <DropdownButton
+              onSelect={props.onSetOscType}
+              title={osc.oscillatorType}
+              id={`${osc.id}-type-selector`}>
+              <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
+            </DropdownButton>
+            <OutputSelector
+              id={`${osc.id}-output-select`}
+              active={osc.output}
+              options={outputs}
+              onSelect={props.onSelectOutput} />
+            <Button onClick={props.onPlay}><Glyphicon glyph="play" /></Button>
+          </Col>
+        </Row>
+      </Panel.Body>
     </Panel>
   );
 }
@@ -75,6 +91,7 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: number) => dispatch(changeVolumeInstrumentAction(id, volume)),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
+    onChangeFrequency: (volume: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, volume)),
   }
 }
 
