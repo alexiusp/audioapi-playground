@@ -24,4 +24,12 @@ store.dispatch(addInstrumentAction({
   oscillatorType: 'sine',
   frequency: 440,
 } as ISimpleOscillator))
+store.dispatch(addInstrumentAction({
+  id: getUID('envosc'),
+  instrument: InstrumentEnum.EnvelopedOscillator,
+  type: "Output",
+  volume: 1,
+  oscillatorType: 'sine',
+  frequency: 440,
+} as ISimpleOscillator))
 export default store;

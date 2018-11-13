@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Panel } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 import './rack.css';
 
 import { InstrumentEnum, IBaseInstrument } from '../models/base';
-import SimpleOscillatorUI from './instruments/simpleOscillator';
-import SimpleOscillator from '../models/instruments/simpleOscillator';
 import IState from '../store/state';
 import { getInstrumentsList } from '../store/instruments/selectors';
-import { connect } from 'react-redux';
-import Rack from '../models/instrumentsRack';
+import SimpleOscillatorUI from './instruments/simpleOscillator';
+import EnvelopedOscillatorUI from './instruments/envelopedOscillator';
 
 export interface Props {
   instruments: IBaseInstrument[];
@@ -22,6 +21,10 @@ export class RackUI extends React.Component<Props> {
       case InstrumentEnum.SimpleOscillator:
         return (
           <SimpleOscillatorUI id={instrument.id} key={instrument.id} />
+        );
+      case InstrumentEnum.EnvelopedOscillator:
+        return (
+          <EnvelopedOscillatorUI id={instrument.id} key={instrument.id} />
         );
     }
     return null;
