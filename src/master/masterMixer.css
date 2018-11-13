@@ -8,8 +8,8 @@
   margin: 0 10px;
 }
 
-.volume-control {
-  width: 200px;
+.level-control, .volume-control {
+  max-width: 200px;
   padding: 10px 0;
   display: flex;
 }

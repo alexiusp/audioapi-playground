@@ -1,4 +1,4 @@
-import { IInstrument, IInputInstrument, ID, IInput, IConnectable, IOutput, IOutputInstrument } from './base';
+import { IInstrument, IInputInstrument, ID, IInput, IConnectable } from './base';
 import { MasterMixer } from './master';
 
 export class InstrumentsRack {

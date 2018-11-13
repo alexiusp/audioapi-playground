@@ -32,6 +32,9 @@ export interface IOscillator extends IBaseInstrument {
   oscillatorType: OscillatorType;
   frequency: number;
 }
+export interface IEnveloped extends IBaseInstrument {
+  envelope: ADSREnvelope;
+}
 
 // behavior models
 export interface IPlayable {
@@ -48,8 +51,9 @@ export interface IInputInstrument extends IInput {
 }
 
 export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator {}
+export interface IEnvelopedOscillator extends ISimpleOscillator, IEnveloped {}
 export interface IMasterMixer extends IInputInstrument, IPlayable {}
-export type IInstrument = ISimpleOscillator | IMasterMixer;
+export type IInstrument = IEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
 export class BaseAudioDevice {
   context: AudioContext;

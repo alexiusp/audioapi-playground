@@ -6,7 +6,7 @@ import IState from './state';
 import reducer from './reducer';
 import rootSaga from './saga';
 import { addInstrumentAction } from './instruments/actions';
-import { InstrumentEnum, ISimpleOscillator } from '../models/base';
+import { InstrumentEnum, ISimpleOscillator, IEnvelopedOscillator } from '../models/base';
 import { getUID } from '../utils/utils';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -31,5 +31,11 @@ store.dispatch(addInstrumentAction({
   volume: 1,
   oscillatorType: 'sine',
   frequency: 440,
-} as ISimpleOscillator))
+  envelope: {
+    attack: 0.1,
+    decay: 0.1,
+    sustain: 0.8,
+    release: 0.1,
+  },
+} as IEnvelopedOscillator))
 export default store;

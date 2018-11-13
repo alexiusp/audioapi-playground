@@ -8,22 +8,21 @@ export default class EnvelopedOscillator extends SimpleOscillator {
   output?: ID;
   oscillator?: OscillatorNode;
   gain?: GainNode;
-  envelope: ADSREnvelope;
 
   constructor(
     protected context: AudioContext,
     public id: ID,
     public volume: number = 1,
     public oscillatorType: OscillatorType = 'sine',
-    public frequency: number = 440
-  ) {
-    super(context, id, volume, oscillatorType, frequency);
-    this.envelope = {
+    public frequency: number = 440,
+    public envelope: ADSREnvelope = {
       attack: 0,
       decay: 0.1,
-      sustain: volume,
+      sustain: 0.8,
       release: 0.1,
     }
+  ) {
+    super(context, id, volume, oscillatorType, frequency);
   }
 
   setAttack = (attack: Time) => {
@@ -52,7 +51,8 @@ export default class EnvelopedOscillator extends SimpleOscillator {
     this.gain!.gain.linearRampToValueAtTime(1, attackTime);
     // decay to sustain
     const decayTime = attackTime + this.envelope.decay;
-    this.gain!.gain.linearRampToValueAtTime(this.envelope.sustain, decayTime);
+    const volume = this.envelope.sustain * this.volume;
+    this.gain!.gain.linearRampToValueAtTime(volume, decayTime);
     // start playing
     this.oscillator!.start();
   }

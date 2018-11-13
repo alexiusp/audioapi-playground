@@ -36,6 +36,7 @@ export interface Props extends OwnProps {
 export function EnvelopedOscillatorUI(props: Props) {
   const osc = props.instrument as EnvelopedOscillator;
   const outputs = [Rack.master, ...props.outputs];
+  const stubHandler = () => null;
   return (
     <Panel className="instrument simple-oscillator">
       <Panel.Heading>EnvelopedOscillator {osc.id}</Panel.Heading>
@@ -48,11 +49,41 @@ export function EnvelopedOscillatorUI(props: Props) {
               onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
           </Col>
           <Col xs={6}>
-            <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
+            <div className="level-control">
+              <label htmlFor="attack-control">Attack</label>
+              <input
+                name="attack-control"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                defaultValue={osc.envelope.attack.toString()}
+                onChange={stubHandler} />
+              <span>{osc.envelope.attack}</span>
+            </div>
           </Col>
         </Row>
         <Row>
-          <Col xs={12}>
+          <Col xs={6}>
+            <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
+          </Col>
+          <Col xs={6}>
+            <div className="level-control">
+              <label htmlFor="decay-control">Decay</label>
+              <input
+                name="decay-control"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                defaultValue={osc.envelope.decay.toString()}
+                onChange={stubHandler} />
+              <span>{osc.envelope.decay}</span>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={6}>
             <DropdownButton
               onSelect={props.onSetOscType}
               title={osc.oscillatorType}
@@ -68,6 +99,38 @@ export function EnvelopedOscillatorUI(props: Props) {
               options={outputs}
               onSelect={props.onSelectOutput} />
             <Button onClick={props.onPlay}><Glyphicon glyph="play" /></Button>
+          </Col>
+          <Col xs={6}>
+            <div className="level-control">
+              <label htmlFor="sustain-control">Sustain</label>
+              <input
+                name="sustain-control"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                defaultValue={osc.envelope.sustain.toString()}
+                onChange={stubHandler} />
+              <span>{osc.envelope.sustain}</span>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={6}>
+          </Col>
+          <Col xs={6}>
+            <div className="level-control">
+              <label htmlFor="release-control">Release</label>
+              <input
+                name="release-control"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                defaultValue={osc.envelope.release.toString()}
+                onChange={stubHandler} />
+              <span>{osc.envelope.release}</span>
+            </div>
           </Col>
         </Row>
       </Panel.Body>
