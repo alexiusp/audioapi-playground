@@ -1,4 +1,4 @@
-import { BaseAudioDevice, InstrumentEnum, IMasterMixer } from './base';
+import { BaseAudioDevice, InstrumentEnum, IMasterMixer, Level } from './base';
 
 export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
   id: string;
@@ -36,12 +36,12 @@ export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
     return this.analyser;
   }
 
-  public setVolume(volume: number) {
+  public setVolume(volume: Level) {
     console.log('setVolume', volume);
     this.gain.gain.setValueAtTime(volume, this.context.currentTime);
   }
 
-  public play(volume: number = 1) {
+  public play(volume: Level = 1) {
     console.log('MasterMixer.play');
     this.gain.gain.value = volume;
   }

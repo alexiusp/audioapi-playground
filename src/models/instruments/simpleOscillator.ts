@@ -1,4 +1,4 @@
-import { IInputInstrument, InstrumentEnum, ID, ISimpleOscillator } from '../base';
+import { IInputInstrument, InstrumentEnum, ID, ISimpleOscillator, Level, Time } from '../base';
 import Rack from '../instrumentsRack';
 import { OscillatorType } from '../types';
 
@@ -12,13 +12,13 @@ export default class SimpleOscillator implements ISimpleOscillator {
   constructor(
     protected context: AudioContext,
     public id: ID,
-    public volume: number = 1,
+    public volume: Level = 1,
     public oscillatorType: OscillatorType = 'sine',
     public frequency: number = 440
     ) {
   }
 
-  private init() {
+  protected init() {
     console.log('osc.init', this.id, this.oscillatorType);
     this.oscillator = this.context.createOscillator();
     this.oscillator.type = this.oscillatorType;
@@ -39,7 +39,7 @@ export default class SimpleOscillator implements ISimpleOscillator {
     this.output = undefined;
   }
 
-  play = (freq?: number, time?: number) => {
+  play = (freq?: number, time?: Time) => {
     const frequency = freq || this.frequency;
     // temporary solution until start/stop properly implemented with mouse events
     const end = time || 1;
@@ -56,7 +56,7 @@ export default class SimpleOscillator implements ISimpleOscillator {
     }
   }
 
-  private stop(time: number) {
+  public stop(time: Time) {
     const stopTime = this.context.currentTime + time;
     this.gain!.gain.exponentialRampToValueAtTime(0.001, stopTime);
     this.oscillator!.stop(stopTime);

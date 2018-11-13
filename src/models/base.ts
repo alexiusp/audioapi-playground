@@ -1,8 +1,11 @@
 export type ID = string;
+export type Time = number;// [0..Infinity)
+export type Level = number;// [0..1]
 
 export enum InstrumentEnum {
   MasterMixer,
   SimpleOscillator,
+  EnvelopedOscillator,
 }
 
 export type InstrumentType = "Input" | "Output" | "InOut";
@@ -22,9 +25,9 @@ export interface IOutput extends IBaseInstrument {
 export type IConnectable = IInput | IOutput;
 
 export interface IGain extends IBaseInstrument {
-  volume: number;
-
+  volume: Level;
 }
+
 export interface IOscillator extends IBaseInstrument {
   oscillatorType: OscillatorType;
   frequency: number;
@@ -53,4 +56,11 @@ export class BaseAudioDevice {
   constructor(ctx: AudioContext) {
     this.context = ctx;
   }
+}
+
+export interface ADSREnvelope {
+  attack: Time;
+  decay: Time;
+  sustain: Level;
+  release: Time;
 }
