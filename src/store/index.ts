@@ -28,6 +28,7 @@ store.dispatch(addInstrumentAction({
   id: getUID('envosc'),
   instrument: InstrumentEnum.EnvelopedOscillator,
   type: "Output",
+  output: 'master',
   volume: 1,
   oscillatorType: 'sine',
   frequency: 440,

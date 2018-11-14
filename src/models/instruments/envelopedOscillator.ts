@@ -48,7 +48,7 @@ export default class EnvelopedOscillator extends SimpleOscillator {
 
     // attack
     const attackTime = this.context.currentTime + this.envelope.attack;
-    this.gain!.gain.linearRampToValueAtTime(1, attackTime);
+    this.gain!.gain.linearRampToValueAtTime(this.volume, attackTime);
     // decay to sustain
     const decayTime = attackTime + this.envelope.decay;
     const volume = this.envelope.sustain * this.volume;

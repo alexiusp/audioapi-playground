@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput } from '../../models/base';
+import { ID, IOutput, IInput, Level, Time, ADSREnvelope } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
@@ -19,6 +19,8 @@ import {
 import OutputSelector from '../../controls/outputSelector';
 import VolumeControl from '../../controls/volumeControl';
 import EnvelopedOscillator from '../../models/instruments/envelopedOscillator';
+import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
+import { throttledChangeHandler } from '../../utils/utils';
 
 export interface OwnProps {
   id: ID;
@@ -26,17 +28,23 @@ export interface OwnProps {
 
 export interface Props extends OwnProps {
   instrument: IOutput;
+  envelope: ADSREnvelope;
   outputs: IInput[];
   onPlay: Callback;
   onStop: Callback;
   onSelectOutput: DataCallback;
-  onChangeVolume: DataCallback<number>;
+  onChangeVolume: DataCallback<Level>;
   onSetOscType: DataCallback<any>;
   onChangeFrequency: DataCallback<number>;
+  onAttackChange: DataCallback<Time>;
+  onDecayChange: DataCallback<Time>;
+  onSustainChange: DataCallback<Level>;
+  onReleaseChange: DataCallback<Time>;
 }
 
 export function EnvelopedOscillatorUI(props: Props) {
   const osc = props.instrument as EnvelopedOscillator;
+  const envelope = props.envelope;
   const outputs = [Rack.master, ...props.outputs];
   const stubHandler = () => null;
   return (
@@ -59,9 +67,9 @@ export function EnvelopedOscillatorUI(props: Props) {
                 min="0"
                 max="1"
                 step="0.01"
-                defaultValue={osc.envelope.attack.toString()}
-                onChange={stubHandler} />
-              <span>{osc.envelope.attack}</span>
+                defaultValue={envelope.attack.toString()}
+                onChange={throttledChangeHandler(props.onAttackChange)} />
+              <span>{envelope.attack}</span>
             </div>
           </Col>
         </Row>
@@ -78,9 +86,9 @@ export function EnvelopedOscillatorUI(props: Props) {
                 min="0"
                 max="1"
                 step="0.01"
-                defaultValue={osc.envelope.decay.toString()}
-                onChange={stubHandler} />
-              <span>{osc.envelope.decay}</span>
+                defaultValue={envelope.decay.toString()}
+                onChange={throttledChangeHandler(props.onDecayChange)} />
+              <span>{envelope.decay}</span>
             </div>
           </Col>
         </Row>
@@ -111,9 +119,9 @@ export function EnvelopedOscillatorUI(props: Props) {
                 min="0"
                 max="1"
                 step="0.01"
-                defaultValue={osc.envelope.sustain.toString()}
-                onChange={stubHandler} />
-              <span>{osc.envelope.sustain}</span>
+                defaultValue={envelope.sustain.toString()}
+                onChange={throttledChangeHandler(props.onSustainChange)} />
+              <span>{envelope.sustain}</span>
             </div>
           </Col>
         </Row>
@@ -129,9 +137,9 @@ export function EnvelopedOscillatorUI(props: Props) {
                 min="0"
                 max="1"
                 step="0.01"
-                defaultValue={osc.envelope.release.toString()}
-                onChange={stubHandler} />
-              <span>{osc.envelope.release}</span>
+                defaultValue={envelope.release.toString()}
+                onChange={throttledChangeHandler(props.onReleaseChange)} />
+              <span>{envelope.release}</span>
             </div>
           </Col>
         </Row>
@@ -142,22 +150,27 @@ export function EnvelopedOscillatorUI(props: Props) {
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const instrument = getInstrument(state, ownProps.id) as EnvelopedOscillator;
+  const envelope = instrument.envelope;
   const outputs = getOutputs(state);
   return {
     instrument,
+    envelope,
     outputs,
   }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
-  const id = ownProps.id;
-  return {
+  const id = ownProps.id;  return {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: number) => dispatch(changeVolumeInstrumentAction(id, volume)),
+    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, volume)),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
-    onChangeFrequency: (volume: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, volume)),
+    onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
+    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, attack)),
+    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, decay)),
+    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, sustain)),
+    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, release)),
   }
 }
 

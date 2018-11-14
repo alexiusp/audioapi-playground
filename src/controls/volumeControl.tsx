@@ -3,6 +3,7 @@ import { Glyphicon } from 'react-bootstrap';
 
 import { DataCallback } from '../models/types';
 import { throttledChangeHandler } from '../utils/utils';
+import { Level } from '../models/base';
 
 export interface Props {
   className?: string;
@@ -12,10 +13,7 @@ export interface Props {
 
 export default class VolumeControl extends React.Component<Props> {
 
-  changeVolume = throttledChangeHandler((value: string) => {
-    const volume = parseInt(value, 10) / 100;
-    this.props.onVolumeChange(volume);
-  })
+  changeVolume = throttledChangeHandler((value: Level) => this.props.onVolumeChange(value / 100));
 
   public render() {
     const props = this.props;

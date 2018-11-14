@@ -11,7 +11,7 @@ export function debouncedChangeHandler(actualHandler: DataCallback<string>) {
   return (e: React.ChangeEvent<HTMLInputElement>) => callback(e.target.value);
 }
 
-export function throttledChangeHandler(actualHandler: DataCallback<string>) {
+export function throttledChangeHandler(actualHandler: DataCallback<number>) {
   const callback = throttle(actualHandler, 100);
-  return (e: React.ChangeEvent<HTMLInputElement>) => callback(e.target.value);
+  return (e: React.ChangeEvent<HTMLInputElement>) => callback(parseFloat(e.target.value));
 }
