@@ -15,6 +15,7 @@ import {
   changeVolumeInstrumentAction,
   setOscillatorTypeInstrumentAction,
   setOscillatorFrequencyInstrumentAction,
+  stopPlayInstrumentAction,
 } from '../../store/instruments/actions';
 import OutputSelector from '../../controls/outputSelector';
 import VolumeControl from '../../controls/volumeControl';
@@ -27,6 +28,7 @@ export interface Props extends OwnProps {
   instrument: IOutput;
   outputs: IInput[];
   onPlay: Callback;
+  onStop: Callback;
   onSelectOutput: DataCallback;
   onChangeVolume: DataCallback<number>;
   onSetOscType: DataCallback<any>;
@@ -67,7 +69,7 @@ export function SimpleOscillatorUI(props: Props) {
               active={osc.output}
               options={outputs}
               onSelect={props.onSelectOutput} />
-            <Button onClick={props.onPlay}><Glyphicon glyph="play" /></Button>
+            <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
           </Col>
         </Row>
       </Panel.Body>
@@ -88,6 +90,7 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
+    onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: number) => dispatch(changeVolumeInstrumentAction(id, volume)),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),

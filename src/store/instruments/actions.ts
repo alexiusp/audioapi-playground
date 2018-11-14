@@ -24,6 +24,17 @@ export const startPlayInstrumentAction: ActionCreator<IStartPlayInstrumentAction
   payload: id,
 });
 
+export const INSTRUMENT_PLAY_STOP = 'INSTRUMENT_PLAY_STOP';
+export type INSTRUMENT_PLAY_STOP = typeof INSTRUMENT_PLAY_STOP;
+export interface IStopPlayInstrumentAction extends Action<INSTRUMENT_PLAY_STOP> {
+  type: INSTRUMENT_PLAY_STOP;
+  payload: ID;
+}
+export const stopPlayInstrumentAction: ActionCreator<IStopPlayInstrumentAction> = (id: ID) => ({
+  type: INSTRUMENT_PLAY_STOP,
+  payload: id,
+});
+
 export const INSTRUMENT_SET_OUTPUT = 'INSTRUMENT_SET_OUTPUT';
 export type INSTRUMENT_SET_OUTPUT = typeof INSTRUMENT_SET_OUTPUT;
 export interface ISetOutputInstrumentAction extends Action<INSTRUMENT_SET_OUTPUT> {

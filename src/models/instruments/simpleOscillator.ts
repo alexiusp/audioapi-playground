@@ -39,11 +39,10 @@ export default class SimpleOscillator implements ISimpleOscillator {
     this.output = undefined;
   }
 
-  play = (freq?: number, time?: Time) => {
+  play = (freq?: number) => {
     const frequency = freq || this.frequency;
     // temporary solution until start/stop properly implemented with mouse events
-    const end = time || 1;
-    console.log('osc.play', frequency, time, this.volume);
+    console.log('osc.play', frequency, this.volume);
     this.init();
 
     this.oscillator!.frequency.value = frequency;
@@ -51,12 +50,9 @@ export default class SimpleOscillator implements ISimpleOscillator {
 
     this.gain!.gain.setValueAtTime(this.volume, startTime);
     this.oscillator!.start(startTime);
-    if (end) {
-      this.stop(end);
-    }
   }
 
-  public stop(time: Time) {
+  public stop(time: Time = 0) {
     const stopTime = this.context.currentTime + time;
     this.gain!.gain.exponentialRampToValueAtTime(0.001, stopTime);
     this.oscillator!.stop(stopTime);
