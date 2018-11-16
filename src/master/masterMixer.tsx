@@ -11,6 +11,7 @@ import { startPlayAction, stopPlayAction, changeVolumeAction } from '../store/ma
 import { getVolume, isPlaying } from '../store/master/selectors';
 import IState from '../store/state';
 import VolumeControl from '../controls/volumeControl';
+import RoundKnob from '../controls/roundKnob';
 
 export interface Props {
   onPlay: Callback;
@@ -117,6 +118,7 @@ export class MasterMixerComponent extends React.Component<Props> {
             onClick={this.playToggle}>
             <Glyphicon glyph="play" />
           </Button>
+          <RoundKnob />
           <VolumeControl
             volume={this.props.volume}
             onVolumeChange={this.props.onVolumeChange}
