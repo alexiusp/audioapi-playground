@@ -1,34 +1,39 @@
 import React, { Component } from 'react';
 
 import './roundKnob.css';
+import { DataCallback } from '../models/types';
 
-function normalize(min: number, max: number, value: number, delta: number) {
-  let newValue = value + delta;
-  newValue = (newValue > min) ? Math.min(newValue, max) : min;
-  const normalized = (newValue - min) / (max - min);
-  return normalized;
+export interface State {
+  active: boolean,
+  x: number,
+  y: number,
 }
 
-export default class RoundKnob extends Component {
+export interface Props {
+  onUpdate: DataCallback<number>,
+  min: number,
+  max: number,
+  value: number,
+  radius: number,
+}
 
-  state = {
+export default class RoundKnob extends Component<Props, State> {
+  public static defaultProps: Partial<Props> = {
     min: 0,
     max: 100,
+    radius: 20,
+  };
+
+  public state = {
     active: false,
-    value: 0,
-    delta: 0,
     x: 0,
     y: 0,
   }
 
   deactivate = () => {
-    const { delta, min, max, value } = this.state;
-    const newValue = min + normalize(min, max, value, delta) * (max - min);
-    console.log('deactivate', newValue);
+    // console.log('deactivate');
     this.setState({
       active: false,
-      value: newValue,
-      delta: 0,
     });
     document.removeEventListener('mouseup', this.deactivate);
     document.removeEventListener('mousemove', this.move);
@@ -36,12 +41,11 @@ export default class RoundKnob extends Component {
 
   activate = (e: React.MouseEvent<SVGGeometryElement>) => {
     const { clientX, clientY } = e;
-    console.log('activate');
+    // console.log('activate');
     this.setState({
       x: clientX,
       y: clientY,
       active: true,
-      delta: 0,
     });
     document.addEventListener('mouseup', this.deactivate);
     document.addEventListener('mousemove', this.move);
@@ -49,33 +53,36 @@ export default class RoundKnob extends Component {
 
   move = (e: MouseEvent) => {
     const { clientX, clientY } = e;
+    const { min, max, value } = this.props;
     const { x, y } = this.state;
-    let deltaX = clientX - x;
+    let deltaX = (clientX - x) / 2;
     deltaX = (deltaX < 0) ? Math.max(deltaX, -50) : Math.min(deltaX, 50);
-    let deltaY = (clientY - y) * (-1);
+    let deltaY = (clientY - y) / (-2);
     deltaY = (deltaY < 0) ? Math.max(deltaY, -50) : Math.min(deltaY, 50);
     const delta = deltaX + deltaY;
-    console.log('move', deltaX, deltaY, delta);
-    this.setState({ delta });
+    let newValue = Math.ceil(value + delta);
+    newValue = (newValue > min) ? Math.min(newValue, max) : min;
+    // console.log('move', deltaX, deltaY, delta, newValue);
+    this.props.onUpdate(newValue);
   }
 
   render() {
-    const { active, delta, min, max, value } = this.state;
-    const radius = 20;
+    const { min, max, radius, value } = this.props;
+    const { active } = this.state;
     const viewBox = `-${radius} -${radius} ${radius * 2} ${radius * 2}`;
-    const normalizedValue = normalize(min, max, value, delta);
-    const rotation = Math.ceil(normalizedValue * 359);
-    const label = Math.ceil(min + normalizedValue * (max - min));
+    const normalized = (value - min) / (max - min);
+    const rotation = Math.ceil(normalized * 359);
+    const label = Math.ceil(value);
     return (
       <div>
       <svg viewBox={viewBox} width={radius * 2} height={radius * 2}>
-        { active ? <circle fill="#000" fillOpacity="0.4" cx="2" cy="2" r={radius} /> : null }
-        <circle cx="0" cy="0" r={radius} fill="#fff" stroke="#333" strokeWidth="1" />
+        { active ? <circle fill="#000" fillOpacity="0.2" cx="2" cy="2" r={radius - 3} /> : null }
+        <circle cx="0" cy="0" r={radius - 3} fill="#fff" stroke="#999" strokeWidth="1" />
         <text x="0" y="3" textAnchor="middle">{label}</text>
         <g
           transform={`rotate(${rotation})`}
           onMouseDown={this.activate}>
-          <path d={`M -${radius} 0 h 10 0`} stroke="#ee3333" strokeWidth="1"/>
+          <path d={`M -${radius - 3} 0 h 10 0`} stroke="#ee3333" strokeWidth="1"/>
           <circle cx="0" cy="0" r={radius} fill="#fff" fillOpacity="0" />
         </g>
       </svg>

@@ -100,13 +100,7 @@ export class MasterMixerComponent extends React.Component<Props> {
     }
   }
 
-  changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const volume = +e.target.value / 100;
-    this.props.onVolumeChange(volume);
-  }
-
   render() {
-    const volume = Math.ceil(this.props.volume * 100).toString();
     return (
       <Navbar fluid fixedBottom={true} className="master-mixer">
         <div className="mixer-panel">
@@ -118,7 +112,7 @@ export class MasterMixerComponent extends React.Component<Props> {
             onClick={this.playToggle}>
             <Glyphicon glyph="play" />
           </Button>
-          <RoundKnob />
+          <RoundKnob value={this.props.volume} onUpdate={this.props.onVolumeChange} />
           <VolumeControl
             volume={this.props.volume}
             onVolumeChange={this.props.onVolumeChange}

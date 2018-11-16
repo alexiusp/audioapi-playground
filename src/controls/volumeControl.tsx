@@ -13,15 +13,15 @@ export interface Props {
 
 export default class VolumeControl extends React.Component<Props> {
 
-  changeVolume = throttledChangeHandler((value: Level) => this.props.onVolumeChange(value / 100));
+  changeVolume = throttledChangeHandler((value: Level) => this.props.onVolumeChange(value));
 
   public render() {
     const props = this.props;
-    const volume = Math.ceil(props.volume * 100).toString();
+    const volume = props.volume.toString();
     const className = `volume-control ${props.className}`;
     let label = (<Glyphicon glyph="volume-off" />);
     if (props.volume > 0) {
-      label = props.volume > 0.5 ? (<Glyphicon glyph="volume-up" />) : (<Glyphicon glyph="volume-down" />);
+      label = props.volume > 50 ? (<Glyphicon glyph="volume-up" />) : (<Glyphicon glyph="volume-down" />);
     }
     return (
       <div className={className}>
@@ -32,7 +32,7 @@ export default class VolumeControl extends React.Component<Props> {
           min="0"
           max="100"
           step="1"
-          defaultValue={volume}
+          value={volume}
           onChange={this.changeVolume} />
         <span>{volume}</span>
       </div>

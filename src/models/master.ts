@@ -38,7 +38,7 @@ export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
 
   public setVolume(volume: Level) {
     console.log('setVolume', volume);
-    this.gain.gain.setValueAtTime(volume, this.context.currentTime);
+    this.gain.gain.setValueAtTime(volume / 100, this.context.currentTime);
   }
 
   public play(volume: Level = 1) {

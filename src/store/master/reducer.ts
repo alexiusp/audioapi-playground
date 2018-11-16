@@ -2,7 +2,7 @@ import IMasterState from './state';
 import { MasterAction, MASTER_PLAY_START, MASTER_PLAY_STOP, MASTER_VOLUME_CHANGE } from './actions';
 
 export const initialMasterState: IMasterState = {
-  volume: 1,
+  volume: 100,
   playing: false,
 }
 
