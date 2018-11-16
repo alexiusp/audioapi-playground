@@ -20,7 +20,7 @@ store.dispatch(addInstrumentAction({
   instrument: InstrumentEnum.SimpleOscillator,
   type: "Output",
   output: 'master',
-  volume: 1,
+  volume: 100,
   oscillatorType: 'sine',
   frequency: 440,
 } as ISimpleOscillator))
@@ -29,7 +29,7 @@ store.dispatch(addInstrumentAction({
   instrument: InstrumentEnum.EnvelopedOscillator,
   type: "Output",
   output: 'master',
-  volume: 1,
+  volume: 100,
   oscillatorType: 'sine',
   frequency: 440,
   envelope: {
