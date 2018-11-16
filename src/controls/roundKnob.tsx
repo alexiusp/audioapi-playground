@@ -74,8 +74,7 @@ export default class RoundKnob extends Component<Props, State> {
     const rotation = Math.ceil(normalized * 359);
     const label = Math.ceil(value);
     return (
-      <div>
-      <svg viewBox={viewBox} width={radius * 2} height={radius * 2}>
+      <svg className="round-knob control" viewBox={viewBox} width={radius * 2} height={radius * 2}>
         <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
           <stop id="stop1" stopColor="#ffffff" offset="0%"/>
           <stop id="stop2" stopColor="#e0e0e0" offset="100%"/>
@@ -90,7 +89,6 @@ export default class RoundKnob extends Component<Props, State> {
           <circle cx="0" cy="0" r={radius} fill="#fff" fillOpacity="0" />
         </g>
       </svg>
-      </div>
     );
   }
 }

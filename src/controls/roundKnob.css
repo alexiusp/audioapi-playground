@@ -1,5 +1,13 @@
+.round-knob {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+  overflow: visible;
+}
 svg {
   user-select: none;
+  margin: 0;
 }
 svg text {
   pointer-events: none;

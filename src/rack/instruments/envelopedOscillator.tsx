@@ -17,10 +17,10 @@ import {
   stopPlayInstrumentAction,
 } from '../../store/instruments/actions';
 import OutputSelector from '../../controls/outputSelector';
-import VolumeControl from '../../controls/volumeControl';
 import EnvelopedOscillator from '../../models/instruments/envelopedOscillator';
 import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
 import { throttledChangeHandler } from '../../utils/utils';
+import RoundKnob from '../../controls/roundKnob';
 
 export interface OwnProps {
   id: ID;
@@ -75,7 +75,22 @@ export function EnvelopedOscillatorUI(props: Props) {
         </Row>
         <Row>
           <Col xs={6}>
-            <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
+            <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
+            <DropdownButton
+              onSelect={props.onSetOscType}
+              title={osc.oscillatorType}
+              id={`${osc.id}-type-selector`}>
+              <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
+              <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
+            </DropdownButton>
+            <OutputSelector
+              id={`${osc.id}-output-select`}
+              active={osc.output}
+              options={outputs}
+              onSelect={props.onSelectOutput} />
+            <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
           </Col>
           <Col xs={6}>
             <div className="level-control">
@@ -94,21 +109,6 @@ export function EnvelopedOscillatorUI(props: Props) {
         </Row>
         <Row>
           <Col xs={6}>
-            <DropdownButton
-              onSelect={props.onSetOscType}
-              title={osc.oscillatorType}
-              id={`${osc.id}-type-selector`}>
-              <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
-            </DropdownButton>
-            <OutputSelector
-              id={`${osc.id}-output-select`}
-              active={osc.output}
-              options={outputs}
-              onSelect={props.onSelectOutput} />
-            <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
           </Col>
           <Col xs={6}>
             <div className="level-control">

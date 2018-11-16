@@ -18,7 +18,7 @@ import {
   stopPlayInstrumentAction,
 } from '../../store/instruments/actions';
 import OutputSelector from '../../controls/outputSelector';
-import VolumeControl from '../../controls/volumeControl';
+import RoundKnob from '../../controls/roundKnob';
 
 export interface OwnProps {
   id: ID;
@@ -50,11 +50,7 @@ export function SimpleOscillatorUI(props: Props) {
               onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
           </Col>
           <Col xs={6}>
-            <VolumeControl volume={osc.volume} onVolumeChange={props.onChangeVolume} />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
+            <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
             <DropdownButton
               onSelect={props.onSetOscType}
               title={osc.oscillatorType}
