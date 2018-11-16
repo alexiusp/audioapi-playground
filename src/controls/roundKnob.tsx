@@ -76,13 +76,17 @@ export default class RoundKnob extends Component<Props, State> {
     return (
       <div>
       <svg viewBox={viewBox} width={radius * 2} height={radius * 2}>
-        { active ? <circle fill="#000" fillOpacity="0.2" cx="2" cy="2" r={radius - 3} /> : null }
-        <circle cx="0" cy="0" r={radius - 3} fill="#fff" stroke="#999" strokeWidth="1" />
-        <text x="0" y="3" textAnchor="middle">{label}</text>
+        <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
+          <stop id="stop1" stopColor="#ffffff" offset="0%"/>
+          <stop id="stop2" stopColor="#e0e0e0" offset="100%"/>
+        </linearGradient>
+        { active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={radius - 3} /> : null }
+        <circle cx="0" cy="0" r={radius - 3} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
+        <text x="0" y="2" fontSize={radius / 3} textAnchor="middle" fill="#333">{label}</text>
         <g
           transform={`rotate(${rotation})`}
           onMouseDown={this.activate}>
-          <path d={`M -${radius - 3} 0 h 10 0`} stroke="#ee3333" strokeWidth="1"/>
+          <path d={`M -${radius - 3} 0 h 4 0`} stroke="#ee3333" strokeWidth="1"/>
           <circle cx="0" cy="0" r={radius} fill="#fff" fillOpacity="0" />
         </g>
       </svg>
