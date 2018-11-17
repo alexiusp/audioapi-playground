@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import './roundKnob.css';
 import { DataCallback } from '../models/types';
@@ -17,7 +17,7 @@ export interface Props {
   radius: number,
 }
 
-export default class RoundKnob extends Component<Props, State> {
+export default class RoundKnob extends React.Component<Props, State> {
   public static defaultProps: Partial<Props> = {
     min: 0,
     max: 100,
@@ -66,6 +66,14 @@ export default class RoundKnob extends Component<Props, State> {
     this.props.onUpdate(newValue);
   }
 
+  onWheel = (e: React.WheelEvent<SVGElement>) => {
+    const { min, max, value } = this.props;
+    const shift = e.deltaY / (-150);
+    let newValue = Math.ceil(value + shift);
+    newValue = (newValue > min) ? Math.min(newValue, max) : min;
+    this.props.onUpdate(newValue);
+  }
+
   render() {
     const { min, max, radius, value } = this.props;
     const { active } = this.state;
@@ -74,14 +82,18 @@ export default class RoundKnob extends Component<Props, State> {
     const rotation = Math.ceil(normalized * 359);
     const label = Math.ceil(value);
     return (
-      <svg className="round-knob control" viewBox={viewBox} width={radius * 2} height={radius * 2}>
+      <svg
+        className="round-knob control"
+        onWheel={this.onWheel}
+        viewBox={viewBox}
+        width={radius * 2} height={radius * 2}>
         <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
           <stop id="stop1" stopColor="#ffffff" offset="0%"/>
           <stop id="stop2" stopColor="#e0e0e0" offset="100%"/>
         </linearGradient>
         { active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={radius - 3} /> : null }
         <circle cx="0" cy="0" r={radius - 3} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
-        <text x="0" y="2" fontSize={radius / 3} textAnchor="middle" fill="#333">{label}</text>
+        <text x="0" y="3" fontSize={radius / 2} textAnchor="middle" fill="#333">{label}</text>
         <g
           transform={`rotate(${rotation})`}
           onMouseDown={this.activate}>
