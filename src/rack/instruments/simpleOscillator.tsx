@@ -20,6 +20,7 @@ import {
 import OutputSelector from '../../controls/outputSelector';
 import RoundKnob from '../../controls/roundKnob';
 import WaveSelector from '../../controls/waveSelector';
+import { parseLevel } from '../../utils/utils';
 
 export interface OwnProps {
   id: ID;
@@ -87,7 +88,7 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, volume)),
+    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
     onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
   }

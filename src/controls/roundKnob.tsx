@@ -16,6 +16,7 @@ export interface Props {
   step: number,
   value: number,
   radius: number,
+  className?: string,
 }
 
 export default class RoundKnob extends React.Component<Props, State> {
@@ -77,15 +78,17 @@ export default class RoundKnob extends React.Component<Props, State> {
   }
 
   render() {
-    const { min, max, radius, value } = this.props;
+    const { className, min, max, radius, value } = this.props;
+    const circleRadius = radius - 2;
     const { active } = this.state;
     const viewBox = `-${radius} -${radius} ${radius * 2} ${radius * 2}`;
     const normalized = (value - min) / (max - min);
     const rotation = Math.ceil(normalized * 359);
     const label = value;
+    const progress = (normalized) * 2 * Math.PI * (circleRadius);
     return (
       <svg
-        className="round-knob control"
+        className={'round-knob control ' + (className || '')}
         onWheel={this.onWheel}
         viewBox={viewBox}
         width={radius * 2} height={radius * 2}>
@@ -93,8 +96,9 @@ export default class RoundKnob extends React.Component<Props, State> {
           <stop id="stop1" stopColor="#ffffff" offset="0%"/>
           <stop id="stop2" stopColor="#e0e0e0" offset="100%"/>
         </linearGradient>
-        { active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={radius - 3} /> : null }
-        <circle cx="0" cy="0" r={radius - 3} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
+        { active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={circleRadius} /> : null }
+        <circle cx="0" cy="0" r={circleRadius - 1} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
+        <circle cx="0" cy="0" r={circleRadius} fill="none" stroke="#ee3333" strokeWidth="1" strokeDasharray={`${progress},20000`} transform="rotate(180)"/>
         <text x="0" y="3" fontSize={radius / 2} textAnchor="middle" fill="#333">{label}</text>
         <g
           transform={`rotate(${rotation})`}

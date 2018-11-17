@@ -12,6 +12,8 @@ import { getVolume, isPlaying } from '../store/master/selectors';
 import IState from '../store/state';
 import VolumeControl from '../controls/volumeControl';
 import RoundKnob from '../controls/roundKnob';
+import { Level } from '../models/base';
+import { parseLevel } from '../utils/utils';
 
 export interface Props {
   onPlay: Callback;
@@ -113,15 +115,12 @@ export class MasterMixerComponent extends React.Component<Props> {
             <Glyphicon glyph="play" />
           </Button>
           <RoundKnob
+            className="mixer-control"
             min={0}
             max={1}
             step={0.01}
             value={this.props.volume}
             onUpdate={this.props.onVolumeChange} />
-          <VolumeControl
-            volume={this.props.volume}
-            onVolumeChange={this.props.onVolumeChange}
-            className="mixer-control" />
           <div className="mixer-control">
             <canvas id="master-visualizer" ref={this.canvas} />
           </div>
@@ -139,7 +138,7 @@ export const mapStateToProps = (state: IState) => ({
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onPlay: () => dispatch(startPlayAction()),
   onStop: () => dispatch(stopPlayAction()),
-  onVolumeChange: (volume: number) => dispatch(changeVolumeAction(volume)),
+  onVolumeChange: (volume: Level) => dispatch(changeVolumeAction(parseLevel(volume))),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MasterMixerComponent);

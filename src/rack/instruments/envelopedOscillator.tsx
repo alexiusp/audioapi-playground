@@ -19,7 +19,7 @@ import {
 import OutputSelector from '../../controls/outputSelector';
 import EnvelopedOscillator from '../../models/instruments/envelopedOscillator';
 import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
-import { throttledCallback } from '../../utils/utils';
+import { throttledCallback, parseLevel } from '../../utils/utils';
 import RoundKnob from '../../controls/roundKnob';
 
 import Sine from './sine.svg'
@@ -49,7 +49,6 @@ export function EnvelopedOscillatorUI(props: Props) {
   const osc = props.instrument as EnvelopedOscillator;
   const envelope = props.envelope;
   const outputs = [Rack.master, ...props.outputs];
-  const stubHandler = () => null;
   return (
     <Panel className="instrument simple-oscillator">
       <Panel.Heading>EnvelopedOscillator {osc.id}</Panel.Heading>
@@ -145,13 +144,13 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, volume)),
+    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
     onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
-    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseFloat(attack.toFixed(2)))),
-    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseFloat(decay.toFixed(2)))),
-    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseFloat(sustain.toFixed(2)))),
-    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseFloat(release.toFixed(2)))),
+    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseLevel(attack))),
+    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseLevel(decay))),
+    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseLevel(sustain))),
+    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseLevel(release))),
   }
 }
 
