@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import Rack from '../../models/instrumentsRack';
 import SimpleOscillator from '../../models/instruments/simpleOscillator';
-import { ID, IOutput, IInput } from '../../models/base';
+import { ID, IOutput, IInput, Level } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
@@ -51,7 +51,13 @@ export function SimpleOscillatorUI(props: Props) {
               onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
           </Col>
           <Col xs={6}>
-            <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={osc.volume}
+              onUpdate={props.onChangeVolume} />
             <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
             <OutputSelector
               id={`${osc.id}-output-select`}
@@ -81,9 +87,9 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: number) => dispatch(changeVolumeInstrumentAction(id, volume)),
+    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, volume)),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
-    onChangeFrequency: (volume: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, volume)),
+    onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
   }
 }
 

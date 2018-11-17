@@ -112,11 +112,16 @@ export class MasterMixerComponent extends React.Component<Props> {
             onClick={this.playToggle}>
             <Glyphicon glyph="play" />
           </Button>
-          <RoundKnob value={this.props.volume} onUpdate={this.props.onVolumeChange} />
+          <RoundKnob
+            min={0}
+            max={1}
+            step={0.01}
+            value={this.props.volume}
+            onUpdate={this.props.onVolumeChange} />
           <VolumeControl
             volume={this.props.volume}
             onVolumeChange={this.props.onVolumeChange}
-            className="mixer-control"/>
+            className="mixer-control" />
           <div className="mixer-control">
             <canvas id="master-visualizer" ref={this.canvas} />
           </div>

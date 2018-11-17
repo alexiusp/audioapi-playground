@@ -106,7 +106,13 @@ export function EnvelopedOscillatorUI(props: Props) {
         </Row>
         <Row>
           <Col xs={6}>
-            <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={osc.volume}
+              onUpdate={props.onChangeVolume} />
             <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
             <OutputSelector
               id={`${osc.id}-output-select`}

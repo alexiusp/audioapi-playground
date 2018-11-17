@@ -39,7 +39,7 @@ export function* instrumentSetOutputSaga(action: ISetOutputInstrumentAction) {
 export function* instrumentSetVolumeSaga(action: IChangeVolumeInstrumentAction) {
   const { id, volume } = action.payload;
   const instrument = yield Rack.getInstrument(id);
-  instrument.volume = volume / 100;
+  instrument.volume = volume;
 }
 
 export function* instrumentSetOscillatorTypeSaga(action: ISetOscillatorTypeInstrumentAction) {
