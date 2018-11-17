@@ -19,6 +19,7 @@ import {
 } from '../../store/instruments/actions';
 import OutputSelector from '../../controls/outputSelector';
 import RoundKnob from '../../controls/roundKnob';
+import WaveSelector from '../../controls/waveSelector';
 
 export interface OwnProps {
   id: ID;
@@ -51,15 +52,7 @@ export function SimpleOscillatorUI(props: Props) {
           </Col>
           <Col xs={6}>
             <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
-            <DropdownButton
-              onSelect={props.onSetOscType}
-              title={osc.oscillatorType}
-              id={`${osc.id}-type-selector`}>
-              <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
-            </DropdownButton>
+            <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
             <OutputSelector
               id={`${osc.id}-output-select`}
               active={osc.output}

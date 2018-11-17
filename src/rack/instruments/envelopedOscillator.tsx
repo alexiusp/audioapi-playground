@@ -19,8 +19,11 @@ import {
 import OutputSelector from '../../controls/outputSelector';
 import EnvelopedOscillator from '../../models/instruments/envelopedOscillator';
 import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
-import { throttledCallback, throttledChangeHandler } from '../../utils/utils';
+import { throttledCallback } from '../../utils/utils';
 import RoundKnob from '../../controls/roundKnob';
+
+import Sine from './sine.svg'
+import WaveSelector from '../../controls/waveSelector';
 
 export interface OwnProps {
   id: ID;
@@ -96,15 +99,7 @@ export function EnvelopedOscillatorUI(props: Props) {
         <Row>
           <Col xs={6}>
             <RoundKnob radius={17} value={osc.volume} onUpdate={props.onChangeVolume} />
-            <DropdownButton
-              onSelect={props.onSetOscType}
-              title={osc.oscillatorType}
-              id={`${osc.id}-type-selector`}>
-              <MenuItem active={osc.oscillatorType === 'sine'} eventKey="sine">sine</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'square'} eventKey="square">square</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'triangle'} eventKey="triangle">triangle</MenuItem>
-              <MenuItem active={osc.oscillatorType === 'sawtooth'} eventKey="sawtooth">sawtooth</MenuItem>
-            </DropdownButton>
+            <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
             <OutputSelector
               id={`${osc.id}-output-select`}
               active={osc.output}

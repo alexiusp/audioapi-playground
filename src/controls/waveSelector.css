@@ -1,0 +1,6 @@
+.wave-type-selector svg.wave-type, li svg.wave-type {
+  stroke: #333;
+}
+li.active svg.wave-type {
+  stroke: #fff
+}
