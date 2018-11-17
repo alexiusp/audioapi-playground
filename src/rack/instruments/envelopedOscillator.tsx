@@ -19,7 +19,7 @@ import {
 import OutputSelector from '../../controls/outputSelector';
 import EnvelopedOscillator from '../../models/instruments/envelopedOscillator';
 import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
-import { throttledChangeHandler } from '../../utils/utils';
+import { throttledCallback, throttledChangeHandler } from '../../utils/utils';
 import RoundKnob from '../../controls/roundKnob';
 
 export interface OwnProps {
@@ -59,18 +59,38 @@ export function EnvelopedOscillatorUI(props: Props) {
               onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
           </Col>
           <Col xs={6}>
-            <div className="level-control">
-              <label htmlFor="attack-control">Attack</label>
-              <input
-                name="attack-control"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                defaultValue={envelope.attack.toString()}
-                onChange={throttledChangeHandler(props.onAttackChange)} />
-              <span>{envelope.attack}</span>
-            </div>
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={envelope.attack}
+              onUpdate={throttledCallback(props.onAttackChange)} />
+            <span>Attack</span>
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={envelope.decay}
+              onUpdate={throttledCallback(props.onDecayChange)} />
+            <span>Decay</span>
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={envelope.sustain}
+              onUpdate={throttledCallback(props.onSustainChange)} />
+            <span>Sustain</span>
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={envelope.release}
+              onUpdate={throttledCallback(props.onReleaseChange)} />
+            <span>Release</span>
           </Col>
         </Row>
         <Row>
@@ -93,54 +113,6 @@ export function EnvelopedOscillatorUI(props: Props) {
             <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
           </Col>
           <Col xs={6}>
-            <div className="level-control">
-              <label htmlFor="decay-control">Decay</label>
-              <input
-                name="decay-control"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                defaultValue={envelope.decay.toString()}
-                onChange={throttledChangeHandler(props.onDecayChange)} />
-              <span>{envelope.decay}</span>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={6}>
-          </Col>
-          <Col xs={6}>
-            <div className="level-control">
-              <label htmlFor="sustain-control">Sustain</label>
-              <input
-                name="sustain-control"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                defaultValue={envelope.sustain.toString()}
-                onChange={throttledChangeHandler(props.onSustainChange)} />
-              <span>{envelope.sustain}</span>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={6}>
-          </Col>
-          <Col xs={6}>
-            <div className="level-control">
-              <label htmlFor="release-control">Release</label>
-              <input
-                name="release-control"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                defaultValue={envelope.release.toString()}
-                onChange={throttledChangeHandler(props.onReleaseChange)} />
-              <span>{envelope.release}</span>
-            </div>
           </Col>
         </Row>
       </Panel.Body>
@@ -160,17 +132,17 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
-  const id = ownProps.id;  return {
+  const id = ownProps.id; return {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, volume)),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
     onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
-    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, attack)),
-    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, decay)),
-    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, sustain)),
-    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, release)),
+    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseFloat(attack.toFixed(2)))),
+    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseFloat(decay.toFixed(2)))),
+    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseFloat(sustain.toFixed(2)))),
+    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseFloat(release.toFixed(2)))),
   }
 }
 

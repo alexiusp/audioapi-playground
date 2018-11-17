@@ -13,6 +13,7 @@ export interface Props {
   onUpdate: DataCallback<number>,
   min: number,
   max: number,
+  step: number,
   value: number,
   radius: number,
 }
@@ -21,6 +22,7 @@ export default class RoundKnob extends React.Component<Props, State> {
   public static defaultProps: Partial<Props> = {
     min: 0,
     max: 100,
+    step: 1,
     radius: 20,
   };
 
@@ -53,23 +55,23 @@ export default class RoundKnob extends React.Component<Props, State> {
 
   move = (e: MouseEvent) => {
     const { clientX, clientY } = e;
-    const { min, max, value } = this.props;
+    const { min, max, step, value } = this.props;
     const { x, y } = this.state;
     let deltaX = (clientX - x) / 2;
     deltaX = (deltaX < 0) ? Math.max(deltaX, -50) : Math.min(deltaX, 50);
     let deltaY = (clientY - y) / (-2);
     deltaY = (deltaY < 0) ? Math.max(deltaY, -50) : Math.min(deltaY, 50);
-    const delta = deltaX + deltaY;
-    let newValue = Math.ceil(value + delta);
+    const delta = (deltaX + deltaY) * step;
+    let newValue = value + delta;
     newValue = (newValue > min) ? Math.min(newValue, max) : min;
     // console.log('move', deltaX, deltaY, delta, newValue);
     this.props.onUpdate(newValue);
   }
 
   onWheel = (e: React.WheelEvent<SVGElement>) => {
-    const { min, max, value } = this.props;
-    const shift = e.deltaY / (-150);
-    let newValue = Math.ceil(value + shift);
+    const { min, max, step, value } = this.props;
+    const shift = (e.deltaY / (-150)) * step;
+    let newValue = value + shift;
     newValue = (newValue > min) ? Math.min(newValue, max) : min;
     this.props.onUpdate(newValue);
   }
@@ -80,7 +82,7 @@ export default class RoundKnob extends React.Component<Props, State> {
     const viewBox = `-${radius} -${radius} ${radius * 2} ${radius * 2}`;
     const normalized = (value - min) / (max - min);
     const rotation = Math.ceil(normalized * 359);
-    const label = Math.ceil(value);
+    const label = value;
     return (
       <svg
         className="round-knob control"

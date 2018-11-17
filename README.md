@@ -9,7 +9,7 @@ The main goal is by learning the Web Audio API implement musical instruments rac
 * *MasterMixer* - simple panel with 'master' controls.
 * *SimpleOscillator* - basic version of oscillator to learn basics of Audio API
 * *EnvelopedOscillator* - version of oscillator with enveloped gain node (ADSR)
-* KnobControl - UI element to control ranged audio paramers (volume, frequency etc.)
+* *KnobControl* - UI element to control ranged audio paramers (volume, frequency etc.)
 
 ## TODO:
 

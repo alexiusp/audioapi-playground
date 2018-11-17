@@ -15,3 +15,8 @@ export function throttledChangeHandler(actualHandler: DataCallback<number>) {
   const callback = throttle(actualHandler, 100);
   return (e: React.ChangeEvent<HTMLInputElement>) => callback(parseFloat(e.target.value));
 }
+
+export function throttledCallback<T = number>(actualHandler: DataCallback<T>) {
+  const callback = throttle(actualHandler, 100);
+  return (value: T) => callback(value);
+}
