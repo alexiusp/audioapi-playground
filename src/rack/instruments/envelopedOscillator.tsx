@@ -61,39 +61,47 @@ export function EnvelopedOscillatorUI(props: Props) {
               value={osc.frequency}
               onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
           </Col>
-          <Col xs={6}>
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={envelope.attack}
-              onUpdate={throttledCallback(props.onAttackChange)} />
-            <span>Attack</span>
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={envelope.decay}
-              onUpdate={throttledCallback(props.onDecayChange)} />
-            <span>Decay</span>
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={envelope.sustain}
-              onUpdate={throttledCallback(props.onSustainChange)} />
-            <span>Sustain</span>
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={envelope.release}
-              onUpdate={throttledCallback(props.onReleaseChange)} />
-            <span>Release</span>
+          <Col xs={6} className="adsr-controls">
+            <div>
+              <RoundKnob
+                radius={17}
+                min={0}
+                max={1}
+                step={0.01}
+                value={envelope.attack}
+                onUpdate={throttledCallback(props.onAttackChange)} />
+              <div>Attack</div>
+            </div>
+            <div>
+              <RoundKnob
+                radius={17}
+                min={0}
+                max={1}
+                step={0.01}
+                value={envelope.decay}
+                onUpdate={throttledCallback(props.onDecayChange)} />
+              <div>Decay</div>
+            </div>
+            <div>
+              <RoundKnob
+                radius={17}
+                min={0}
+                max={1}
+                step={0.01}
+                value={envelope.sustain}
+                onUpdate={throttledCallback(props.onSustainChange)} />
+              <div>Sustain</div>
+            </div>
+            <div>
+              <RoundKnob
+                radius={17}
+                min={0}
+                max={1}
+                step={0.01}
+                value={envelope.release}
+                onUpdate={throttledCallback(props.onReleaseChange)} />
+              <div>Release</div>
+            </div>
           </Col>
         </Row>
         <Row>
