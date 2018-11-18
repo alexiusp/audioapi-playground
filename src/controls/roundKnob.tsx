@@ -19,6 +19,8 @@ export interface Props {
   className?: string,
 }
 
+const mouseSensitivity = 0.05;
+
 export default class RoundKnob extends React.Component<Props, State> {
   public static defaultProps: Partial<Props> = {
     min: 0,
@@ -43,11 +45,11 @@ export default class RoundKnob extends React.Component<Props, State> {
   }
 
   activate = (e: React.MouseEvent<SVGGeometryElement>) => {
-    const { clientX, clientY } = e;
+    const { screenX, screenY } = e;
     // console.log('activate');
     this.setState({
-      x: clientX,
-      y: clientY,
+      x: screenX,
+      y: screenY,
       active: true,
     });
     document.addEventListener('mouseup', this.deactivate);
@@ -55,18 +57,15 @@ export default class RoundKnob extends React.Component<Props, State> {
   }
 
   move = (e: MouseEvent) => {
-    const { clientX, clientY } = e;
+    const { screenX, screenY } = e;
     const { min, max, step, value } = this.props;
+    const oldValue = (value - min) / (max - min);
     const { x, y } = this.state;
-    let deltaX = (clientX - x) / 2;
-    deltaX = (deltaX < 0) ? Math.max(deltaX, -50) : Math.min(deltaX, 50);
-    let deltaY = (clientY - y) / (-2);
-    deltaY = (deltaY < 0) ? Math.max(deltaY, -50) : Math.min(deltaY, 50);
-    const delta = (deltaX + deltaY) * step;
-    let newValue = value + delta;
-    newValue = (newValue > min) ? Math.min(newValue, max) : min;
-    // console.log('move', deltaX, deltaY, delta, newValue);
-    this.props.onUpdate(newValue);
+    const deltaX = (screenX - x) * mouseSensitivity * step;
+    const deltaY = (y - screenY) * mouseSensitivity * step;
+    let newValue = Math.min(Math.max(oldValue + deltaX + deltaY, 0), 1);
+    // console.log('move', deltaX, deltaY, oldValue, newValue);
+    this.props.onUpdate((newValue * (max - min)) + min);
   }
 
   onWheel = (e: React.WheelEvent<SVGElement>) => {
