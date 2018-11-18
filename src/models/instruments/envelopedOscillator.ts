@@ -41,10 +41,9 @@ export default class EnvelopedOscillator extends SimpleOscillator {
     this.envelope.release = release;
   }
 
-  play = () => {
+  play = (freq?: number) => {
+    this.init(freq);
     console.log('osc.play', this.frequency, this.volume);
-    this.init();
-    this.oscillator!.frequency.value = this.frequency;
 
     // attack
     const attackTime = this.context.currentTime + this.envelope.attack;
@@ -53,11 +52,11 @@ export default class EnvelopedOscillator extends SimpleOscillator {
     const decayTime = attackTime + this.envelope.decay;
     const volume = this.envelope.sustain * this.volume;
     this.gain!.gain.linearRampToValueAtTime(volume, decayTime);
-    // start playing
+    // start oscillator (sustain mode)
     this.oscillator!.start();
   }
 
-  public stop() {
+  stop() {
     // release phase start
     const releaseTime = this.context.currentTime + this.envelope.release;
     this.gain!.gain.linearRampToValueAtTime(0, releaseTime);
