@@ -3,6 +3,8 @@ import Rack from '../../models/instrumentsRack';
 import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction, ISetOscillatorFrequencyInstrumentAction, INSTRUMENT_SET_OSCILLATOR_FREQUENCY, INSTRUMENT_PLAY_STOP, IStopPlayInstrumentAction } from './actions';
 import InstrumentFactory from '../../models/instruments/instrumentFactory';
 import { EnvelopeAction, INSTRUMENT_ENVELOPE_ATTACK_SET, INSTRUMENT_ENVELOPE_DECAY_SET, INSTRUMENT_ENVELOPE_SUSTAIN_SET, INSTRUMENT_ENVELOPE_RELEASE_SET } from './actions/envelope';
+import { IKeyboardKeyDownAction, IKeyboardKeyUpAction, KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
+import { MIDINoteMap } from '../../utils/midi';
 
 export function* instrumentPlaySaga(action: IStartPlayInstrumentAction) {
   const id = action.payload;
@@ -77,6 +79,24 @@ export function* instrumentSetEnvelopeSaga(action: EnvelopeAction) {
   }
 }
 
+
+export function* keyboardDownSaga(action: IKeyboardKeyDownAction) {
+  const { id, key } = action.payload;
+  const frequency = MIDINoteMap[key].frequency;
+  const instrument = yield Rack.getInstrument(id);
+  if (instrument && instrument.play) {
+    instrument.play(frequency);
+  }
+}
+
+export function* keyboardUpSaga(action: IKeyboardKeyUpAction) {
+  const { id } = action.payload;
+  const instrument = yield Rack.getInstrument(id);
+  if (instrument && instrument.stop) {
+    instrument.stop();
+  }
+}
+
 export default function* instrumentsSaga() {
   return yield all([
     yield takeEvery(INSTRUMENT_PLAY_START, instrumentPlaySaga),
@@ -92,5 +112,7 @@ export default function* instrumentsSaga() {
       INSTRUMENT_ENVELOPE_SUSTAIN_SET,
       INSTRUMENT_ENVELOPE_RELEASE_SET,
     ], instrumentSetEnvelopeSaga),
+    yield takeEvery(KEYBOARD_KEY_DOWN, keyboardDownSaga),
+    yield takeEvery(KEYBOARD_KEY_UP, keyboardUpSaga),
   ]);
 }

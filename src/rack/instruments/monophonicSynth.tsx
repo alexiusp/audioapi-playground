@@ -1,31 +1,29 @@
 import * as React from 'react';
-import { Button, Glyphicon, Panel, FormControl, Row, Col } from 'react-bootstrap';
+import { Panel, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { throttledCallback, parseLevel } from '../../utils/utils';
-import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput, Level, Time, ADSREnvelope, IEnvelopedOscillator } from '../../models/base';
-import { Callback, DataCallback, OscillatorType } from '../../models/types';
-import { getInstrument, getOutputs } from '../../store/instruments/selectors';
+import { parseLevel, throttledCallback } from '../../utils/utils';
 import IState from '../../store/state';
+import { ID, IMonophonicSynth, Level, Time, IOutput, ADSREnvelope, IInput } from '../../models/base';
+import { DataCallback, Callback } from '../../models/types';
+import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
-  startPlayInstrumentAction,
   setOutputInstrumentAction,
   changeVolumeInstrumentAction,
   setOscillatorTypeInstrumentAction,
-  setOscillatorFrequencyInstrumentAction,
-  stopPlayInstrumentAction,
 } from '../../store/instruments/actions';
 import {
   setAttackEnvelopeInstrumentAction,
   setDecayEnvelopeInstrumentAction,
   setSustainEnvelopeInstrumentAction,
-  setReleaseEnvelopeInstrumentAction
+  setReleaseEnvelopeInstrumentAction,
 } from '../../store/instruments/actions/envelope';
+import Rack from '../../models/instrumentsRack';
 import RoundKnob from '../../controls/roundKnob';
 import OutputSelector from '../../controls/outputSelector';
 import WaveSelector from '../../controls/waveSelector';
+import Keyboard from '../../controls/keyboard/keyboard';
 
 export interface OwnProps {
   id: ID;
@@ -35,32 +33,38 @@ export interface Props extends OwnProps {
   instrument: IOutput;
   envelope: ADSREnvelope;
   outputs: IInput[];
-  onPlay: Callback;
-  onStop: Callback;
   onSelectOutput: DataCallback;
   onChangeVolume: DataCallback<Level>;
   onSetOscType: DataCallback<any>;
-  onChangeFrequency: DataCallback<number>;
   onAttackChange: DataCallback<Time>;
   onDecayChange: DataCallback<Time>;
   onSustainChange: DataCallback<Level>;
   onReleaseChange: DataCallback<Time>;
 }
 
-export function EnvelopedOscillatorUI(props: Props) {
-  const osc = props.instrument as IEnvelopedOscillator;
+export function MonophonicSynthUI(props: Props) {
+  const inst = props.instrument as IMonophonicSynth;
   const envelope = props.envelope;
   const outputs = [Rack.master, ...props.outputs];
   return (
-    <Panel className="instrument enveloped-oscillator">
-      <Panel.Heading>EnvelopedOscillator {osc.id}</Panel.Heading>
+    <Panel className="instrument monophonic-synth">
+      <Panel.Heading>MonophonicSynth {inst.id}</Panel.Heading>
       <Panel.Body>
         <Row>
           <Col xs={6}>
-            <FormControl
-              type="number"
-              value={osc.frequency}
-              onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
+            <RoundKnob
+              radius={17}
+              min={0}
+              max={1}
+              step={0.01}
+              value={inst.volume}
+              onUpdate={props.onChangeVolume} />
+            <WaveSelector id={inst.id} selected={inst.oscillatorType} onSelect={props.onSetOscType} />
+            <OutputSelector
+              id={`${inst.id}-output-select`}
+              active={inst.output}
+              options={outputs}
+              onSelect={props.onSelectOutput} />
           </Col>
           <Col xs={6} className="adsr-controls">
             <div>
@@ -105,33 +109,16 @@ export function EnvelopedOscillatorUI(props: Props) {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col xs={6}>
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={osc.volume}
-              onUpdate={props.onChangeVolume} />
-            <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
-            <OutputSelector
-              id={`${osc.id}-output-select`}
-              active={osc.output}
-              options={outputs}
-              onSelect={props.onSelectOutput} />
-            <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
-          </Col>
-          <Col xs={6}>
-          </Col>
-        </Row>
+      </Panel.Body>
+      <Panel.Body>
+        <Keyboard id={props.id} />
       </Panel.Body>
     </Panel>
   );
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getInstrument(state, ownProps.id) as IEnvelopedOscillator;
+  const instrument = getInstrument(state, ownProps.id) as IMonophonicSynth;
   const envelope = instrument.envelope;
   const outputs = getOutputs(state);
   return {
@@ -144,12 +131,9 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
-    onPlay: () => dispatch(startPlayInstrumentAction(id)),
-    onStop: () => dispatch(stopPlayInstrumentAction(id)),
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
-    onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
     onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseLevel(attack))),
     onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseLevel(decay))),
     onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseLevel(sustain))),
@@ -157,4 +141,4 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillatorUI);
+export default connect(mapStateToProps, mapDispatchToProps)(MonophonicSynthUI);

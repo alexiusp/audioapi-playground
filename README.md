@@ -11,8 +11,10 @@ The main goal is by learning the Web Audio API implement musical instruments rac
 * *EnvelopedOscillator* - version of oscillator with enveloped gain node (ADSR)
 * *KnobControl* - UI element to control ranged audio paramers (volume, frequency etc.)
 
+## In progress:
+* *MIDI keyboard* - UI element to control frequency parameter
+
 ## TODO:
 
-* MIDI keyboard - UI element to control frequency parameter
 * implement connection of oscillator output to audio parameter (volume, frequency)
 * ModulatedOscillator - version of oscillator with an option to control some parameter via second oscillator

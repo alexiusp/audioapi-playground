@@ -10,3 +10,5 @@ export enum OscillatorTypeEnum {
   Custom = 'custom',
 }
 export type OscillatorType = 'sine'|'square'|'triangle'|'sawtooth'|'custom';
+
+export type KeyboardKeyName = string;

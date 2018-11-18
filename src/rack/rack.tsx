@@ -9,6 +9,7 @@ import IState from '../store/state';
 import { getInstrumentsList } from '../store/instruments/selectors';
 import SimpleOscillatorUI from './instruments/simpleOscillator';
 import EnvelopedOscillatorUI from './instruments/envelopedOscillator';
+import MonophonicSynthUI from './instruments/monophonicSynth';
 
 export interface Props {
   instruments: IBaseInstrument[];
@@ -25,6 +26,10 @@ export class RackUI extends React.Component<Props> {
       case InstrumentEnum.EnvelopedOscillator:
         return (
           <EnvelopedOscillatorUI id={instrument.id} key={instrument.id} />
+        );
+      case InstrumentEnum.MonophonicSynth:
+        return (
+          <MonophonicSynthUI id={instrument.id} key={instrument.id} />
         );
     }
     return null;

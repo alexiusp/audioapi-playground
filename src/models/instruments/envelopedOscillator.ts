@@ -1,9 +1,8 @@
-import { ISimpleOscillator, InstrumentEnum, ID, IInputInstrument, ADSREnvelope, Time, Level } from '../base';
-import Rack from '../instrumentsRack';
+import { InstrumentEnum, ID, ADSREnvelope, Time, Level } from '../base';
 import SimpleOscillator from './simpleOscillator';
 
 export default class EnvelopedOscillator extends SimpleOscillator {
-  instrument = InstrumentEnum.SimpleOscillator;
+  instrument = InstrumentEnum.EnvelopedOscillator;
   type: "Output" = "Output";
   output?: ID;
   oscillator?: OscillatorNode;
