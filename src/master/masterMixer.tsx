@@ -103,16 +103,18 @@ export class MasterMixerComponent extends React.Component<Props> {
   }
 
   render() {
+    const active = this.props.playing;
+    const onStateClass = (active) ? "success" : "default";
     return (
       <Navbar fluid fixedBottom={true} className="master-mixer">
         <div className="mixer-panel">
           <Button
             className="mixer-control"
-            active={this.props.playing}
+            active={active}
             bsSize="small"
-            bsStyle="primary"
+            bsStyle={onStateClass}
             onClick={this.playToggle}>
-            <Glyphicon glyph="play" />
+            <Glyphicon glyph="off" />
           </Button>
           <RoundKnob
             className="mixer-control"
