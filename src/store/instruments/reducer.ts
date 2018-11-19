@@ -1,7 +1,10 @@
+import { size } from 'lodash';
 import IInstrumentsState from './state';
-import { InstrumentEnum, IOutput, IGain, IConnectable, IInput, IInstrument, IOscillator, IEnvelopedOscillator } from '../../models/base';
+import { InstrumentEnum, IOutput, IGain, IConnectable, IInput, IInstrument, IOscillator, IEnvelopedOscillator, IMidiKeyboard } from '../../models/base';
 import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, INSTRUMENT_SET_OSCILLATOR_FREQUENCY } from './actions';
 import { INSTRUMENT_ENVELOPE_ATTACK_SET, INSTRUMENT_ENVELOPE_DECAY_SET, INSTRUMENT_ENVELOPE_SUSTAIN_SET, INSTRUMENT_ENVELOPE_RELEASE_SET } from './actions/envelope';
+import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
+import { MIDINoteMap } from '../../utils/midi';
 
 export const initialInstrumentsState: IInstrumentsState = {
   instruments: {},
@@ -89,6 +92,38 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const instrument = state.instruments[id] as IEnvelopedOscillator;
       instrument.envelope.release = release;
       return applyInstrumentToState(instrument, state);
+    }
+    case KEYBOARD_KEY_DOWN: {
+      const { id, key, velocity } = action.payload;
+      const instrument = state.instruments[id] as IMidiKeyboard;
+      const { end, keys, start, sounds } = instrument.keyboard;
+      const pressedKeys = size(keys);
+      console.log('KEYBOARD_KEY_DOWN', pressedKeys, sounds);
+      if (pressedKeys < sounds) {
+        const note = MIDINoteMap[key];
+        keys[note.midiNumber] = velocity;
+        instrument.keyboard = {
+          end,
+          keys,
+          start,
+          sounds,
+        }
+      }
+      return applyInstrumentToState(instrument as IInstrument, state);
+    }
+    case KEYBOARD_KEY_UP: {
+      const { id, key } = action.payload;
+      const instrument = state.instruments[id] as IMidiKeyboard;
+      const note = MIDINoteMap[key];
+      const { end, keys, start, sounds } = instrument.keyboard;
+      delete keys[note.midiNumber];
+      instrument.keyboard = {
+        end,
+        keys,
+        start,
+        sounds,
+      }
+      return applyInstrumentToState(instrument as IInstrument, state);
     }
   }
   return state;

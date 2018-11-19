@@ -37,3 +37,8 @@ export const keyboardKeyUpAction: ActionCreator<IKeyboardKeyUpAction> = (id: ID,
     key,
   },
 });
+
+
+export type MidiKeyboardAction =
+  IKeyboardKeyDownAction |
+  IKeyboardKeyUpAction;

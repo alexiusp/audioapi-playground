@@ -8,6 +8,7 @@ import IState from '../../store/state';
 import { whiteKeyWidth } from './constants';
 import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../store/instruments/actions/keyboard';
 import { MIDINoteIndex } from '../../utils/midi';
+import { getMidiKeyboard } from '../../store/instruments/selectors';
 
 export interface OwnProps {
   // instrument id
@@ -19,13 +20,15 @@ export interface OwnProps {
 }
 
 export interface Props extends OwnProps {
+  isPressed: boolean;
   onDown: Callback;
   onUp: Callback;
 }
 
 export function WhiteKey(props: Props) {
-  const { i, onDown, onUp } = props;
+  const { i, onDown, onUp, isPressed } = props;
   const x = i * whiteKeyWidth;
+  const keyFill = isPressed ? 'url(#white-pressed)' : 'url(#white)';
   return (
     <rect
       onMouseDown={onDown}
@@ -35,9 +38,18 @@ export function WhiteKey(props: Props) {
       width={whiteKeyWidth}
       height="100"
       stroke="#000"
-      fill="url(#white)"
+      fill={keyFill}
       strokeWidth="0.1"/>
   )
+}
+
+export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
+  const { id, midi } = ownProps;
+  const { keys } = getMidiKeyboard(state, id);
+  const isPressed = !!keys[midi];
+  return {
+    isPressed,
+  }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
@@ -49,4 +61,4 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(WhiteKey);
+export default connect(mapStateToProps, mapDispatchToProps)(WhiteKey);

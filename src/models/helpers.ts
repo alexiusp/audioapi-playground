@@ -9,8 +9,9 @@ export function buildEnvelope(attack = 0.05, decay = 0.05, sustain = 0.8, releas
   } as ADSREnvelope;
 }
 
-export function buildKeyboard(start = 60, end = 83) {
+export function buildKeyboard(start = 60, end = 83, sounds = 1) {
   return {
+    sounds,
     start,
     end,
     keys: {},

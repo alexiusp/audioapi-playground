@@ -64,9 +64,17 @@ export function Keyboard(props: Props) {
           <stop id="stop1" stopColor="#ffffff" offset="0%" />
           <stop id="stop2" stopColor="#e0e0e0" offset="100%" />
         </linearGradient>
+        <linearGradient id="white-pressed" x1="0" x2="0" y1="0" y2="1">
+          <stop id="stop1" stopColor="#e0e0e0" offset="0%" />
+          <stop id="stop2" stopColor="#d1d1d1" offset="100%" />
+        </linearGradient>
         <linearGradient id="black" x1="0" x2="0" y1="0" y2="1">
-          <stop id="stop1" stopColor="#1f1f1f" offset="0%" />
+          <stop id="stop1" stopColor="#3f3f3f" offset="0%" />
           <stop id="stop2" stopColor="#000000" offset="100%" />
+        </linearGradient>
+        <linearGradient id="black-pressed" x1="0" x2="0" y1="0" y2="1">
+          <stop id="stop1" stopColor="#414141" offset="0%" />
+          <stop id="stop2" stopColor="#3f3f3f" offset="100%" />
         </linearGradient>
         {whiteKeys}
         {blackKeys}

@@ -2,6 +2,7 @@ import { Action, ActionCreator } from 'redux';
 import { ID, IInstrument } from '../../models/base';
 import { OscillatorType } from '../../models/types';
 import { EnvelopeAction } from './actions/envelope';
+import { MidiKeyboardAction } from './actions/keyboard';
 
 export const INSTRUMENT_ADD = 'INSTRUMENT_ADD';
 export type INSTRUMENT_ADD = typeof INSTRUMENT_ADD;
@@ -112,4 +113,5 @@ export type InstrumentAction =
   ISetOutputInstrumentAction |
   ISetOscillatorTypeInstrumentAction |
   ISetOscillatorFrequencyInstrumentAction |
+  MidiKeyboardAction |
   EnvelopeAction;

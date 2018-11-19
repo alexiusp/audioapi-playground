@@ -30,13 +30,16 @@ export interface IGain extends IBaseInstrument {
   volume: Level;
 }
 
+// oscillator model
 export interface IOscillator extends IBaseInstrument {
   oscillatorType: OscillatorType;
   frequency: Frequency;
 }
+// instrument with envelope
 export interface IEnveloped extends IBaseInstrument {
   envelope: ADSREnvelope;
 }
+// instrument with mide-keyboard
 export interface IMidiKeyboard extends IBaseInstrument {
   keyboard: MidiKeyboardState;
 }
@@ -86,9 +89,14 @@ export interface KeyboardKey {
 }
 
 export interface MidiKeyboardState {
+  // amount of simultaneously playable sounds
+  sounds: number;
+  // starting note of keyboard
   start: number;
+  // end note of keyboard
   end: number;
+  // mide-keyboard keys state
   keys: {
-    [midiNumber: number]: boolean;
+    [midiNumber: number]: number;
   },
 }
