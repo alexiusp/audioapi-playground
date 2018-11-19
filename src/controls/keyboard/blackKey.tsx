@@ -34,7 +34,7 @@ export function BlackKey(props: Props) {
       width={blackKeyWidth}
       height="60"
       stroke="#000"
-      fill="#000"
+      fill="url(#black)"
       strokeWidth="0.1"/>
   )
 }

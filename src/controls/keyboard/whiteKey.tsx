@@ -35,7 +35,7 @@ export function WhiteKey(props: Props) {
       width={whiteKeyWidth}
       height="100"
       stroke="#000"
-      fill="#fff"
+      fill="url(#white)"
       strokeWidth="0.1"/>
   )
 }

@@ -23,23 +23,31 @@ export function Keyboard(props: Props) {
   const viewBox = '0 0 49 100';
   return (
     <div className={'keyboard control ' + (className || '')}>
-    <svg
-      viewBox={viewBox}
-      preserveAspectRatio="none"
-      width="100%" height="100%">
-      <WhiteKey id={id} i={0} midi={60} />
-      <WhiteKey id={id} i={1} midi={62} />
-      <WhiteKey id={id} i={2} midi={64} />
-      <WhiteKey id={id} i={3} midi={65} />
-      <WhiteKey id={id} i={4} midi={67} />
-      <WhiteKey id={id} i={5} midi={69} />
-      <WhiteKey id={id} i={6} midi={71} />
-      <BlackKey id={id} i={0} midi={61} />
-      <BlackKey id={id} i={1} midi={63} />
-      <BlackKey id={id} i={3} midi={66} />
-      <BlackKey id={id} i={4} midi={68} />
-      <BlackKey id={id} i={5} midi={70} />
-    </svg>
+      <svg
+        viewBox={viewBox}
+        preserveAspectRatio="none"
+        width="100%" height="100%">
+        <linearGradient id="white" x1="0" x2="0" y1="0" y2="1">
+          <stop id="stop1" stopColor="#ffffff" offset="0%" />
+          <stop id="stop2" stopColor="#e0e0e0" offset="100%" />
+        </linearGradient>
+        <linearGradient id="black" x1="0" x2="0" y1="0" y2="1">
+          <stop id="stop1" stopColor="#1f1f1f" offset="0%" />
+          <stop id="stop2" stopColor="#000000" offset="100%" />
+        </linearGradient>
+        <WhiteKey id={id} i={0} midi={60} />
+        <WhiteKey id={id} i={1} midi={62} />
+        <WhiteKey id={id} i={2} midi={64} />
+        <WhiteKey id={id} i={3} midi={65} />
+        <WhiteKey id={id} i={4} midi={67} />
+        <WhiteKey id={id} i={5} midi={69} />
+        <WhiteKey id={id} i={6} midi={71} />
+        <BlackKey id={id} i={0} midi={61} />
+        <BlackKey id={id} i={1} midi={63} />
+        <BlackKey id={id} i={3} midi={66} />
+        <BlackKey id={id} i={4} midi={68} />
+        <BlackKey id={id} i={5} midi={70} />
+      </svg>
     </div>
   );
 }
