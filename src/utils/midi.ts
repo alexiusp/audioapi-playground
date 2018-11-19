@@ -1,4 +1,4 @@
-import { KeyboardKey, Frequency } from '../models/base';
+import { KeyboardKey, Frequency, KeyboardKeyType } from '../models/base';
 
 export const STANDART_TUNING = 440;
 
@@ -15,11 +15,14 @@ export const MIDINoteMap: {[note: string]: KeyboardKey} = {};
 export const MIDINoteIndex: KeyboardKey[] = [];
 
 for (let midiNumber = 0; midiNumber < 127; midiNumber++) {
-  const noteName = noteNames[midiNumber % 12];
+  const index = midiNumber % 12;
+  const noteName = noteNames[index];
   const octave = Math.floor(midiNumber / 12) - 1;
   const fullName = `${noteName}${octave}`;
+  const type: KeyboardKeyType = [1, 3, 6, 8, 10].indexOf(index) >= 0 ? 'black' : 'white';
   const midiNoteDefinition = {
     midiNumber,
+    type,
     fullName,
     shortName: noteName,
     frequency: midiNoteNumberToFrequency(midiNumber),

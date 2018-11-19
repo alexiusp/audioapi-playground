@@ -3,10 +3,14 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { ID } from '../../models/base';
+import { getMidiKeyboard } from '../../store/instruments/selectors';
 import IState from '../../store/state';
+import { MIDINoteIndex } from '../../utils/midi';
 
+import { whiteKeyWidth } from './constants';
 import WhiteKey from './whiteKey';
 import BlackKey from './blackKey';
+
 import './keyboard.css';
 
 export interface OwnProps {
@@ -15,12 +19,41 @@ export interface OwnProps {
 }
 
 export interface Props extends OwnProps {
+  start: number;
+  end: number;
 }
 
+// offset for drawing the keys
+const keysOffset = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
+
 export function Keyboard(props: Props) {
-  const { className, id } = props;
+  const { className, id, start, end } = props;
+  let whiteKeys = [];
+  let blackKeys = [];
+  for (let index = start; index < end + 1; index++) {
+    const note = MIDINoteIndex[index];
+    const i = index % 12;
+    const octave = Math.floor((index - start) / 12)
+    const offset = octave * 7 + keysOffset[i];
+    switch (note.type) {
+      case 'white': {
+        const key = whiteKeys.length;
+        whiteKeys.push(
+          <WhiteKey id={id} i={offset} key={key} midi={index} />
+        );
+        break;
+      }
+      default: {
+        const key = blackKeys.length;
+        blackKeys.push(
+          <BlackKey id={id} i={offset} key={key} midi={index} />
+        );
+        break;
+      }
+    }
+  }
   // viewbox should be dynamic to be able to add more keys in the future
-  const viewBox = '0 0 49 100';
+  const viewBox = `0 0 ${whiteKeys.length * whiteKeyWidth} 100`;
   return (
     <div className={'keyboard control ' + (className || '')}>
       <svg
@@ -35,25 +68,19 @@ export function Keyboard(props: Props) {
           <stop id="stop1" stopColor="#1f1f1f" offset="0%" />
           <stop id="stop2" stopColor="#000000" offset="100%" />
         </linearGradient>
-        <WhiteKey id={id} i={0} midi={60} />
-        <WhiteKey id={id} i={1} midi={62} />
-        <WhiteKey id={id} i={2} midi={64} />
-        <WhiteKey id={id} i={3} midi={65} />
-        <WhiteKey id={id} i={4} midi={67} />
-        <WhiteKey id={id} i={5} midi={69} />
-        <WhiteKey id={id} i={6} midi={71} />
-        <BlackKey id={id} i={0} midi={61} />
-        <BlackKey id={id} i={1} midi={63} />
-        <BlackKey id={id} i={3} midi={66} />
-        <BlackKey id={id} i={4} midi={68} />
-        <BlackKey id={id} i={5} midi={70} />
+        {whiteKeys}
+        {blackKeys}
       </svg>
     </div>
   );
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
+  const id = ownProps.id;
+  const { start, end } = getMidiKeyboard(state, id);
   return {
+    start,
+    end,
   }
 }
 

@@ -37,6 +37,9 @@ export interface IOscillator extends IBaseInstrument {
 export interface IEnveloped extends IBaseInstrument {
   envelope: ADSREnvelope;
 }
+export interface IMidiKeyboard extends IBaseInstrument {
+  keyboard: MidiKeyboardState;
+}
 
 // behavior models
 export interface IPlayable {
@@ -54,7 +57,7 @@ export interface IInputInstrument extends IInput {
 
 export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator {}
 export interface IEnvelopedOscillator extends ISimpleOscillator, IEnveloped {}
-export interface IMonophonicSynth extends IEnvelopedOscillator {}
+export interface IMonophonicSynth extends IEnvelopedOscillator, IMidiKeyboard {}
 export interface IMasterMixer extends IInputInstrument, IPlayable {}
 export type IInstrument = IMonophonicSynth | IEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
@@ -72,9 +75,20 @@ export interface ADSREnvelope {
   release: Time;
 }
 
+export type KeyboardKeyType = 'white' | 'black';
+
 export interface KeyboardKey {
   midiNumber: number;
   fullName: string;
   shortName: string;
+  type: KeyboardKeyType;
   frequency: Frequency;
+}
+
+export interface MidiKeyboardState {
+  start: number;
+  end: number;
+  keys: {
+    [midiNumber: number]: boolean;
+  },
 }

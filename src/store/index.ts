@@ -13,6 +13,7 @@ import {
   IEnvelopedOscillator,
   IMonophonicSynth,
 } from '../models/base';
+import { buildEnvelope, buildKeyboard } from '../models/helpers';
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store<IState, Action> = createStore(
@@ -39,12 +40,7 @@ store.dispatch(addInstrumentAction({
   volume: 1,
   oscillatorType: 'sine',
   frequency: 440,
-  envelope: {
-    attack: 0.1,
-    decay: 0.1,
-    sustain: 0.8,
-    release: 0.1,
-  },
+  envelope: buildEnvelope(0.1, 0.1, 0.8, 0.1),
 } as IEnvelopedOscillator));
 store.dispatch(addInstrumentAction({
   id: getUID('monosynth'),
@@ -54,11 +50,7 @@ store.dispatch(addInstrumentAction({
   volume: 1,
   oscillatorType: 'sine',
   frequency: 220,
-  envelope: {
-    attack: 0.05,
-    decay: 0.05,
-    sustain: 0.8,
-    release: 0.3,
-  },
+  envelope: buildEnvelope(),
+  keyboard: buildKeyboard(),
 } as IMonophonicSynth));
 export default store;
