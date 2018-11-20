@@ -18,8 +18,8 @@ export class BaseAudioDevice implements IBase {
   public id: ID;
   private _context: AudioContext;
   protected output: GainNode;
-  constructor(ctx: AudioContext) {
-    this.id = getUID();
+  constructor(ctx: AudioContext, prefix?: string) {
+    this.id = getUID(prefix);
     this._context = ctx;
     this.output = ctx.createGain();
   }
