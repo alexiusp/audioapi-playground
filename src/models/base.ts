@@ -1,7 +1,74 @@
+import { getUID } from '../utils/utils';
+
 export type ID = string;
 export type Time = number;// [0..Infinity)
 export type Level = number;// [0..1]
 export type Frequency = number;
+
+// common abstract models
+export interface IBase {
+  id: ID;
+}
+
+export interface IInputDevice {
+  input: AudioNode;
+}
+
+export class BaseAudioDevice implements IBase {
+  public id: ID;
+  private _context: AudioContext;
+  protected output: GainNode;
+  constructor(ctx: AudioContext) {
+    this.id = getUID();
+    this._context = ctx;
+    this.output = ctx.createGain();
+  }
+  get context() {
+    return this._context;
+  }
+  connect(target: IInputDevice) {
+    this.output.connect(target.input);
+  }
+  disconnect(target: IInputDevice) {
+    this.output.disconnect(target.input);
+  }
+}
+
+export interface ADSREnvelope {
+  attack: Time;
+  decay: Time;
+  sustain: Level;
+  release: Time;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export enum InstrumentEnum {
   MasterMixer,
@@ -12,9 +79,7 @@ export enum InstrumentEnum {
 
 export type InstrumentType = "Input" | "Output" | "InOut";
 
-// data models
-export interface IBaseInstrument {
-  id: ID;
+export interface IBaseInstrument extends IBase {
   instrument: InstrumentEnum;
 }
 export interface IInput extends IBaseInstrument {
@@ -58,25 +123,12 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator {}
-export interface IEnvelopedOscillator extends ISimpleOscillator, IEnveloped {}
-export interface IMonophonicSynth extends IEnvelopedOscillator, IMidiKeyboard {}
-export interface IMasterMixer extends IInputInstrument, IPlayable {}
+export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator { }
+export interface IEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
+export interface IMonophonicSynth extends IEnvelopedOscillator, IMidiKeyboard { }
+export interface IMasterMixer extends IInputInstrument, IPlayable { }
 export type IInstrument = IMonophonicSynth | IEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
-export class BaseAudioDevice {
-  context: AudioContext;
-  constructor(ctx: AudioContext) {
-    this.context = ctx;
-  }
-}
-
-export interface ADSREnvelope {
-  attack: Time;
-  decay: Time;
-  sustain: Level;
-  release: Time;
-}
 
 export type KeyboardKeyType = 'white' | 'black';
 

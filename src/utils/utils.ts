@@ -2,9 +2,9 @@ import { debounce, throttle } from 'lodash';
 import { DataCallback } from '../models/types';
 import { Level } from '../models/base';
 
-export function getUID(prefix: string, postfix?: string) {
+export function getUID(prefix?: string, postfix?: string) {
   const rndId = Math.ceil(Math.random() * 1000);
-  return `${prefix}_${rndId}` + (postfix ? `_${postfix}` : '');
+  return (prefix ? `${prefix}_` : '') + `${rndId}` + (postfix ? `_${postfix}` : '');
 }
 
 export function debouncedChangeHandler(actualHandler: DataCallback<string>) {
