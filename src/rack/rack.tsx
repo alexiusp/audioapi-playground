@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import './rack.css';
 
-import { InstrumentEnum, IBaseInstrument } from '../models/base';
+import { LegacyInstrumentEnum, IBaseInstrument, Instrument, IBase } from '../models/base';
 import IState from '../store/state';
 import { getInstrumentsList } from '../store/instruments/selectors';
 import SimpleOscillatorUI from './instruments/simpleOscillator';
@@ -12,25 +12,27 @@ import EnvelopedOscillatorUI from './instruments/envelopedOscillator';
 import MonophonicSynthUI from './instruments/monophonicSynth';
 
 export interface Props {
-  instruments: IBaseInstrument[];
+  instruments: (IBaseInstrument | Instrument)[];
 }
 
 export class RackUI extends React.Component<Props> {
 
-  renderInstrument(instrument: IBaseInstrument) {
-    switch (instrument.instrument) {
-      case InstrumentEnum.SimpleOscillator:
-        return (
-          <SimpleOscillatorUI id={instrument.id} key={instrument.id} />
-        );
-      case InstrumentEnum.EnvelopedOscillator:
-        return (
-          <EnvelopedOscillatorUI id={instrument.id} key={instrument.id} />
-        );
-      case InstrumentEnum.MonophonicSynth:
-        return (
-          <MonophonicSynthUI id={instrument.id} key={instrument.id} />
-        );
+  renderInstrument(instrument: IBase) {
+    if ((instrument as IBaseInstrument).instrument !== undefined) {
+      switch ((instrument as IBaseInstrument).instrument) {
+        case LegacyInstrumentEnum.SimpleOscillator:
+          return (
+            <SimpleOscillatorUI id={instrument.id} key={instrument.id} />
+          );
+        case LegacyInstrumentEnum.EnvelopedOscillator:
+          return (
+            <EnvelopedOscillatorUI id={instrument.id} key={instrument.id} />
+          );
+        case LegacyInstrumentEnum.MonophonicSynth:
+          return (
+            <MonophonicSynthUI id={instrument.id} key={instrument.id} />
+          );
+      }
     }
     return null;
   }

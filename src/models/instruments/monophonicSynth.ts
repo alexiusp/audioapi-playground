@@ -1,6 +1,6 @@
 import { LegacyEnvelopedOscillator } from './envelopedOscillator';
-import { InstrumentEnum } from '../base';
+import { LegacyInstrumentEnum } from '../base';
 
 export default class MonophonicSynth extends LegacyEnvelopedOscillator {
-  instrument = InstrumentEnum.MonophonicSynth;
+  instrument = LegacyInstrumentEnum.MonophonicSynth;
 }

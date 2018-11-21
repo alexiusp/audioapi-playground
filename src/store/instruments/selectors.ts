@@ -1,6 +1,6 @@
 import { forIn } from 'lodash';
 import IState from '../state';
-import { IBaseInstrument, ID, IMidiKeyboard } from '../../models/base';
+import { IBaseInstrument, ID, IMidiKeyboard, Instrument } from '../../models/base';
 
 export const getInstrumetsState = (state: IState) => state.instruments;
 
@@ -8,8 +8,8 @@ export const getInstrumentsMap = (state: IState) => getInstrumetsState(state).in
 
 export const getInstrumentsList = (state: IState) => {
   const instrumentMap = getInstrumentsMap(state);
-  const instruments: IBaseInstrument[] = [];
-  forIn(instrumentMap, (i: IBaseInstrument) => instruments.push(i));
+  const instruments: (IBaseInstrument | Instrument)[] = [];
+  forIn(instrumentMap, (i: IBaseInstrument | Instrument) => instruments.push(i));
   return instruments;
 }
 

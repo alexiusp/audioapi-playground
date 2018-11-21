@@ -1,5 +1,5 @@
 import { Action, ActionCreator } from 'redux';
-import { ID, ILegacyInstrument } from '../../models/base';
+import { ID, ILegacyInstrument, InstrumentEnum } from '../../models/base';
 import { OscillatorType } from '../../models/types';
 import { EnvelopeAction } from './actions/envelope';
 import { MidiKeyboardAction } from './actions/keyboard';
@@ -106,6 +106,8 @@ export const setOscillatorFrequencyInstrumentAction: ActionCreator<ISetOscillato
 });
 
 export type InstrumentAction =
+  ICreateInstrumentAction |
+// legacy actions:
   IAddInstrumentAction |
   IChangeVolumeInstrumentAction |
   IStartPlayInstrumentAction |
@@ -115,3 +117,15 @@ export type InstrumentAction =
   ISetOscillatorFrequencyInstrumentAction |
   MidiKeyboardAction |
   EnvelopeAction;
+
+// instrument action after refactoring
+export const INSTRUMENT_CREATE = 'INSTRUMENT_CREATE';
+export type INSTRUMENT_CREATE = typeof INSTRUMENT_CREATE;
+export interface ICreateInstrumentAction extends Action<INSTRUMENT_CREATE> {
+  type: INSTRUMENT_CREATE;
+  payload: InstrumentEnum;
+}
+export const createInstrumentAction: ActionCreator<ICreateInstrumentAction> = (instrument: InstrumentEnum) => ({
+  type: INSTRUMENT_CREATE,
+  payload: instrument,
+});

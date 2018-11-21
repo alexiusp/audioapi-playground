@@ -1,9 +1,11 @@
-import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable } from './base';
+import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum } from './base';
 import { MasterMixer } from './master';
+import EnvelopedOscillator from './instruments/envelopedOscillator';
 
 export class InstrumentsRack {
+  private instruments: Map<ID, Instrument>
   // all instruments map
-  public instruments: Map<ID, ILegacyInstrument>;
+  public legacyInstruments: Map<ID, ILegacyInstrument>;
   // possible outputs (instruments with inputs)
   public outputs: Map<ID, IInput>;
 
@@ -11,17 +13,30 @@ export class InstrumentsRack {
   public master: MasterMixer;
 
   constructor() {
-    this.instruments = new Map<ID, ILegacyInstrument>();
+    this.instruments = new Map();
     // @ts-ignore
     const ctx: AudioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.master = new MasterMixer(ctx);
     this.context = ctx;
+    this.master = new MasterMixer(ctx);
+    // legacy
     this.outputs = new Map<ID, IInputInstrument>();
     this.outputs.set(this.master.id, this.master);
+    this.legacyInstruments = new Map<ID, ILegacyInstrument>();
   }
 
+  public createInstrument(instrumentClass: InstrumentEnum) {
+    switch (instrumentClass) {
+      case InstrumentEnum.EnvelopedOscillator: {
+        const instrument = new EnvelopedOscillator(this.context);
+        this.instruments.set(instrument.id, instrument);
+        return instrument;
+      }
+    }
+  }
+
+  // legacy methods
   public addInstrument(instrument: ILegacyInstrument) {
-    this.instruments.set(instrument.id, instrument);
+    this.legacyInstruments.set(instrument.id, instrument);
     // if instrument has input - add it to the outputs map
     if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
       this.outputs.set(instrument.id, instrument as IInputInstrument);
@@ -30,7 +45,7 @@ export class InstrumentsRack {
 
   public getInstrument(id: ID) {
     // console.log('getInstrument', id, this.instruments.has(id));
-    return this.instruments.get(id);
+    return this.legacyInstruments.get(id);
   }
 
   public getOutput(id: ID) {

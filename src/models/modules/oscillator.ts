@@ -1,6 +1,6 @@
-import { BaseAudioDevice, Frequency, IModule, IOscillator, Level, Time } from '../base';
+import { BaseAudioDevice, Frequency, IModule, IOscillator, Level, Time, IStateful } from '../base';
 
-export class Oscillator extends BaseAudioDevice implements IOscillator, IModule {
+export class Oscillator extends BaseAudioDevice implements IOscillator, IModule, IStateful<IOscillator> {
 
   private _type : OscillatorType;
   public get type() : OscillatorType {
@@ -58,6 +58,11 @@ export class Oscillator extends BaseAudioDevice implements IOscillator, IModule 
       throw new Error('Can not stop an Oscillator when it was not started');
     }
     this.osc.stop(time);
+  }
+
+  public normalize() {
+    const { id, type, frequency, gain } = this;
+    return { id, type, frequency, gain };
   }
 
 }

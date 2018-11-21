@@ -6,12 +6,13 @@ import { getUID } from '../utils/utils';
 import IState from './state';
 import reducer from './reducer';
 import rootSaga from './saga';
-import { addInstrumentAction } from './instruments/actions';
+import { addInstrumentAction, createInstrumentAction } from './instruments/actions';
 import {
-  InstrumentEnum,
+  LegacyInstrumentEnum,
   ISimpleOscillator,
-  IEnvelopedOscillator,
+  ILegacyEnvelopedOscillator,
   IMonophonicSynth,
+  InstrumentEnum,
 } from '../models/base';
 import { buildEnvelope, buildKeyboard } from '../models/helpers';
 
@@ -22,9 +23,13 @@ const store: Store<IState, Action> = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
+// new instrument creation
+store.dispatch(createInstrumentAction(InstrumentEnum.EnvelopedOscillator));
+// legacy instrument creation
+/*
 store.dispatch(addInstrumentAction({
   id: getUID('osc'),
-  instrument: InstrumentEnum.SimpleOscillator,
+  instrument: LegacyInstrumentEnum.SimpleOscillator,
   type: "Output",
   output: 'master',
   volume: 1,
@@ -33,17 +38,18 @@ store.dispatch(addInstrumentAction({
 } as ISimpleOscillator))
 store.dispatch(addInstrumentAction({
   id: getUID('envosc'),
-  instrument: InstrumentEnum.EnvelopedOscillator,
+  instrument: LegacyInstrumentEnum.EnvelopedOscillator,
   type: "Output",
   output: 'master',
   volume: 1,
   oscillatorType: 'sine',
   frequency: 440,
   envelope: buildEnvelope(0.1, 0.1, 0.8, 0.1),
-} as IEnvelopedOscillator));
+} as ILegacyEnvelopedOscillator));
+*/
 store.dispatch(addInstrumentAction({
   id: getUID('monosynth'),
-  instrument: InstrumentEnum.MonophonicSynth,
+  instrument: LegacyInstrumentEnum.MonophonicSynth,
   type: "Output",
   output: 'master',
   volume: 1,

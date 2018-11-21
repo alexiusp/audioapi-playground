@@ -1,6 +1,6 @@
-import { IEnvelope, BaseAudioDevice, IInputDevice, IModule, Level, Time } from '../base';
+import { IEnvelope, BaseAudioDevice, IInputDevice, IModule, Level, Time, IStateful } from '../base';
 
-export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IModule {
+export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IModule, IStateful<IEnvelope> {
 
   private _attack : Time;
   public get attack() : Time {
@@ -72,4 +72,14 @@ export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice
     return releaseTime;
   }
 
+  public normalize() {
+    const { id, attack, decay, sustain, release } = this;
+    return {
+      id,
+      attack,
+      decay,
+      sustain,
+      release,
+    }
+  }
 }

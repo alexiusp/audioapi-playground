@@ -1,9 +1,9 @@
-import { InstrumentEnum, ID, IEnvelope, Time, Level, BaseAudioDevice, IModule } from '../base';
+import { LegacyInstrumentEnum, ID, IEnvelope, Time, Level, BaseAudioDevice, IModule, IEnvelopedOscillator, IStateful } from '../base';
 import SimpleOscillator from './simpleOscillator';
 import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
 
-export default class EnvelopedOscillator extends BaseAudioDevice implements IModule {
+export default class EnvelopedOscillator extends BaseAudioDevice implements IModule, IEnvelopedOscillator, IStateful<IEnvelopedOscillator> {
 
   private _envelope : Envelope;
   public get envelope() : Envelope {
@@ -39,10 +39,18 @@ export default class EnvelopedOscillator extends BaseAudioDevice implements IMod
     this.oscillator.stop(releaseTime);
   }
 
+  public normalize() {
+    return {
+      id: this.id,
+      envelope: this.envelope.normalize(),
+      oscillator: this.oscillator.normalize(),
+    }
+  }
+
 }
 
 export class LegacyEnvelopedOscillator extends SimpleOscillator {
-  instrument = InstrumentEnum.EnvelopedOscillator;
+  instrument = LegacyInstrumentEnum.EnvelopedOscillator;
   type: "Output" = "Output";
   output?: ID;
   oscillator?: OscillatorNode;
@@ -55,6 +63,7 @@ export class LegacyEnvelopedOscillator extends SimpleOscillator {
     public oscillatorType: OscillatorType = 'sine',
     public frequency: number = 440,
     public envelope: IEnvelope = {
+      id: 'Asd',
       attack: 0,
       decay: 0.1,
       sustain: 0.8,

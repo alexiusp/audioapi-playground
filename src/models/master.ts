@@ -1,9 +1,9 @@
-import { BaseAudioDevice, InstrumentEnum, IMasterMixer, Level } from './base';
+import { BaseAudioDevice, LegacyInstrumentEnum, IMasterMixer, Level } from './base';
 
 export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
   id: string;
   type: "Input";
-  instrument = InstrumentEnum.MasterMixer;
+  instrument = LegacyInstrumentEnum.MasterMixer;
   // osciloscope/frequency bar graph
   private analyser: AnalyserNode;
   // master volume control

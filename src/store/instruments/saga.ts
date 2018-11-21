@@ -1,6 +1,6 @@
 import { all, takeEvery } from 'redux-saga/effects'
 import Rack from '../../models/instrumentsRack';
-import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction, ISetOscillatorFrequencyInstrumentAction, INSTRUMENT_SET_OSCILLATOR_FREQUENCY, INSTRUMENT_PLAY_STOP, IStopPlayInstrumentAction } from './actions';
+import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction, ISetOscillatorFrequencyInstrumentAction, INSTRUMENT_SET_OSCILLATOR_FREQUENCY, INSTRUMENT_PLAY_STOP, IStopPlayInstrumentAction, } from './actions';
 import InstrumentFactory from '../../models/instruments/instrumentFactory';
 import { EnvelopeAction, INSTRUMENT_ENVELOPE_ATTACK_SET, INSTRUMENT_ENVELOPE_DECAY_SET, INSTRUMENT_ENVELOPE_SUSTAIN_SET, INSTRUMENT_ENVELOPE_RELEASE_SET } from './actions/envelope';
 import { IKeyboardKeyDownAction, IKeyboardKeyUpAction, KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';

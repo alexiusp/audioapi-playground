@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import { throttledCallback, parseLevel } from '../../utils/utils';
 import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput, Level, Time, IEnvelope, IEnvelopedOscillator } from '../../models/base';
+import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
@@ -48,7 +48,7 @@ export interface Props extends OwnProps {
 }
 
 export function EnvelopedOscillatorUI(props: Props) {
-  const osc = props.instrument as IEnvelopedOscillator;
+  const osc = props.instrument as ILegacyEnvelopedOscillator;
   const envelope = props.envelope;
   const outputs = [Rack.master, ...props.outputs];
   return (
@@ -131,7 +131,7 @@ export function EnvelopedOscillatorUI(props: Props) {
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getInstrument(state, ownProps.id) as IEnvelopedOscillator;
+  const instrument = getInstrument(state, ownProps.id) as ILegacyEnvelopedOscillator;
   const envelope = instrument.envelope;
   const outputs = getOutputs(state);
   return {
