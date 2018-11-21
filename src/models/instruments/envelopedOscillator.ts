@@ -1,7 +1,47 @@
-import { InstrumentEnum, ID, ADSREnvelope, Time, Level } from '../base';
+import { InstrumentEnum, ID, IEnvelope, Time, Level, BaseAudioDevice, IModule } from '../base';
 import SimpleOscillator from './simpleOscillator';
+import { Envelope } from '../modules/envelope';
+import { Oscillator } from '../modules/oscillator';
 
-export default class EnvelopedOscillator extends SimpleOscillator {
+export default class EnvelopedOscillator extends BaseAudioDevice implements IModule {
+
+  private _envelope : Envelope;
+  public get envelope() : Envelope {
+    return this._envelope;
+  }
+  public set envelope(v : Envelope) {
+    this._envelope = v;
+  }
+
+  private _oscillator : Oscillator;
+  public get oscillator() : Oscillator {
+    return this._oscillator;
+  }
+  public set oscillator(v : Oscillator) {
+    this._oscillator = v;
+  }
+
+  constructor(ctx: AudioContext) {
+    super(ctx);
+    this._envelope = new Envelope(ctx);
+    this._oscillator = new Oscillator(ctx);
+    this._oscillator.connect(this._envelope.input);
+    this._envelope.connect(this.output);
+  }
+
+  public start(time?: Time) {
+    this.envelope.start(time);
+    this.oscillator.start(time);
+  }
+
+  public stop(time?: Time) {
+    const releaseTime = this.envelope.stop(time);
+    this.oscillator.stop(releaseTime);
+  }
+
+}
+
+export class LegacyEnvelopedOscillator extends SimpleOscillator {
   instrument = InstrumentEnum.EnvelopedOscillator;
   type: "Output" = "Output";
   output?: ID;
@@ -14,7 +54,7 @@ export default class EnvelopedOscillator extends SimpleOscillator {
     public volume: number = 1,
     public oscillatorType: OscillatorType = 'sine',
     public frequency: number = 440,
-    public envelope: ADSREnvelope = {
+    public envelope: IEnvelope = {
       attack: 0,
       decay: 0.1,
       sustain: 0.8,

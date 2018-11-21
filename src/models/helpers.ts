@@ -1,4 +1,4 @@
-import { ADSREnvelope, MidiKeyboardState } from './base';
+import { IEnvelope, MidiKeyboardState } from './base';
 
 export function buildEnvelope(attack = 0.05, decay = 0.05, sustain = 0.8, release = 0.3) {
   return {
@@ -6,7 +6,7 @@ export function buildEnvelope(attack = 0.05, decay = 0.05, sustain = 0.8, releas
     decay,
     sustain,
     release,
-  } as ADSREnvelope;
+  } as IEnvelope;
 }
 
 export function buildKeyboard(start = 60, end = 83, sounds = 1) {

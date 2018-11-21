@@ -6,14 +6,18 @@ export type Level = number;// [0..1]
 export type Frequency = number;
 
 // common abstract models
+
+// base model with id
 export interface IBase {
   id: ID;
 }
 
+// device or parameter where we can connect to
 export interface IInputDevice {
   input: AudioNode;
 }
 
+// base audio device wrapper class
 export class BaseAudioDevice implements IBase {
   public id: ID;
   private _context: AudioContext;
@@ -26,23 +30,42 @@ export class BaseAudioDevice implements IBase {
   get context() {
     return this._context;
   }
-  connect(target: IInputDevice) {
-    this.output.connect(target.input);
+  connect(target: AudioNode) {
+    this.output.connect(target);
   }
-  disconnect(target: IInputDevice) {
-    this.output.disconnect(target.input);
+  disconnect(target: AudioNode) {
+    this.output.disconnect(target);
   }
 }
 
-export interface ADSREnvelope {
+// base module with controls
+export interface IModule {
+  start: (time?: Time) => void;
+  stop: (time?: Time) => void;
+}
+
+// ADSR envelope model
+export interface IEnvelope {
   attack: Time;
   decay: Time;
   sustain: Level;
   release: Time;
 }
 
+// basic oscillator parameters model
+export interface IOscillator {
+  type: OscillatorType;
+  frequency: Frequency;
+  gain: Level;
+}
 
+// union type of all existing modules
+export type Module = IEnvelope | IOscillator;
 
+// instrument - container for modules
+export interface IInstrument {
+  [name: string]: Module;
+}
 
 
 
@@ -96,13 +119,13 @@ export interface IGain extends IBaseInstrument {
 }
 
 // oscillator model
-export interface IOscillator extends IBaseInstrument {
+export interface ILegacyOscillator extends IBaseInstrument {
   oscillatorType: OscillatorType;
   frequency: Frequency;
 }
 // instrument with envelope
 export interface IEnveloped extends IBaseInstrument {
-  envelope: ADSREnvelope;
+  envelope: IEnvelope;
 }
 // instrument with mide-keyboard
 export interface IMidiKeyboard extends IBaseInstrument {
@@ -123,11 +146,11 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, IOscillator { }
+export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, ILegacyOscillator { }
 export interface IEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
 export interface IMonophonicSynth extends IEnvelopedOscillator, IMidiKeyboard { }
 export interface IMasterMixer extends IInputInstrument, IPlayable { }
-export type IInstrument = IMonophonicSynth | IEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
+export type ILegacyInstrument = IMonophonicSynth | IEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
 
 export type KeyboardKeyType = 'white' | 'black';

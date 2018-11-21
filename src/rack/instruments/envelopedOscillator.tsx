@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import { throttledCallback, parseLevel } from '../../utils/utils';
 import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput, Level, Time, ADSREnvelope, IEnvelopedOscillator } from '../../models/base';
+import { ID, IOutput, IInput, Level, Time, IEnvelope, IEnvelopedOscillator } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
@@ -33,7 +33,7 @@ export interface OwnProps {
 
 export interface Props extends OwnProps {
   instrument: IOutput;
-  envelope: ADSREnvelope;
+  envelope: IEnvelope;
   outputs: IInput[];
   onPlay: Callback;
   onStop: Callback;

@@ -9,7 +9,7 @@ import rootSaga from './saga';
 import { addInstrumentAction } from './instruments/actions';
 import {
   InstrumentEnum,
-//  ISimpleOscillator,
+  ISimpleOscillator,
   IEnvelopedOscillator,
   IMonophonicSynth,
 } from '../models/base';
@@ -21,7 +21,7 @@ const store: Store<IState, Action> = createStore(
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
-/*
+
 store.dispatch(addInstrumentAction({
   id: getUID('osc'),
   instrument: InstrumentEnum.SimpleOscillator,
@@ -31,7 +31,6 @@ store.dispatch(addInstrumentAction({
   oscillatorType: 'sine',
   frequency: 440,
 } as ISimpleOscillator))
-*/
 store.dispatch(addInstrumentAction({
   id: getUID('envosc'),
   instrument: InstrumentEnum.EnvelopedOscillator,

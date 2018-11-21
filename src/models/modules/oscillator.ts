@@ -1,7 +1,6 @@
-import { BaseAudioDevice, Frequency, Level, Time } from '../base';
-import { IModule } from './base';
+import { BaseAudioDevice, Frequency, IModule, IOscillator, Level, Time } from '../base';
 
-export class Oscillator extends BaseAudioDevice implements IModule {
+export class Oscillator extends BaseAudioDevice implements IOscillator, IModule {
 
   private _type : OscillatorType;
   public get type() : OscillatorType {

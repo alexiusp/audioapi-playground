@@ -1,7 +1,6 @@
-import { ADSREnvelope, BaseAudioDevice, IInputDevice, Time, Level } from '../base';
-import { IModule } from './base';
+import { IEnvelope, BaseAudioDevice, IInputDevice, IModule, Level, Time } from '../base';
 
-export class Envelope extends BaseAudioDevice implements ADSREnvelope, IInputDevice, IModule {
+export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IModule {
 
   private _attack : Time;
   public get attack() : Time {
@@ -70,6 +69,7 @@ export class Envelope extends BaseAudioDevice implements ADSREnvelope, IInputDev
     // release phase start
     const releaseTime = stopTime + this.release;
     this.input.gain.linearRampToValueAtTime(0, releaseTime);
+    return releaseTime;
   }
 
 }

@@ -1,9 +1,9 @@
-import { IInstrument, IInputInstrument, ID, IInput, IConnectable } from './base';
+import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable } from './base';
 import { MasterMixer } from './master';
 
 export class InstrumentsRack {
   // all instruments map
-  public instruments: Map<ID, IInstrument>;
+  public instruments: Map<ID, ILegacyInstrument>;
   // possible outputs (instruments with inputs)
   public outputs: Map<ID, IInput>;
 
@@ -11,7 +11,7 @@ export class InstrumentsRack {
   public master: MasterMixer;
 
   constructor() {
-    this.instruments = new Map<ID, IInstrument>();
+    this.instruments = new Map<ID, ILegacyInstrument>();
     // @ts-ignore
     const ctx: AudioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.master = new MasterMixer(ctx);
@@ -20,7 +20,7 @@ export class InstrumentsRack {
     this.outputs.set(this.master.id, this.master);
   }
 
-  public addInstrument(instrument: IInstrument) {
+  public addInstrument(instrument: ILegacyInstrument) {
     this.instruments.set(instrument.id, instrument);
     // if instrument has input - add it to the outputs map
     if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {

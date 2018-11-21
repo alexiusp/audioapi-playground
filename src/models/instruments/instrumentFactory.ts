@@ -1,7 +1,7 @@
-import { IInstrument, InstrumentEnum, ISimpleOscillator, IEnvelopedOscillator, IMonophonicSynth } from '../base';
+import { ILegacyInstrument, InstrumentEnum, ISimpleOscillator, IEnvelopedOscillator, IMonophonicSynth } from '../base';
 import Rack from '../instrumentsRack';
 import SimpleOscillator from './simpleOscillator';
-import EnvelopedOscillator from './envelopedOscillator';
+import {LegacyEnvelopedOscillator} from './envelopedOscillator';
 import MonophonicSynth from './monophonicSynth';
 
 export function buildSimpleOscillator(data: ISimpleOscillator) {
@@ -13,7 +13,7 @@ export function buildSimpleOscillator(data: ISimpleOscillator) {
 }
 
 export function buildEnvelopedOscillator(data: IEnvelopedOscillator) {
-  const instrument = new EnvelopedOscillator(Rack.context, data.id, data.volume, data.oscillatorType, data.frequency, data.envelope);
+  const instrument = new LegacyEnvelopedOscillator(Rack.context, data.id, data.volume, data.oscillatorType, data.frequency, data.envelope);
   if (data.output) {
     instrument.connect(data.output);
   }
@@ -28,7 +28,7 @@ export function buildMonophonicSynth(data: IMonophonicSynth) {
   return instrument;
 }
 
-export function buildInstrument(data: IInstrument) {
+export function buildInstrument(data: ILegacyInstrument) {
   switch (data.instrument) {
     case InstrumentEnum.SimpleOscillator:
       return buildSimpleOscillator(data as ISimpleOscillator);

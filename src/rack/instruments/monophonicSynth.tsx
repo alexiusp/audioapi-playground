@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import { parseLevel, throttledCallback } from '../../utils/utils';
 import IState from '../../store/state';
-import { ID, IMonophonicSynth, Level, Time, IOutput, ADSREnvelope, IInput } from '../../models/base';
+import { ID, IMonophonicSynth, Level, Time, IOutput, IEnvelope, IInput } from '../../models/base';
 import { DataCallback, Callback } from '../../models/types';
 import { getInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
@@ -31,7 +31,7 @@ export interface OwnProps {
 
 export interface Props extends OwnProps {
   instrument: IOutput;
-  envelope: ADSREnvelope;
+  envelope: IEnvelope;
   outputs: IInput[];
   onSelectOutput: DataCallback;
   onChangeVolume: DataCallback<Level>;

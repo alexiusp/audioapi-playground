@@ -1,6 +1,6 @@
 import { size } from 'lodash';
 import IInstrumentsState from './state';
-import { InstrumentEnum, IOutput, IGain, IConnectable, IInput, IInstrument, IOscillator, IEnvelopedOscillator, IMidiKeyboard } from '../../models/base';
+import { InstrumentEnum, IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, IEnvelopedOscillator, IMidiKeyboard } from '../../models/base';
 import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, INSTRUMENT_SET_OSCILLATOR_FREQUENCY } from './actions';
 import { INSTRUMENT_ENVELOPE_ATTACK_SET, INSTRUMENT_ENVELOPE_DECAY_SET, INSTRUMENT_ENVELOPE_SUSTAIN_SET, INSTRUMENT_ENVELOPE_RELEASE_SET } from './actions/envelope';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
@@ -11,7 +11,7 @@ export const initialInstrumentsState: IInstrumentsState = {
   outputs: [],
 };
 
-export function applyInstrumentToState(instrument: IInstrument, state: IInstrumentsState) {
+export function applyInstrumentToState(instrument: ILegacyInstrument, state: IInstrumentsState) {
   const instruments = {
     ...state.instruments,
     [instrument.id]: {
@@ -49,25 +49,25 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       } else {
         delete instrument.output;
       }
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     case INSTRUMENT_VOLUME_CHANGE: {
       const { id, volume } = action.payload;
       const instrument = state.instruments[id] as IGain;
       instrument.volume = volume;
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     case INSTRUMENT_SET_OSCILLATOR_TYPE: {
       const { id, type } = action.payload;
-      const instrument = state.instruments[id] as IOscillator;
+      const instrument = state.instruments[id] as ILegacyOscillator;
       instrument.oscillatorType = type;
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     case INSTRUMENT_SET_OSCILLATOR_FREQUENCY: {
       const { id, freq } = action.payload;
-      const instrument = state.instruments[id] as IOscillator;
+      const instrument = state.instruments[id] as ILegacyOscillator;
       instrument.frequency = freq;
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     case INSTRUMENT_ENVELOPE_ATTACK_SET: {
       const { id, attack } = action.payload;
@@ -109,7 +109,7 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
           sounds,
         }
       }
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     case KEYBOARD_KEY_UP: {
       const { id, key } = action.payload;
@@ -123,7 +123,7 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
         start,
         sounds,
       }
-      return applyInstrumentToState(instrument as IInstrument, state);
+      return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
   }
   return state;
