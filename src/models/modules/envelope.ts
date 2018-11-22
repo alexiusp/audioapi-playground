@@ -1,6 +1,7 @@
-import { IEnvelope, BaseAudioDevice, IInputDevice, IModule, Level, Time, IStateful } from '../base';
+import { IEnvelope, BaseAudioDevice, IInputDevice, IPlayable, Level, Time, ModuleEnum } from '../base';
 
-export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IModule, IStateful<IEnvelope> {
+export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IPlayable {
+  name: ModuleEnum.Envelope;
 
   private _attack : Time;
   public get attack() : Time {
@@ -44,6 +45,7 @@ export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice
     this._release = 0;
     this.input = this.output;
     this.input.gain.value = 0;
+    this.name = ModuleEnum.Envelope;
   }
 
   public setEnvelope(attack: Time, decay: Time, sustain: Level, release: Time) {
@@ -72,14 +74,4 @@ export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice
     return releaseTime;
   }
 
-  public normalize() {
-    const { id, attack, decay, sustain, release } = this;
-    return {
-      id,
-      attack,
-      decay,
-      sustain,
-      release,
-    }
-  }
 }

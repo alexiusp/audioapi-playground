@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { ID, IEnvelopedOscillator, Time, Level } from '../../models/base';
-import { getInstrument } from '../../store/instruments/selectors';
+import { getLegacyInstrument } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import RoundKnob from '../../controls/roundKnob';
 import { throttledCallback, parseLevel } from '../../utils/utils';

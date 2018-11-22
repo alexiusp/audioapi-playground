@@ -7,7 +7,7 @@ import { throttledCallback, parseLevel } from '../../utils/utils';
 import Rack from '../../models/instrumentsRack';
 import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator, IEnvelopedOscillator } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
-import { getInstrument, getOutputs } from '../../store/instruments/selectors';
+import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import {
   startPlayInstrumentAction,
@@ -49,13 +49,13 @@ export interface Props extends OwnProps {
   onReleaseChange: DataCallback<Time>;
 }
 
-export function EnvelopedOscillator(props: Props) {
+export function EnvelopedOscillator(props: OwnProps) {
   // const osc = props.instrument as ILegacyEnvelopedOscillator;
-  const envelope = props.envelope;
+  // const envelope = props.envelope;
   // const outputs = [Rack.master, ...props.outputs];
   return (
     <Panel className="instrument enveloped-oscillator">
-      <Panel.Heading>{props.name} {props.id}</Panel.Heading>
+      {/*<Panel.Heading>{props.name} {props.id}</Panel.Heading>*/}
       <Panel.Body>
         <Row>
           <Col xs={6}>
@@ -69,6 +69,7 @@ export function EnvelopedOscillator(props: Props) {
           }
           </Col>
           <Col xs={6}>
+          {/*
             <Envelope
               id={props.id}
               attack={envelope.attack}
@@ -76,6 +77,7 @@ export function EnvelopedOscillator(props: Props) {
               sustain={envelope.sustain}
               release={envelope.release}
               />
+          */}
           </Col>
         </Row>
         <Row>
@@ -106,7 +108,7 @@ export function EnvelopedOscillator(props: Props) {
     </Panel>
   );
 }
-
+/*
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const instrument = getInstrument(state, ownProps.id) as IEnvelopedOscillator;
   const { envelope, name, oscillator } = instrument;
@@ -134,5 +136,6 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseLevel(release))),
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillator);
+*/
+// export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillator);
+export default connect(null, null)(EnvelopedOscillator);

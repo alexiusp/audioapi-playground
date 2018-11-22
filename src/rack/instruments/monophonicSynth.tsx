@@ -7,7 +7,7 @@ import { parseLevel, throttledCallback } from '../../utils/utils';
 import IState from '../../store/state';
 import { ID, IMonophonicSynth, Level, Time, IOutput, IEnvelope, IInput } from '../../models/base';
 import { DataCallback, Callback } from '../../models/types';
-import { getInstrument, getOutputs } from '../../store/instruments/selectors';
+import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
   setOutputInstrumentAction,
   changeVolumeInstrumentAction,
@@ -118,7 +118,7 @@ export function MonophonicSynthUI(props: Props) {
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getInstrument(state, ownProps.id) as IMonophonicSynth;
+  const instrument = getLegacyInstrument(state, ownProps.id) as IMonophonicSynth;
   const envelope = instrument.envelope;
   const outputs = getOutputs(state);
   return {

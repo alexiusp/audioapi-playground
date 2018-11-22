@@ -38,22 +38,33 @@ export class BaseAudioDevice implements IBase {
   }
 }
 
-// base module with controls
-export interface IModule {
+// base module with play controls
+export interface IPlayable {
   start: (time?: Time) => void;
   stop: (time?: Time) => void;
 }
 
-// ADSR envelope model
-export interface IEnvelope extends IBase {
+export enum ModuleEnum {
+  Oscillator = 'OSC',
+  Envelope = 'ADSR',
+}
+
+export interface IModule extends IBase {
+  name: ModuleEnum;
+}
+
+// ADSR envelope module model
+export interface IEnvelope extends IModule {
+  name: ModuleEnum.Envelope;
   attack: Time;
   decay: Time;
   sustain: Level;
   release: Time;
 }
 
-// basic oscillator parameters model
-export interface IOscillator extends IBase {
+// base oscillator module model
+export interface IOscillator extends IModule {
+  name: ModuleEnum.Oscillator;
   type: OscillatorType;
   frequency: Frequency;
   gain: Level;
@@ -62,12 +73,8 @@ export interface IOscillator extends IBase {
 // union type of all existing modules
 export type Module = IEnvelope | IOscillator;
 
-export interface IInstrument extends IBase {
-  name: InstrumentEnum,
-}
-
 // instrument - container for modules
-export interface IEnvelopedOscillator extends IInstrument {
+export interface IEnvelopedOscillator extends IBase {
   name: InstrumentEnum.EnvelopedOscillator;
   envelope: IEnvelope;
   oscillator: IOscillator;
@@ -79,9 +86,9 @@ export enum InstrumentEnum {
   EnvelopedOscillator = 'Enveloped Oscillator',
 }
 
-// exports its properties to save in state
-export interface IStateful<T extends Instrument | Module> {
-  normalize: () => T;
+export interface IInstrument extends IBase {
+  name: InstrumentEnum;
+  modules: ID[];
 }
 
 
@@ -143,7 +150,7 @@ export interface IMidiKeyboard extends IBaseInstrument {
 }
 
 // behavior models
-export interface IPlayable {
+export interface ILegacyPlayable {
   play: (freq?: Frequency) => void;
 }
 
@@ -156,10 +163,10 @@ export interface IInputInstrument extends IInput {
   getInput: () => AudioNode;
 }
 
-export interface ISimpleOscillator extends IOutputInstrument, IGain, IPlayable, ILegacyOscillator { }
+export interface ISimpleOscillator extends IOutputInstrument, IGain, ILegacyPlayable, ILegacyOscillator { }
 export interface ILegacyEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
 export interface IMonophonicSynth extends ILegacyEnvelopedOscillator, IMidiKeyboard { }
-export interface IMasterMixer extends IInputInstrument, IPlayable { }
+export interface IMasterMixer extends IInputInstrument, ILegacyPlayable { }
 export type ILegacyInstrument = IMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
 

@@ -7,7 +7,7 @@ import Rack from '../../models/instrumentsRack';
 import SimpleOscillator from '../../models/instruments/simpleOscillator';
 import { ID, IOutput, IInput, Level } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
-import { getInstrument, getOutputs } from '../../store/instruments/selectors';
+import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import {
   startPlayInstrumentAction,
@@ -74,7 +74,7 @@ export function SimpleOscillatorUI(props: Props) {
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getInstrument(state, ownProps.id) as SimpleOscillator;
+  const instrument = getLegacyInstrument(state, ownProps.id) as SimpleOscillator;
   const outputs = getOutputs(state);
   return {
     instrument,

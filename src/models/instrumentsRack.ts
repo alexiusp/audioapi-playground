@@ -1,9 +1,10 @@
-import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum } from './base';
+import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum, Module } from './base';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
 
 export class InstrumentsRack {
   private instruments: Map<ID, Instrument>
+  private modules: Map<ID, Module>
   // all instruments map
   public legacyInstruments: Map<ID, ILegacyInstrument>;
   // possible outputs (instruments with inputs)
@@ -14,6 +15,7 @@ export class InstrumentsRack {
 
   constructor() {
     this.instruments = new Map();
+    this.modules = new Map();
     // @ts-ignore
     const ctx: AudioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.context = ctx;
@@ -27,8 +29,14 @@ export class InstrumentsRack {
   public createInstrument(instrumentClass: InstrumentEnum) {
     switch (instrumentClass) {
       case InstrumentEnum.EnvelopedOscillator: {
+        // instantiate instrument
         const instrument = new EnvelopedOscillator(this.context);
+        // add instrument to map
         this.instruments.set(instrument.id, instrument);
+        // register modules
+        const { envelope, oscillator } = instrument;
+        this.modules.set(envelope.id, envelope);
+        this.modules.set(oscillator.id, oscillator);
         return instrument;
       }
     }
@@ -39,7 +47,13 @@ export class InstrumentsRack {
     return this.instruments.get(id);
   }
 
+  public getModule(id: ID) {
+    // console.log('getInstrument', id, this.instruments.has(id));
+    return this.modules.get(id);
+  }
+
   // legacy methods
+
   public addInstrument(instrument: ILegacyInstrument) {
     this.legacyInstruments.set(instrument.id, instrument);
     // if instrument has input - add it to the outputs map

@@ -1,8 +1,15 @@
-import { IInput, ILegacyInstrument, Instrument } from '../../models/base';
+import { IInput, ILegacyInstrument, IInstrument, Module } from '../../models/base';
 
 export default interface IInstrumentsState {
-  outputs: IInput[];
+  modules: {
+    [id: string]: Module;
+  },
   instruments: {
-    [id: string]: ILegacyInstrument | Instrument;
+    [id: string]: IInstrument;
+  }
+  // legacy state
+  outputs: IInput[];
+  legacyInstruments: {
+    [id: string]: ILegacyInstrument;
   }
 }
