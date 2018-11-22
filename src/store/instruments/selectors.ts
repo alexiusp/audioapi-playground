@@ -1,8 +1,19 @@
-import { forIn } from 'lodash';
+import { forIn, keys } from 'lodash';
 import IState from '../state';
 import { IBaseInstrument, ID, IMidiKeyboard, Instrument } from '../../models/base';
 
 export const getInstrumetsState = (state: IState) => state.instruments;
+
+export const getInstrumentIdList = (state: IState) : ID[] => {
+  const iMap = getInstrumetsState(state).instruments;
+  return keys(iMap);
+}
+
+export const getInstrument = (state: IState, id: ID) => getInstrumetsState(state).instruments[id];
+
+export const getModule = (state: IState, id: ID) => getInstrumetsState(state).modules[id];
+
+// legacy selectors
 
 export const getLegacyInstrumentsMap = (state: IState) => getInstrumetsState(state).legacyInstruments;
 
