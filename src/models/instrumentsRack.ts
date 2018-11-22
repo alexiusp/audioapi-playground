@@ -34,6 +34,11 @@ export class InstrumentsRack {
     }
   }
 
+  public getInstrument(id: ID) {
+    // console.log('getInstrument', id, this.instruments.has(id));
+    return this.instruments.get(id);
+  }
+
   // legacy methods
   public addInstrument(instrument: ILegacyInstrument) {
     this.legacyInstruments.set(instrument.id, instrument);
@@ -43,10 +48,6 @@ export class InstrumentsRack {
     }
   }
 
-  public getInstrument(id: ID) {
-    // console.log('getInstrument', id, this.instruments.has(id));
-    return this.legacyInstruments.get(id);
-  }
 
   public getOutput(id: ID) {
     // console.log('getOutput', id, this.outputs.has(id));

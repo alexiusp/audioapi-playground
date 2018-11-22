@@ -62,8 +62,13 @@ export interface IOscillator extends IBase {
 // union type of all existing modules
 export type Module = IEnvelope | IOscillator;
 
+export interface IInstrument extends IBase {
+  name: InstrumentEnum,
+}
+
 // instrument - container for modules
-export interface IEnvelopedOscillator extends IBase {
+export interface IEnvelopedOscillator extends IInstrument {
+  name: InstrumentEnum.EnvelopedOscillator;
   envelope: IEnvelope;
   oscillator: IOscillator;
 }
@@ -71,7 +76,7 @@ export interface IEnvelopedOscillator extends IBase {
 export type Instrument = IEnvelopedOscillator;
 
 export enum InstrumentEnum {
-  EnvelopedOscillator,
+  EnvelopedOscillator = 'Enveloped Oscillator',
 }
 
 // exports its properties to save in state
