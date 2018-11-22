@@ -5,9 +5,9 @@ import { Dispatch } from 'redux';
 
 import { throttledCallback, parseLevel } from '../../utils/utils';
 import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator, IEnvelopedOscillator } from '../../models/base';
+import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator, IEnvelopedOscillator, IInstrument, ModuleEnum } from '../../models/base';
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
-import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
+import { getLegacyInstrument, getOutputs, getInstrument, getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import {
   startPlayInstrumentAction,
@@ -33,29 +33,23 @@ export interface OwnProps {
 }
 
 export interface Props extends OwnProps {
-  envelope: IEnvelope;
   name: string;
+  envelope: ID;
   oscillator: ID;
 //  instrument: IOutput;
 //  outputs: IInput[];
-  onPlay: Callback;
-  onStop: Callback;
-  onSelectOutput: DataCallback;
-  onChangeVolume: DataCallback<Level>;
-  onSetOscType: DataCallback<any>;
-  onChangeFrequency: DataCallback<number>;
-  onDecayChange: DataCallback<Time>;
-  onSustainChange: DataCallback<Level>;
-  onReleaseChange: DataCallback<Time>;
+//  onPlay: Callback;
+//  onStop: Callback;
+//  onSelectOutput: DataCallback;
+//  onChangeVolume: DataCallback<Level>;
+//  onSetOscType: DataCallback<any>;
+//  onChangeFrequency: DataCallback<number>;
 }
 
-export function EnvelopedOscillator(props: OwnProps) {
-  // const osc = props.instrument as ILegacyEnvelopedOscillator;
-  // const envelope = props.envelope;
-  // const outputs = [Rack.master, ...props.outputs];
+export function EnvelopedOscillator(props: Props) {
   return (
     <Panel className="instrument enveloped-oscillator">
-      {/*<Panel.Heading>{props.name} {props.id}</Panel.Heading>*/}
+      <Panel.Heading>{props.name} {props.id}</Panel.Heading>
       <Panel.Body>
         <Row>
           <Col xs={6}>
@@ -69,15 +63,7 @@ export function EnvelopedOscillator(props: OwnProps) {
           }
           </Col>
           <Col xs={6}>
-          {/*
-            <Envelope
-              id={props.id}
-              attack={envelope.attack}
-              decay={envelope.decay}
-              sustain={envelope.sustain}
-              release={envelope.release}
-              />
-          */}
+            <Envelope id={props.envelope} />
           </Col>
         </Row>
         <Row>
@@ -108,20 +94,28 @@ export function EnvelopedOscillator(props: OwnProps) {
     </Panel>
   );
 }
-/*
+
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getInstrument(state, ownProps.id) as IEnvelopedOscillator;
-  const { envelope, name, oscillator } = instrument;
-  const outputs = getOutputs(state);
+  const instrument = getInstrument(state, ownProps.id) as IInstrument;
+  const modules = instrument.modules;
+  let envelope: string = '';
+  let oscillator: string = '';
+  modules.forEach(id => {
+    const module = getModule(state, id);
+    if (module.name === ModuleEnum.Envelope) {
+      envelope = id;
+    } else {
+      oscillator = id;
+    }
+  });
   return {
-    name,
+    name: instrument.name,
     envelope,
-    oscillator: oscillator.id,
-//    instrument,
-//    outputs,
+    oscillator,
   }
 }
 
+/*
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
@@ -131,11 +125,8 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
     onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
-    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseLevel(decay))),
-    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseLevel(sustain))),
-    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseLevel(release))),
   }
 }
 */
 // export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillator);
-export default connect(null, null)(EnvelopedOscillator);
+export default connect(mapStateToProps, null)(EnvelopedOscillator);

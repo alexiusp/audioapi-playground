@@ -4,14 +4,17 @@ import { IBaseInstrument, ID, IMidiKeyboard, Instrument } from '../../models/bas
 
 export const getInstrumetsState = (state: IState) => state.instruments;
 
-export const getInstrumentIdList = (state: IState) : ID[] => {
-  const iMap = getInstrumetsState(state).instruments;
-  return keys(iMap);
-}
+export const getInstrumentsMap = (state: IState) => getInstrumetsState(state).instruments;
 
-export const getInstrument = (state: IState, id: ID) => getInstrumetsState(state).instruments[id];
+export const getInstrumentIdList = (state: IState) => keys(getInstrumentsMap(state));
 
-export const getModule = (state: IState, id: ID) => getInstrumetsState(state).modules[id];
+export const getInstrument = (state: IState, id: ID) => getInstrumentsMap(state)[id];
+
+export const getModulesMap = (state: IState) => getInstrumetsState(state).modules;
+
+export const getModulesIdList = (state: IState) => keys(getModulesMap(state));
+
+export const getModule = (state: IState, id: ID) => getModulesMap(state)[id];
 
 // legacy selectors
 

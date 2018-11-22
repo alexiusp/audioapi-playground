@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import { ID, InstrumentEnum } from '../../models/base';
-import { connect } from 'react-redux';
-import IState from '../../store/state';
 import { getInstrument } from '../../store/instruments/selectors';
+import IState from '../../store/state';
+import EnvelopedOscillator from './envelopedOscillator';
 
 export interface OwnProps {
   id: ID;
@@ -13,10 +14,11 @@ export interface Props extends OwnProps {
   name: InstrumentEnum;
 }
 
+// HOC to render instruments
 export function Instrument(props: Props) {
   switch (props.name) {
     case InstrumentEnum.EnvelopedOscillator:
-      return (<div>{props.name}</div>);
+      return (<EnvelopedOscillator id={props.id} />);
   }
 }
 
