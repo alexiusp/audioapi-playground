@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { ID, IEnvelopedOscillator, Time, Level, IEnvelope } from '../../models/base';
-import { getLegacyInstrument, getModule } from '../../store/instruments/selectors';
+import { ID, Time, Level, IEnvelope } from '../../models/base';
+import { getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import RoundKnob from '../../controls/roundKnob';
 import { throttledCallback, parseLevel } from '../../utils/utils';
-import { setAttackEnvelopeInstrumentAction, setDecayEnvelopeInstrumentAction, setSustainEnvelopeInstrumentAction, setReleaseEnvelopeInstrumentAction } from '../../store/instruments/actions/envelope';
+import { setAttackEnvelopeModuleAction, setDecayEnvelopeModuleAction, setSustainEnvelopeModuleAction, setReleaseEnvelopeModuleAction } from '../../store/instruments/actions/envelope';
 import { DataCallback } from '../../models/types';
 
 export interface OwnProps {
@@ -86,10 +86,10 @@ export const mapStateToProps = (state: IState, props: OwnProps) => {
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
-    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseLevel(attack))),
-    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseLevel(decay))),
-    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseLevel(sustain))),
-    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseLevel(release))),
+    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeModuleAction(id, parseLevel(attack))),
+    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeModuleAction(id, parseLevel(decay))),
+    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeModuleAction(id, parseLevel(sustain))),
+    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeModuleAction(id, parseLevel(release))),
   }
 }
 

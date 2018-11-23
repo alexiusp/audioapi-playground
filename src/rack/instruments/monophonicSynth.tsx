@@ -14,10 +14,10 @@ import {
   setOscillatorTypeInstrumentAction,
 } from '../../store/instruments/actions';
 import {
-  setAttackEnvelopeInstrumentAction,
-  setDecayEnvelopeInstrumentAction,
-  setSustainEnvelopeInstrumentAction,
-  setReleaseEnvelopeInstrumentAction,
+  setAttackEnvelopeModuleAction,
+  setDecayEnvelopeModuleAction,
+  setSustainEnvelopeModuleAction,
+  setReleaseEnvelopeModuleAction,
 } from '../../store/instruments/actions/envelope';
 import Rack from '../../models/instrumentsRack';
 import RoundKnob from '../../controls/roundKnob';
@@ -134,10 +134,10 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
-    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeInstrumentAction(id, parseLevel(attack))),
-    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeInstrumentAction(id, parseLevel(decay))),
-    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeInstrumentAction(id, parseLevel(sustain))),
-    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeInstrumentAction(id, parseLevel(release))),
+    onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeModuleAction(id, parseLevel(attack))),
+    onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeModuleAction(id, parseLevel(decay))),
+    onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeModuleAction(id, parseLevel(sustain))),
+    onReleaseChange: (release: Time) => dispatch(setReleaseEnvelopeModuleAction(id, parseLevel(release))),
   }
 }
 

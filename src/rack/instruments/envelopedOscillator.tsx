@@ -17,12 +17,6 @@ import {
   setOscillatorFrequencyInstrumentAction,
   stopPlayInstrumentAction,
 } from '../../store/instruments/actions';
-import {
-  setAttackEnvelopeInstrumentAction,
-  setDecayEnvelopeInstrumentAction,
-  setSustainEnvelopeInstrumentAction,
-  setReleaseEnvelopeInstrumentAction
-} from '../../store/instruments/actions/envelope';
 import RoundKnob from '../../controls/roundKnob';
 import OutputSelector from '../../controls/outputSelector';
 import WaveSelector from '../../controls/waveSelector';
