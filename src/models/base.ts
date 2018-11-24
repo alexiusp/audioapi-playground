@@ -17,20 +17,34 @@ export interface IInputDevice {
 export class BaseAudioDevice implements IBase {
   public id: ID;
   private _context: AudioContext;
-  protected output: GainNode;
   constructor(ctx: AudioContext, prefix?: string) {
     this.id = getUID(prefix);
     this._context = ctx;
-    this.output = ctx.createGain();
   }
   get context() {
     return this._context;
+  }
+}
+
+export class OutputAudioDevice extends BaseAudioDevice {
+  protected output: GainNode;
+  constructor(ctx: AudioContext, prefix?: string) {
+    super(ctx, prefix)
+    this.output = ctx.createGain();
   }
   connect(target: AudioNode) {
     this.output.connect(target);
   }
   disconnect(target: AudioNode) {
     this.output.disconnect(target);
+  }
+}
+
+export class InputAudioDevice extends BaseAudioDevice implements IInputDevice {
+  input: GainNode;
+  constructor(ctx: AudioContext, prefix?: string) {
+    super(ctx, prefix)
+    this.input = ctx.createGain();
   }
 }
 
@@ -91,7 +105,7 @@ export interface IInstrument extends IBase {
 }
 
 // enveloped oscillator - basic oscillator
-export interface IEnvelopedOscillator extends BaseAudioDevice, IPlayable {
+export interface IEnvelopedOscillator extends OutputAudioDevice, IPlayable {
   name: InstrumentEnum.EnvelopedOscillator;
   envelope: IEnvelope;
   oscillator: IOscillator;
@@ -100,7 +114,11 @@ export interface IEnvelopedOscillator extends BaseAudioDevice, IPlayable {
 // union type of all existing instruments
 export type Instrument = IEnvelopedOscillator;
 
-
+// store interface for master mixer
+export interface IMasterMixer extends InputAudioDevice, IPlayable {
+  volume: Level;
+  playing: boolean;
+}
 
 
 
@@ -119,33 +137,33 @@ export enum LegacyInstrumentEnum {
 
 export type LegacyInstrumentType = "Input" | "Output" | "InOut";
 
-export interface IBaseInstrument extends IBase {
+export interface ILegacyBaseInstrument extends IBase {
   instrument: LegacyInstrumentEnum;
 }
-export interface IInput extends IBaseInstrument {
+export interface IInput extends ILegacyBaseInstrument {
   type: "Input";
 }
-export interface IOutput extends IBaseInstrument {
+export interface IOutput extends ILegacyBaseInstrument {
   output?: ID;
   type: "Output";
 }
 export type IConnectable = IInput | IOutput;
 
-export interface IGain extends IBaseInstrument {
+export interface IGain extends ILegacyBaseInstrument {
   volume: Level;
 }
 
 // oscillator model
-export interface ILegacyOscillator extends IBaseInstrument {
+export interface ILegacyOscillator extends ILegacyBaseInstrument {
   oscillatorType: OscillatorType;
   frequency: Frequency;
 }
 // instrument with envelope
-export interface IEnveloped extends IBaseInstrument {
+export interface IEnveloped extends ILegacyBaseInstrument {
   envelope: IEnvelope;
 }
 // instrument with mide-keyboard
-export interface IMidiKeyboard extends IBaseInstrument {
+export interface IMidiKeyboard extends ILegacyBaseInstrument {
   keyboard: MidiKeyboardState;
 }
 
@@ -154,21 +172,16 @@ export interface ILegacyPlayable {
   play: (freq?: Frequency) => void;
 }
 
-export interface IOutputInstrument extends IOutput {
+export interface ILegacyOutputInstrument extends IOutput {
   connect: (output: ID) => void;
   disconnect: () => void;
 }
 
-export interface IInputInstrument extends IInput {
-  getInput: () => AudioNode;
-}
-
-export interface ISimpleOscillator extends IOutputInstrument, IGain, ILegacyPlayable, ILegacyOscillator { }
+export interface ISimpleOscillator extends ILegacyOutputInstrument, IGain, ILegacyPlayable, ILegacyOscillator { }
 export interface ILegacyEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
 export interface IMonophonicSynth extends ILegacyEnvelopedOscillator, IMidiKeyboard { }
-export interface IMasterMixer extends IInputInstrument, ILegacyPlayable { }
-export type ILegacyInstrument = IMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator | IMasterMixer;
 
+export type ILegacyInstrument = IMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator;
 
 export type KeyboardKeyType = 'white' | 'black';
 

@@ -1,29 +1,41 @@
-import { BaseAudioDevice, LegacyInstrumentEnum, IMasterMixer } from './base';
+import { InputAudioDevice, IMasterMixer } from './base';
 import { Level } from './types';
 
-export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
-  id: string;
-  type: "Input";
-  instrument = LegacyInstrumentEnum.MasterMixer;
+export class MasterMixer extends InputAudioDevice implements IMasterMixer {
+
+  private _playing : boolean;
+  public get playing() : boolean {
+    return this._playing;
+  }
+  public set playing(v : boolean) {
+    this._playing = v;
+  }
+
+  private _volume : Level;
+  public get volume() : Level {
+    return this._volume;
+  }
+  public set volume(v : Level) {
+    this.input.gain.setValueAtTime(v, this.context.currentTime);
+    this._volume = v;
+  }
+
   // osciloscope/frequency bar graph
   private analyser: AnalyserNode;
-  // master volume control
-  private gain: GainNode;
 
   constructor(ctx: AudioContext) {
     super(ctx);
-    this.id = 'master';
-    this.type = "Input";
     this.analyser = ctx.createAnalyser();
     this.analyser.fftSize = 4096;
     this.analyser.minDecibels = -90;
     this.analyser.maxDecibels = -10;
     // this.analyser.smoothingTimeConstant = 0.85;
     // this.analyser.smoothingTimeConstant = 0;
-    this.gain = ctx.createGain();
-    this.gain.gain.value = 0;
-    this.analyser.connect(this.gain);
-    this.gain.connect(ctx.destination);
+    this.input.connect(this.analyser);
+    this.analyser.connect(ctx.destination);
+    this.input.gain.value = 0;
+    this._volume = 0;
+    this._playing = false;
   }
 
   public getAnalyserData() {
@@ -33,23 +45,14 @@ export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
     return dataArray;
   }
 
-  getInput() {
-    return this.analyser;
-  }
-
-  public setVolume(volume: Level) {
-    console.log('setVolume', volume);
-    this.gain.gain.setValueAtTime(volume, this.context.currentTime);
-  }
-
-  public play(volume: Level = 1) {
-    console.log('MasterMixer.play');
-    this.gain.gain.value = volume;
+  public start(volume: Level = 1) {
+    this.playing = true;
+    this.volume = volume;
   }
 
   public stop() {
-    console.log('MasterMixer.stop');
-    this.gain.gain.value = 0;
+    this.playing = false;
+    this.volume = 0;
   }
 
 }

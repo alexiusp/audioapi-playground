@@ -1,5 +1,5 @@
 import {
-  BaseAudioDevice,
+  OutputAudioDevice,
   IEnvelopedOscillator,
   InstrumentEnum,
 } from '../base';
@@ -7,7 +7,7 @@ import { Time } from '../types';
 import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
 
-export default class EnvelopedOscillator extends BaseAudioDevice implements IEnvelopedOscillator {
+export default class EnvelopedOscillator extends OutputAudioDevice implements IEnvelopedOscillator {
 
   name = InstrumentEnum.EnvelopedOscillator;
 
@@ -33,7 +33,6 @@ export default class EnvelopedOscillator extends BaseAudioDevice implements IEnv
     this._oscillator = new Oscillator(ctx);
     this._oscillator.connect(this._envelope.input);
     this._envelope.connect(this.output);
-    this.connect(ctx.destination);
   }
 
   public start(time?: Time) {

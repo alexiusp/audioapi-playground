@@ -1,7 +1,7 @@
-import { IEnvelope, BaseAudioDevice, IInputDevice, IPlayable, ModuleEnum } from '../base';
+import { IEnvelope, OutputAudioDevice, IInputDevice, IPlayable, ModuleEnum } from '../base';
 import { Level, Time } from '../types';
 
-export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IPlayable {
+export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevice, IPlayable {
   name: ModuleEnum.Envelope;
 
   private _attack : Time;

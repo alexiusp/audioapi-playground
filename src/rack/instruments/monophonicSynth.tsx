@@ -41,7 +41,7 @@ export interface Props extends OwnProps {
 export function MonophonicSynthUI(props: Props) {
   const inst = props.instrument as IMonophonicSynth;
   const envelope = props.envelope;
-  const outputs = [Rack.master, ...props.outputs];
+  const outputs = [...props.outputs];
   return (
     <Panel className="instrument monophonic-synth">
       <Panel.Heading>MonophonicSynth {inst.id}</Panel.Heading>

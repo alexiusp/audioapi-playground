@@ -1,4 +1,6 @@
+import { Level } from '../../models/types';
+
 export default interface IMasterState {
-  volume: number;
+  volume: Level;
   playing: boolean;
 }

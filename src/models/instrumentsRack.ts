@@ -1,4 +1,4 @@
-import { ILegacyInstrument, IInputInstrument, IInput, IConnectable, Instrument, InstrumentEnum, Module, BaseAudioDevice } from './base';
+import { ILegacyInstrument, IInput, IConnectable, Instrument, InstrumentEnum, Module, BaseAudioDevice, OutputAudioDevice } from './base';
 import { ID } from './types';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
@@ -6,10 +6,6 @@ import EnvelopedOscillator from './instruments/envelopedOscillator';
 export class InstrumentsRack {
   private instruments: Map<ID, Instrument>
   private modules: Map<ID, Module>
-  // all instruments map
-  public legacyInstruments: Map<ID, ILegacyInstrument>;
-  // possible outputs (instruments with inputs)
-  public outputs: Map<ID, IInput>;
 
   public context: AudioContext;
   public master: MasterMixer;
@@ -21,10 +17,6 @@ export class InstrumentsRack {
     const ctx: AudioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.context = ctx;
     this.master = new MasterMixer(ctx);
-    // legacy
-    this.outputs = new Map<ID, IInputInstrument>();
-    this.outputs.set(this.master.id, this.master);
-    this.legacyInstruments = new Map<ID, ILegacyInstrument>();
   }
 
   public createInstrument(which: InstrumentEnum) {
@@ -41,7 +33,7 @@ export class InstrumentsRack {
         this.modules.set(oscillator.id, oscillator);
       }
     }
-    (instrument! as BaseAudioDevice).connect(Rack.master.getInput());
+    (instrument! as OutputAudioDevice).connect(Rack.master.input);
     return instrument!;
   }
 
@@ -53,22 +45,6 @@ export class InstrumentsRack {
   public getModule(id: ID) {
     // console.log('getInstrument', id, this.instruments.has(id));
     return this.modules.get(id);
-  }
-
-  // legacy methods
-
-  public addInstrument(instrument: ILegacyInstrument) {
-    this.legacyInstruments.set(instrument.id, instrument);
-    // if instrument has input - add it to the outputs map
-    if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
-      this.outputs.set(instrument.id, instrument as IInputInstrument);
-    }
-  }
-
-
-  public getOutput(id: ID) {
-    // console.log('getOutput', id, this.outputs.has(id));
-    return this.outputs.get(id);
   }
 
 }

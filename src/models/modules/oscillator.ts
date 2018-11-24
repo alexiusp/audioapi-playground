@@ -1,7 +1,7 @@
-import { BaseAudioDevice, IPlayable, IOscillator, ModuleEnum } from '../base';
+import { OutputAudioDevice, IPlayable, IOscillator, ModuleEnum } from '../base';
 import { Frequency, Level, Time } from '../types';
 
-export class Oscillator extends BaseAudioDevice implements IOscillator, IPlayable {
+export class Oscillator extends OutputAudioDevice implements IOscillator, IPlayable {
   name: ModuleEnum.Oscillator;
 
   private _type : OscillatorType;

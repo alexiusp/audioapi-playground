@@ -52,7 +52,7 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       legacyInstruments[instrument.id] = instrument;
       const outputs = state.outputs;
       if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
-        outputs.push(instrument as IInput);
+        // outputs.push(instrument as IInput);
       }
       return {
         ...state,

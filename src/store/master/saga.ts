@@ -7,7 +7,7 @@ import { getVolume } from './selectors';
 export function* masterPlaySaga(action: PlayControlAction) {
   if (action.type === MASTER_PLAY_START) {
     const volume = yield select(getVolume);
-    Rack.master.play(volume);
+    Rack.master.start(volume);
   } else {
     Rack.master.stop();
   }
@@ -15,7 +15,7 @@ export function* masterPlaySaga(action: PlayControlAction) {
 
 export function* masterVolumeSaga(action: IChangeVolumeAction) {
   const volume = action.payload;
-  yield Rack.master.setVolume(volume);
+  yield Rack.master.volume = volume;
 }
 
 export default function* masterSaga() {
