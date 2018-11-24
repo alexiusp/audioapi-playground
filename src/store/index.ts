@@ -6,7 +6,7 @@ import { InstrumentEnum } from '../models/base';
 import IState from './state';
 import reducer from './reducer';
 import rootSaga from './saga';
-import { createInstrumentAction } from './instruments/actions';
+import { createInstrumentAction } from './instruments/actions/instrument';
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store<IState, Action> = createStore(

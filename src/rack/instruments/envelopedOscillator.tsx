@@ -3,14 +3,13 @@ import { Button, Glyphicon, Panel, FormControl, Row, Col } from 'react-bootstrap
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { throttledCallback, parseLevel } from '../../utils/utils';
-import Rack from '../../models/instrumentsRack';
-import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator, IEnvelopedOscillator, IInstrument, ModuleEnum } from '../../models/base';
-import { Callback, DataCallback, OscillatorType } from '../../models/types';
-import { getLegacyInstrument, getOutputs, getInstrument, getModule } from '../../store/instruments/selectors';
+import { ID, IInstrument, ModuleEnum } from '../../models/base';
+import { Callback } from '../../models/types';
+import { getInstrument, getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import Envelope from '../modules/Envelope';
 import Oscillator from '../modules/Oscillator';
+import { startPlayInstrumentAction, stopPlayInstrumentAction } from '../../store/instruments/actions/instrument';
 
 export interface OwnProps {
   id: ID;
@@ -20,12 +19,8 @@ export interface Props extends OwnProps {
   name: string;
   envelope: ID;
   oscillator: ID;
-//  onPlay: Callback;
-//  onStop: Callback;
-//  onSelectOutput: DataCallback;
-//  onChangeVolume: DataCallback<Level>;
-//  onSetOscType: DataCallback<any>;
-//  onChangeFrequency: DataCallback<number>;
+  onPlay: Callback;
+  onStop: Callback;
 }
 
 export function EnvelopedOscillator(props: Props) {
@@ -41,22 +36,10 @@ export function EnvelopedOscillator(props: Props) {
             <Envelope id={props.envelope} />
           </Col>
         </Row>
-        <Row>
-          <Col xs={6}>
-          {
-            /*
-            <OutputSelector
-              id={`${osc.id}-output-select`}
-              active={osc.output}
-              options={outputs}
-              onSelect={props.onSelectOutput} />
-            */
-          }
-          </Col>
-          <Col xs={6}>
-          </Col>
-        </Row>
       </Panel.Body>
+      <Panel.Footer>
+        <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
+      </Panel.Footer>
     </Panel>
   );
 }
@@ -81,18 +64,11 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   }
 }
 
-/*
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
     onPlay: () => dispatch(startPlayInstrumentAction(id)),
     onStop: () => dispatch(stopPlayInstrumentAction(id)),
-    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
-    onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
-    onChangeFrequency: (freq: number) => dispatch(setOscillatorFrequencyInstrumentAction(id, freq)),
   }
 }
-*/
-// export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillator);
-export default connect(mapStateToProps, null)(EnvelopedOscillator);
+export default connect(mapStateToProps, mapDispatchToProps)(EnvelopedOscillator);

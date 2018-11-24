@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
 import IInstrumentsState from './state';
 import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, IMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
-import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_CREATE } from './actions';
+import { InstrumentsAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MIDINoteMap } from '../../utils/midi';
 import Rack from '../../models/instrumentsRack';
@@ -9,6 +9,7 @@ import { normalizeInstrument, normalizeModule } from './normalizer';
 import { MODULE_ENVELOPE_ATTACK_SET, MODULE_ENVELOPE_DECAY_SET, MODULE_ENVELOPE_SUSTAIN_SET, MODULE_ENVELOPE_RELEASE_SET } from './actions/envelope';
 import { MODULE_OSCILLATOR_TYPE_SET, MODULE_OSCILLATOR_FREQUENCY_SET, MODULE_OSCILLATOR_VOLUME_SET, MODULE_OSCILLATOR_PLAY_START, MODULE_OSCILLATOR_PLAY_STOP } from './actions/oscillator';
 import { Oscillator } from '../../models/modules/oscillator';
+import { INSTRUMENT_CREATE, INSTRUMENT_PLAY_START, INSTRUMENT_PLAY_STOP } from './actions/instrument';
 
 export const initialInstrumentsState: IInstrumentsState = {
   modules: {},
@@ -43,7 +44,7 @@ function applyModuleToState(module: Module, state: IInstrumentsState) {
   }
 }
 
-export function instruments(state: IInstrumentsState = initialInstrumentsState, action: InstrumentAction) {
+export function instruments(state: IInstrumentsState = initialInstrumentsState, action: InstrumentsAction) {
   switch (action.type) {
     case INSTRUMENT_ADD: {
       const instrument = action.payload;
@@ -204,6 +205,20 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const module = Rack.getModule(action.payload);
       if (module) {
         (module as Oscillator).stop();
+      }
+      return state;
+    }
+    case INSTRUMENT_PLAY_START: {
+      const instrument = Rack.getInstrument(action.payload);
+      if (instrument) {
+        (instrument as IPlayable).start();
+      }
+      return state;
+    }
+    case INSTRUMENT_PLAY_STOP: {
+      const instrument = Rack.getInstrument(action.payload);
+      if (instrument) {
+        (instrument as IPlayable).stop();
       }
       return state;
     }

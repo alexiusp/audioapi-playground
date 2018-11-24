@@ -31,8 +31,6 @@ export interface Props extends OwnProps {
   onSetOscType: DataCallback<OscillatorType>;
   onChangeFrequency: React.FormEventHandler<FormControl>;
   onChangeVolume: DataCallback<Level>;
-  onPlay: Callback;
-  onStop: Callback;
 }
 
 export function Oscillator(props: Props) {
@@ -54,9 +52,6 @@ export function Oscillator(props: Props) {
           value={props.gain}
           onUpdate={props.onChangeVolume} />
       </div>
-      <div>
-        <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
-      </div>
     </div>
   );
 }
@@ -74,8 +69,6 @@ export const mapStateToProps = (state: IState, props: OwnProps) => {
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
-    onPlay: () => dispatch(startPlayOscillatorModuleAction(id)),
-    onStop: () => dispatch(stopPlayOscillatorModuleAction(id)),
 //    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: Level) => dispatch(setVolumeOscillatorModuleAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setTypeOscillatorModuleAction(id, type)),

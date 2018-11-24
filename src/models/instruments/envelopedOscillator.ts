@@ -3,7 +3,7 @@ import SimpleOscillator from './simpleOscillator';
 import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
 
-export default class EnvelopedOscillator extends BaseAudioDevice implements IPlayable, IEnvelopedOscillator {
+export default class EnvelopedOscillator extends BaseAudioDevice implements IEnvelopedOscillator {
 
   name = InstrumentEnum.EnvelopedOscillator;
 
