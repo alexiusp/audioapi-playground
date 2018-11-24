@@ -1,0 +1,7 @@
+.adsr-controls {
+  display: flex;
+}
+.adsr-controls>div {
+  flex: 1 1 100%;
+  text-align: center;
+}

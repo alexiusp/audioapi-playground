@@ -26,7 +26,8 @@ export class Oscillator extends BaseAudioDevice implements IOscillator, IPlayabl
   }
 
   public get gain() : Level {
-    return this.output.gain.value;
+    const gain = this.output.gain.value;
+    return parseFloat(gain.toFixed(2));
   }
   public set gain(v : Level) {
     this.output.gain.value = v;
@@ -48,6 +49,7 @@ export class Oscillator extends BaseAudioDevice implements IOscillator, IPlayabl
   }
 
   public start(time?: Time) {
+    console.log('start osc');
     this.init();
     if (!this.osc) {
       throw new Error('Failed to create an Oscillator');

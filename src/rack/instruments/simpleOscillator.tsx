@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Glyphicon, Panel, DropdownButton, MenuItem, FormControl, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-
+/*
 import Rack from '../../models/instrumentsRack';
 import SimpleOscillator from '../../models/instruments/simpleOscillator';
 import { ID, IOutput, IInput, Level } from '../../models/base';
@@ -95,3 +95,4 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SimpleOscillatorUI);
+*/

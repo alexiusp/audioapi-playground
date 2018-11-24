@@ -9,11 +9,6 @@ import { ID, IMonophonicSynth, Level, Time, IOutput, IEnvelope, IInput } from '.
 import { DataCallback, Callback } from '../../models/types';
 import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
-  setOutputInstrumentAction,
-  changeVolumeInstrumentAction,
-  setOscillatorTypeInstrumentAction,
-} from '../../store/instruments/actions';
-import {
   setAttackEnvelopeModuleAction,
   setDecayEnvelopeModuleAction,
   setSustainEnvelopeModuleAction,
@@ -24,6 +19,7 @@ import RoundKnob from '../../controls/roundKnob';
 import OutputSelector from '../../controls/outputSelector';
 import WaveSelector from '../../controls/waveSelector';
 import Keyboard from '../../controls/keyboard/keyboard';
+import { setFrequencyOscillatorModuleAction, setTypeOscillatorModuleAction } from '../../store/instruments/actions/oscillator';
 
 export interface OwnProps {
   id: ID;
@@ -131,9 +127,9 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
-    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
-    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
-    onSetOscType: (type: OscillatorType) => dispatch(setOscillatorTypeInstrumentAction(id, type)),
+//    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
+//    onChangeVolume: (volume: Level) => dispatch(changeVolumeInstrumentAction(id, parseLevel(volume))),
+    onSetOscType: (type: OscillatorType) => dispatch(setTypeOscillatorModuleAction(id, type)),
     onAttackChange: (attack: Time) => dispatch(setAttackEnvelopeModuleAction(id, parseLevel(attack))),
     onDecayChange: (decay: Time) => dispatch(setDecayEnvelopeModuleAction(id, parseLevel(decay))),
     onSustainChange: (sustain: Level) => dispatch(setSustainEnvelopeModuleAction(id, parseLevel(sustain))),

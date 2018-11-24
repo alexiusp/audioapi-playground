@@ -62,7 +62,7 @@ export default function WaveSelector(props: Props) {
   }
   return (
     <DropdownButton
-      className="wave-type-selector"
+      className="wave-type-selector btn-block"
       onSelect={props.onSelect}
       title={activeWave}
       id={`${id}-type-selector`}>

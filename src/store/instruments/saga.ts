@@ -1,25 +1,10 @@
 import { all, takeEvery } from 'redux-saga/effects'
 import Rack from '../../models/instrumentsRack';
-import { IStartPlayInstrumentAction, INSTRUMENT_PLAY_START, IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, IChangeVolumeInstrumentAction, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, ISetOscillatorTypeInstrumentAction, ISetOscillatorFrequencyInstrumentAction, INSTRUMENT_SET_OSCILLATOR_FREQUENCY, INSTRUMENT_PLAY_STOP, IStopPlayInstrumentAction, } from './actions';
+import { IAddInstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, } from './actions';
 import InstrumentFactory from '../../models/instruments/instrumentFactory';
 import { IKeyboardKeyDownAction, IKeyboardKeyUpAction, KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MIDINoteMap } from '../../utils/midi';
 
-export function* instrumentPlaySaga(action: IStartPlayInstrumentAction) {
-  const id = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  if (instrument && instrument.play) {
-    instrument.play();
-  }
-}
-
-export function* instrumentStopSaga(action: IStopPlayInstrumentAction) {
-  const id = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  if (instrument && instrument.stop) {
-    instrument.stop();
-  }
-}
 
 export function* instrumentAddSaga(action: IAddInstrumentAction) {
   const instrumentData = action.payload;
@@ -37,23 +22,6 @@ export function* instrumentSetOutputSaga(action: ISetOutputInstrumentAction) {
   }
 }
 
-export function* instrumentSetVolumeSaga(action: IChangeVolumeInstrumentAction) {
-  const { id, volume } = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  instrument.volume = volume;
-}
-
-export function* instrumentSetOscillatorTypeSaga(action: ISetOscillatorTypeInstrumentAction) {
-  const { id, type } = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  instrument.oscillatorType = type;
-}
-
-export function* instrumentSetOscillatorFrequencySaga(action: ISetOscillatorFrequencyInstrumentAction) {
-  const { id, freq } = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  instrument.frequency = freq;
-}
 export function* keyboardDownSaga(action: IKeyboardKeyDownAction) {
   const { id, key } = action.payload;
   const frequency = MIDINoteMap[key].frequency;
@@ -73,13 +41,8 @@ export function* keyboardUpSaga(action: IKeyboardKeyUpAction) {
 
 export default function* instrumentsSaga() {
   return yield all([
-    yield takeEvery(INSTRUMENT_PLAY_START, instrumentPlaySaga),
-    yield takeEvery(INSTRUMENT_PLAY_STOP, instrumentStopSaga),
     yield takeEvery(INSTRUMENT_ADD, instrumentAddSaga),
     yield takeEvery(INSTRUMENT_SET_OUTPUT, instrumentSetOutputSaga),
-    yield takeEvery(INSTRUMENT_VOLUME_CHANGE, instrumentSetVolumeSaga),
-    yield takeEvery(INSTRUMENT_SET_OSCILLATOR_TYPE, instrumentSetOscillatorTypeSaga),
-    yield takeEvery(INSTRUMENT_SET_OSCILLATOR_FREQUENCY, instrumentSetOscillatorFrequencySaga),
     yield takeEvery(KEYBOARD_KEY_DOWN, keyboardDownSaga),
     yield takeEvery(KEYBOARD_KEY_UP, keyboardUpSaga),
   ]);

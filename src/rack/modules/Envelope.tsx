@@ -10,6 +10,8 @@ import { throttledCallback, parseLevel } from '../../utils/utils';
 import { setAttackEnvelopeModuleAction, setDecayEnvelopeModuleAction, setSustainEnvelopeModuleAction, setReleaseEnvelopeModuleAction } from '../../store/instruments/actions/envelope';
 import { DataCallback } from '../../models/types';
 
+import './Envelope.css';
+
 export interface OwnProps {
   id: ID;
 }

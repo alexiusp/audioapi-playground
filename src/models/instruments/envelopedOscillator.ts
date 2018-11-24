@@ -29,9 +29,11 @@ export default class EnvelopedOscillator extends BaseAudioDevice implements IPla
     this._oscillator = new Oscillator(ctx);
     this._oscillator.connect(this._envelope.input);
     this._envelope.connect(this.output);
+    this.connect(ctx.destination);
   }
 
   public start(time?: Time) {
+    console.log('instrument start');
     this.envelope.start(time);
     this.oscillator.start(time);
   }

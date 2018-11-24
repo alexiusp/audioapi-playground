@@ -1,12 +1,14 @@
 import { forEach } from 'lodash';
 import IInstrumentsState from './state';
-import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, IMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope } from '../../models/base';
-import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_VOLUME_CHANGE, INSTRUMENT_SET_OSCILLATOR_TYPE, INSTRUMENT_SET_OSCILLATOR_FREQUENCY, INSTRUMENT_CREATE } from './actions';
+import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, IMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
+import { InstrumentAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT, INSTRUMENT_CREATE } from './actions';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MIDINoteMap } from '../../utils/midi';
 import Rack from '../../models/instrumentsRack';
 import { normalizeInstrument, normalizeModule } from './normalizer';
 import { MODULE_ENVELOPE_ATTACK_SET, MODULE_ENVELOPE_DECAY_SET, MODULE_ENVELOPE_SUSTAIN_SET, MODULE_ENVELOPE_RELEASE_SET } from './actions/envelope';
+import { MODULE_OSCILLATOR_TYPE_SET, MODULE_OSCILLATOR_FREQUENCY_SET, MODULE_OSCILLATOR_VOLUME_SET, MODULE_OSCILLATOR_PLAY_START, MODULE_OSCILLATOR_PLAY_STOP } from './actions/oscillator';
+import { Oscillator } from '../../models/modules/oscillator';
 
 export const initialInstrumentsState: IInstrumentsState = {
   modules: {},
@@ -74,42 +76,6 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const instrument = state.legacyInstruments[id] as IGain;
       instrument.volume = volume;
       return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case INSTRUMENT_SET_OSCILLATOR_TYPE: {
-      const { id, type } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyOscillator;
-      instrument.oscillatorType = type;
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case INSTRUMENT_SET_OSCILLATOR_FREQUENCY: {
-      const { id, freq } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyOscillator;
-      instrument.frequency = freq;
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case INSTRUMENT_ENVELOPE_ATTACK_SET: {
-      const { id, attack } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyEnvelopedOscillator;
-      instrument.envelope.attack = attack;
-      return applyInstrumentToState(instrument, state);
-    }
-    case INSTRUMENT_ENVELOPE_DECAY_SET: {
-      const { id, decay } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyEnvelopedOscillator;
-      instrument.envelope.decay = decay;
-      return applyInstrumentToState(instrument, state);
-    }
-    case INSTRUMENT_ENVELOPE_SUSTAIN_SET: {
-      const { id, sustain } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyEnvelopedOscillator;
-      instrument.envelope.sustain = sustain;
-      return applyInstrumentToState(instrument, state);
-    }
-    case INSTRUMENT_ENVELOPE_RELEASE_SET: {
-      const { id, release } = action.payload;
-      const instrument = state.legacyInstruments[id] as ILegacyEnvelopedOscillator;
-      instrument.envelope.release = release;
-      return applyInstrumentToState(instrument, state);
     }
     case KEYBOARD_KEY_DOWN: {
       const { id, key, velocity } = action.payload;
@@ -196,6 +162,50 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
         return applyModuleToState(normalizedModule, state);
       }
       break;
+    }
+    case MODULE_OSCILLATOR_TYPE_SET: {
+      const { id, type } = action.payload;
+      const module = Rack.getModule(id);
+      if (module) {
+        (module as IOscillator).type = type;
+        const normalizedModule = normalizeModule(module);
+        return applyModuleToState(normalizedModule, state);
+      }
+      break;
+    }
+    case MODULE_OSCILLATOR_FREQUENCY_SET: {
+      const { id, frequency } = action.payload;
+      const module = Rack.getModule(id);
+      if (module) {
+        (module as IOscillator).frequency = frequency;
+        const normalizedModule = normalizeModule(module);
+        return applyModuleToState(normalizedModule, state);
+      }
+      break;
+    }
+    case MODULE_OSCILLATOR_VOLUME_SET: {
+      const { id, volume } = action.payload;
+      const module = Rack.getModule(id);
+      if (module) {
+        (module as IOscillator).gain = volume;
+        const normalizedModule = normalizeModule(module);
+        return applyModuleToState(normalizedModule, state);
+      }
+      break;
+    }
+    case MODULE_OSCILLATOR_PLAY_START: {
+      const module = Rack.getModule(action.payload);
+      if (module) {
+        (module as Oscillator).start();
+      }
+      return state;
+    }
+    case MODULE_OSCILLATOR_PLAY_STOP: {
+      const module = Rack.getModule(action.payload);
+      if (module) {
+        (module as Oscillator).stop();
+      }
+      return state;
     }
   }
   return state;

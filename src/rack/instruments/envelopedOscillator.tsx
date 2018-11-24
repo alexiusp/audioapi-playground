@@ -9,18 +9,8 @@ import { ID, IOutput, IInput, Level, Time, IEnvelope, ILegacyEnvelopedOscillator
 import { Callback, DataCallback, OscillatorType } from '../../models/types';
 import { getLegacyInstrument, getOutputs, getInstrument, getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
-import {
-  startPlayInstrumentAction,
-  setOutputInstrumentAction,
-  changeVolumeInstrumentAction,
-  setOscillatorTypeInstrumentAction,
-  setOscillatorFrequencyInstrumentAction,
-  stopPlayInstrumentAction,
-} from '../../store/instruments/actions';
-import RoundKnob from '../../controls/roundKnob';
-import OutputSelector from '../../controls/outputSelector';
-import WaveSelector from '../../controls/waveSelector';
 import Envelope from '../modules/Envelope';
+import Oscillator from '../modules/Oscillator';
 
 export interface OwnProps {
   id: ID;
@@ -30,8 +20,6 @@ export interface Props extends OwnProps {
   name: string;
   envelope: ID;
   oscillator: ID;
-//  instrument: IOutput;
-//  outputs: IInput[];
 //  onPlay: Callback;
 //  onStop: Callback;
 //  onSelectOutput: DataCallback;
@@ -47,14 +35,7 @@ export function EnvelopedOscillator(props: Props) {
       <Panel.Body>
         <Row>
           <Col xs={6}>
-          {
-            /*
-            <FormControl
-              type="number"
-              value={osc.frequency}
-              onChange={(e) => props.onChangeFrequency(parseFloat((e.target as HTMLInputElement).value))} />
-            */
-          }
+            <Oscillator id={props.oscillator} />
           </Col>
           <Col xs={6}>
             <Envelope id={props.envelope} />
@@ -64,20 +45,11 @@ export function EnvelopedOscillator(props: Props) {
           <Col xs={6}>
           {
             /*
-            <RoundKnob
-              radius={17}
-              min={0}
-              max={1}
-              step={0.01}
-              value={osc.volume}
-              onUpdate={props.onChangeVolume} />
-            <WaveSelector id={osc.id} selected={osc.oscillatorType} onSelect={props.onSetOscType} />
             <OutputSelector
               id={`${osc.id}-output-select`}
               active={osc.output}
               options={outputs}
               onSelect={props.onSelectOutput} />
-            <Button onMouseDown={props.onPlay} onMouseUp={props.onStop}><Glyphicon glyph="play" /></Button>
             */
           }
           </Col>
