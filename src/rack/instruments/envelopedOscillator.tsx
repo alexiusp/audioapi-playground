@@ -3,8 +3,8 @@ import { Button, Glyphicon, Panel, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { ID, IInstrument, ModuleEnum } from '../../models/base';
-import { Callback } from '../../models/types';
+import { IInstrument, ModuleEnum } from '../../models/base';
+import { Callback, ID } from '../../models/types';
 import { getInstrument, getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import Envelope from '../modules/Envelope';

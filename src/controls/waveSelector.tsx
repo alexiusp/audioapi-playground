@@ -3,8 +3,7 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import './waveSelector.css';
 
-import { ID } from '../models/base';
-import { OscillatorType, DataCallback, OscillatorTypeEnum } from '../models/types';
+import { DataCallback, OscillatorTypeEnum, ID } from '../models/types';
 import { getUID } from '../utils/utils';
 
 export interface Props {

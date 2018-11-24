@@ -1,5 +1,7 @@
 import { Action, ActionCreator } from 'redux';
-import { ID, ILegacyInstrument } from '../../models/base';
+
+import { ILegacyInstrument } from '../../models/base';
+import { ID } from '../../models/types';
 import { EnvelopeAction } from './actions/envelope';
 import { MidiKeyboardAction } from './actions/keyboard';
 import { OscillatorAction } from './actions/oscillator';

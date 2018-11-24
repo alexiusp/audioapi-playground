@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { ID } from '../../models/base';
+import { ID } from '../../models/types';
 import { getMidiKeyboard } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import { MIDINoteIndex } from '../../utils/midi';

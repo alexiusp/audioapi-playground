@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { ID, InstrumentEnum } from '../../models/base';
+import { InstrumentEnum } from '../../models/base';
+import { ID } from '../../models/types';
 import { getInstrument } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import EnvelopedOscillator from './envelopedOscillator';

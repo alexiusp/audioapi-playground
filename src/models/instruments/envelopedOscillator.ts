@@ -1,9 +1,9 @@
 import {
-  Time,
   BaseAudioDevice,
   IEnvelopedOscillator,
   InstrumentEnum,
 } from '../base';
+import { Time } from '../types';
 import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
 
@@ -37,7 +37,6 @@ export default class EnvelopedOscillator extends BaseAudioDevice implements IEnv
   }
 
   public start(time?: Time) {
-    console.log('instrument start');
     this.envelope.start(time);
     this.oscillator.start(time);
   }

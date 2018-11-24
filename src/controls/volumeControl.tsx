@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { DataCallback } from '../models/types';
+import { DataCallback, Level } from '../models/types';
 import { throttledChangeHandler } from '../utils/utils';
-import { Level } from '../models/base';
 
 export interface Props {
   className?: string;

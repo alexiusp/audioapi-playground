@@ -2,8 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { Callback } from '../../models/types';
-import { ID } from '../../models/base';
+import { Callback, ID } from '../../models/types';
 import IState from '../../store/state';
 import { whiteKeyWidth } from './constants';
 import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../store/instruments/actions/keyboard';

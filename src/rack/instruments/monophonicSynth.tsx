@@ -5,8 +5,8 @@ import { Dispatch } from 'redux';
 
 import { parseLevel, throttledCallback } from '../../utils/utils';
 import IState from '../../store/state';
-import { ID, IMonophonicSynth, Level, Time, IOutput, IEnvelope, IInput } from '../../models/base';
-import { DataCallback, Callback } from '../../models/types';
+import { IMonophonicSynth, IOutput, IEnvelope, IInput } from '../../models/base';
+import { DataCallback, ID, Level, Time } from '../../models/types';
 import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
   setAttackEnvelopeModuleAction,

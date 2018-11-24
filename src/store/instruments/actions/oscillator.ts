@@ -1,5 +1,6 @@
 import { Action, ActionCreator } from 'redux';
-import { ID, Frequency, Level } from '../../../models/base';
+
+import { ID, Frequency, Level } from '../../../models/types';
 
 export const MODULE_OSCILLATOR_TYPE_SET = 'MODULE_OSCILLATOR_TYPE_SET';
 export type MODULE_OSCILLATOR_TYPE_SET = typeof MODULE_OSCILLATOR_TYPE_SET;

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { ID, ModuleEnum } from '../../models/base';
+import { ModuleEnum } from '../../models/base';
+import { ID } from '../../models/types';
 import { getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 

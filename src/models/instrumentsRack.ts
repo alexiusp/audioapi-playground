@@ -1,4 +1,5 @@
-import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum, Module, BaseAudioDevice } from './base';
+import { ILegacyInstrument, IInputInstrument, IInput, IConnectable, Instrument, InstrumentEnum, Module, BaseAudioDevice } from './base';
+import { ID } from './types';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
 

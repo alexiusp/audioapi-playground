@@ -1,9 +1,5 @@
 import { getUID } from '../utils/utils';
-
-export type ID = string;
-export type Time = number;// [0..Infinity)
-export type Level = number;// [0..1]
-export type Frequency = number;
+import { ID, Time, Level, Frequency } from './types';
 
 // common abstract models
 
@@ -38,17 +34,23 @@ export class BaseAudioDevice implements IBase {
   }
 }
 
-// base module with play controls
+// base module/instrument with play controls
 export interface IPlayable {
   start: (time?: Time) => void;
   stop: (time?: Time) => void;
 }
 
+/*
+* Modules definitions
+*/
+
+// enumeration of existing modules
 export enum ModuleEnum {
   Oscillator = 'OSC',
   Envelope = 'ADSR',
 }
 
+// base store interface for module
 export interface IModule extends IBase {
   name: ModuleEnum;
 }
@@ -73,32 +75,30 @@ export interface IOscillator extends IModule {
 // union type of all existing modules
 export type Module = IEnvelope | IOscillator;
 
-// instrument - container for modules
+/*
+* Instruments
+*/
+
+// enumeration of instruments
+export enum InstrumentEnum {
+  EnvelopedOscillator = 'Enveloped Oscillator',
+}
+
+// store interface to represent instrument as container of modules
+export interface IInstrument extends IBase {
+  name: InstrumentEnum;
+  modules: ID[];
+}
+
+// enveloped oscillator - basic oscillator
 export interface IEnvelopedOscillator extends BaseAudioDevice, IPlayable {
   name: InstrumentEnum.EnvelopedOscillator;
   envelope: IEnvelope;
   oscillator: IOscillator;
 }
 
+// union type of all existing instruments
 export type Instrument = IEnvelopedOscillator;
-
-export enum InstrumentEnum {
-  EnvelopedOscillator = 'Enveloped Oscillator',
-}
-
-export interface IInstrument extends IBase {
-  name: InstrumentEnum;
-  modules: ID[];
-}
-
-
-
-
-
-
-
-
-
 
 
 

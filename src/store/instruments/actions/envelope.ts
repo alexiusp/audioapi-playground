@@ -1,5 +1,5 @@
 import { Action, ActionCreator } from 'redux';
-import { ID, Time, Level } from '../../../models/base';
+import { ID, Level, Time } from '../../../models/types';
 
 export const MODULE_ENVELOPE_ATTACK_SET = 'MODULE_ENVELOPE_ATTACK_SET';
 export type MODULE_ENVELOPE_ATTACK_SET = typeof MODULE_ENVELOPE_ATTACK_SET;

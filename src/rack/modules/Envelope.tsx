@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { ID, Time, Level, IEnvelope } from '../../models/base';
+import { IEnvelope } from '../../models/base';
+import { DataCallback, ID, Time, Level } from '../../models/types';
 import { getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import RoundKnob from '../../controls/roundKnob';
 import { throttledCallback, parseLevel } from '../../utils/utils';
 import { setAttackEnvelopeModuleAction, setDecayEnvelopeModuleAction, setSustainEnvelopeModuleAction, setReleaseEnvelopeModuleAction } from '../../store/instruments/actions/envelope';
-import { DataCallback } from '../../models/types';
 
 import './Envelope.css';
 

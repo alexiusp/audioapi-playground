@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
-import { DataCallback } from '../models/types';
-import { ID, IInput } from '../models/base';
+import { DataCallback, ID } from '../models/types';
+import { IInput } from '../models/base';
 
 export interface Props {
   id: string;

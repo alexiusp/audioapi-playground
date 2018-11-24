@@ -1,4 +1,5 @@
-import { IEnvelope, BaseAudioDevice, IInputDevice, IPlayable, Level, Time, ModuleEnum } from '../base';
+import { IEnvelope, BaseAudioDevice, IInputDevice, IPlayable, ModuleEnum } from '../base';
+import { Level, Time } from '../types';
 
 export class Envelope extends BaseAudioDevice implements IEnvelope, IInputDevice, IPlayable {
   name: ModuleEnum.Envelope;

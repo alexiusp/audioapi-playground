@@ -1,4 +1,5 @@
-import { BaseAudioDevice, LegacyInstrumentEnum, IMasterMixer, Level } from './base';
+import { BaseAudioDevice, LegacyInstrumentEnum, IMasterMixer } from './base';
+import { Level } from './types';
 
 export class MasterMixer extends BaseAudioDevice implements IMasterMixer {
   id: string;

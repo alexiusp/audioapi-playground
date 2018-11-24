@@ -1,4 +1,5 @@
-import { BaseAudioDevice, Frequency, IPlayable, IOscillator, Level, Time, ModuleEnum } from '../base';
+import { BaseAudioDevice, IPlayable, IOscillator, ModuleEnum } from '../base';
+import { Frequency, Level, Time } from '../types';
 
 export class Oscillator extends BaseAudioDevice implements IOscillator, IPlayable {
   name: ModuleEnum.Oscillator;
@@ -49,7 +50,6 @@ export class Oscillator extends BaseAudioDevice implements IOscillator, IPlayabl
   }
 
   public start(time?: Time) {
-    console.log('start osc');
     this.init();
     if (!this.osc) {
       throw new Error('Failed to create an Oscillator');

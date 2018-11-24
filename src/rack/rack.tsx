@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import './rack.css';
 
-import { LegacyInstrumentEnum, IBaseInstrument, ID } from '../models/base';
+import { ID } from '../models/types';
 import IState from '../store/state';
 import { getInstrumentIdList } from '../store/instruments/selectors';
 import Instrument from './instruments/instrument';

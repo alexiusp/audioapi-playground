@@ -1,5 +1,7 @@
 import { Action, ActionCreator } from 'redux';
-import { InstrumentEnum, ID } from '../../../models/base';
+
+import { InstrumentEnum } from '../../../models/base';
+import { ID } from '../../../models/types';
 
 // instrument action after refactoring
 export const INSTRUMENT_CREATE = 'INSTRUMENT_CREATE';

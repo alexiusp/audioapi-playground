@@ -1,6 +1,5 @@
 import { Action, ActionCreator } from 'redux';
-import { ID } from '../../../models/base';
-import { KeyboardKeyName } from '../../../models/types';
+import { ID, KeyboardKeyName } from '../../../models/types';
 
 export const KEYBOARD_KEY_DOWN = 'KEYBOARD_KEY_DOWN';
 export type KEYBOARD_KEY_DOWN = typeof KEYBOARD_KEY_DOWN;

@@ -1,6 +1,6 @@
-import { IInputInstrument, LegacyInstrumentEnum, ID, ISimpleOscillator, Level, Time } from '../base';
+import { IInputInstrument, LegacyInstrumentEnum, ISimpleOscillator } from '../base';
+import { ID, Level, Time } from '../types';
 import Rack from '../instrumentsRack';
-import { OscillatorType } from '../types';
 
 export default class SimpleOscillator implements ISimpleOscillator {
   instrument = LegacyInstrumentEnum.SimpleOscillator;

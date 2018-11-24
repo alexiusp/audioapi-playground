@@ -1,4 +1,5 @@
-import { KeyboardKey, Frequency, KeyboardKeyType } from '../models/base';
+import { KeyboardKey, KeyboardKeyType } from '../models/base';
+import { Frequency } from '../models/types';
 
 export const STANDART_TUNING = 440;
 

@@ -7,8 +7,8 @@ import './Oscillator.css';
 
 import RoundKnob from '../../controls/roundKnob';
 import WaveSelector from '../../controls/waveSelector';
-import { ID, Frequency, Level, IOscillator } from '../../models/base';
-import { DataCallback, Callback } from '../../models/types';
+import { IOscillator } from '../../models/base';
+import { DataCallback, Frequency, ID, Level } from '../../models/types';
 import { getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import { parseLevel } from '../../utils/utils';

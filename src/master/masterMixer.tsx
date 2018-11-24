@@ -6,13 +6,11 @@ import { Dispatch } from 'redux';
 import './masterMixer.css';
 
 import Rack from '../models/instrumentsRack';
-import { Callback, DataCallback } from '../models/types';
+import { Callback, DataCallback,Level } from '../models/types';
 import { startPlayAction, stopPlayAction, changeVolumeAction } from '../store/master/actions';
 import { getVolume, isPlaying } from '../store/master/selectors';
 import IState from '../store/state';
-import VolumeControl from '../controls/volumeControl';
 import RoundKnob from '../controls/roundKnob';
-import { Level } from '../models/base';
 import { parseLevel } from '../utils/utils';
 
 export interface Props {
