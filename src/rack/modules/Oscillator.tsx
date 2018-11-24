@@ -43,15 +43,14 @@ export function Oscillator(props: Props) {
           value={props.frequency}
           onChange={props.onChangeFrequency} />
       </div>
-      <div>
-        <RoundKnob
-          radius={35}
-          min={0}
-          max={1}
-          step={0.01}
-          value={props.gain}
-          onUpdate={props.onChangeVolume} />
-      </div>
+      <RoundKnob
+        radius={35}
+        min={0}
+        max={1}
+        step={0.01}
+        value={props.gain}
+        onUpdate={props.onChangeVolume}
+        label="Gain"/>
     </div>
   );
 }

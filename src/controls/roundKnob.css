@@ -1,19 +1,20 @@
-.round-knob {
+.round-knob svg {
   display: inline-block;
   position: relative;
   vertical-align: middle;
-  cursor: pointer;
+  cursor: ns-resize;
   overflow: visible;
-}
-svg {
   user-select: none;
   margin: 0;
 }
-svg text {
+.round-knob svg text {
   pointer-events: none;
   user-select: none;
   cursor: default;
 }
-svg text::selection {
+.round-knob svg text::selection {
   background: none;
+}
+.audio-control {
+  text-align: center;
 }

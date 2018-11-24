@@ -17,6 +17,7 @@ export interface Props {
   value: number,
   radius: number,
   className?: string,
+  label?: string;
 }
 
 const mouseSensitivity = 0.05;
@@ -86,26 +87,28 @@ export default class RoundKnob extends React.Component<Props, State> {
     const label = value;
     const progress = (normalized) * 2 * Math.PI * (circleRadius);
     return (
-      <svg
-        className={'round-knob control ' + (className || '')}
-        onWheel={this.onWheel}
-        viewBox={viewBox}
-        width={radius * 2} height={radius * 2}>
-        <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
-          <stop id="stop1" stopColor="#ffffff" offset="0%"/>
-          <stop id="stop2" stopColor="#e0e0e0" offset="100%"/>
-        </linearGradient>
-        { active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={circleRadius} /> : null }
-        <circle cx="0" cy="0" r={circleRadius - 1} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
-        <circle cx="0" cy="0" r={circleRadius} fill="none" stroke="#ee3333" strokeWidth="1" strokeDasharray={`${progress},20000`} transform="rotate(180)"/>
-        <text x="0" y="3" fontSize={radius / 2} textAnchor="middle" fill="#333">{label}</text>
-        <g
-          transform={`rotate(${rotation})`}
-          onMouseDown={this.activate}>
-          <path d={`M -${radius - 3} 0 h 4 0`} stroke="#ee3333" strokeWidth="1"/>
-          <circle cx="0" cy="0" r={radius} fill="#fff" fillOpacity="0" />
-        </g>
-      </svg>
+      <div className={'round-knob audio-control ' + (className || '')}>
+        <svg
+          onWheel={this.onWheel}
+          viewBox={viewBox}
+          width={radius * 2} height={radius * 2}>
+          <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
+            <stop id="stop1" stopColor="#ffffff" offset="0%" />
+            <stop id="stop2" stopColor="#e0e0e0" offset="100%" />
+          </linearGradient>
+          {active ? <circle fill="#000" fillOpacity="0.1" cx="1" cy="1" r={circleRadius} /> : null}
+          <circle cx="0" cy="0" r={circleRadius - 1} fill="url(#grad1)" stroke="#ccc" strokeWidth="1" />
+          <circle cx="0" cy="0" r={circleRadius} fill="none" stroke="#ee3333" strokeWidth="1" strokeDasharray={`${progress},20000`} transform="rotate(180)" />
+          <text x="0" y="3" fontSize={radius / 2} textAnchor="middle" fill="#333">{label}</text>
+          <g
+            transform={`rotate(${rotation})`}
+            onMouseDown={this.activate}>
+            <path d={`M -${radius - 3} 0 h 4 0`} stroke="#ee3333" strokeWidth="1" />
+            <circle cx="0" cy="0" r={radius} fill="#fff" fillOpacity="0" />
+          </g>
+        </svg>
+        {this.props.label ? (<div className="audio-label">{this.props.label}</div>) : null}
+      </div>
     );
   }
 }
