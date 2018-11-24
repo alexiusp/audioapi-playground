@@ -74,7 +74,7 @@ export interface IOscillator extends IModule {
 export type Module = IEnvelope | IOscillator;
 
 // instrument - container for modules
-export interface IEnvelopedOscillator extends IBase, IPlayable {
+export interface IEnvelopedOscillator extends BaseAudioDevice, IPlayable {
   name: InstrumentEnum.EnvelopedOscillator;
   envelope: IEnvelope;
   oscillator: IOscillator;

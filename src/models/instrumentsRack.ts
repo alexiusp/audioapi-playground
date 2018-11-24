@@ -1,4 +1,4 @@
-import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum, Module } from './base';
+import { ILegacyInstrument, IInputInstrument, ID, IInput, IConnectable, Instrument, InstrumentEnum, Module, BaseAudioDevice } from './base';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
 
@@ -26,20 +26,22 @@ export class InstrumentsRack {
     this.legacyInstruments = new Map<ID, ILegacyInstrument>();
   }
 
-  public createInstrument(instrumentClass: InstrumentEnum) {
-    switch (instrumentClass) {
+  public createInstrument(which: InstrumentEnum) {
+    let instrument: Instrument;
+    switch (which) {
       case InstrumentEnum.EnvelopedOscillator: {
         // instantiate instrument
-        const instrument = new EnvelopedOscillator(this.context);
+        instrument = new EnvelopedOscillator(this.context);
         // add instrument to map
         this.instruments.set(instrument.id, instrument);
         // register modules
         const { envelope, oscillator } = instrument;
         this.modules.set(envelope.id, envelope);
         this.modules.set(oscillator.id, oscillator);
-        return instrument;
       }
     }
+    (instrument! as BaseAudioDevice).connect(Rack.master.getInput());
+    return instrument!;
   }
 
   public getInstrument(id: ID) {
