@@ -1,6 +1,6 @@
 import { forIn, keys } from 'lodash';
 import IState from '../state';
-import { IBaseInstrument, ID, IMidiKeyboard, Instrument } from '../../models/base';
+import { IBaseInstrument, ID, IMidiKeyboard } from '../../models/base';
 
 export const getInstrumetsState = (state: IState) => state.instruments;
 

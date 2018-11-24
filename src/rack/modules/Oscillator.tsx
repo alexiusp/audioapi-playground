@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Glyphicon, FormControl } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
@@ -16,8 +16,6 @@ import {
   setTypeOscillatorModuleAction,
   setFrequencyOscillatorModuleAction,
   setVolumeOscillatorModuleAction,
-  startPlayOscillatorModuleAction,
-  stopPlayOscillatorModuleAction,
 } from '../../store/instruments/actions/oscillator';
 
 export interface OwnProps {
@@ -68,7 +66,6 @@ export const mapStateToProps = (state: IState, props: OwnProps) => {
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const id = ownProps.id;
   return {
-//    onSelectOutput: (output: ID) => dispatch(setOutputInstrumentAction(id, output)),
     onChangeVolume: (volume: Level) => dispatch(setVolumeOscillatorModuleAction(id, parseLevel(volume))),
     onSetOscType: (type: OscillatorType) => dispatch(setTypeOscillatorModuleAction(id, type)),
     onChangeFrequency: (e: React.FormEvent<FormControl>) => {
@@ -77,6 +74,5 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
     },
   }
 }
-//              onChange={(e) => props.onChangeFrequency())} />
 
 export default connect(mapStateToProps, mapDispatchToProps)(Oscillator);
