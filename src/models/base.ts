@@ -1,5 +1,5 @@
 import { getUID } from '../utils/utils';
-import { ID, Time, Level, Frequency } from './types';
+import { ID, Time, Level, Frequency, MidiKeysState, NoteHandler } from './types';
 
 // common abstract models
 
@@ -29,7 +29,7 @@ export class BaseAudioDevice implements IBase {
 export class OutputAudioDevice extends BaseAudioDevice {
   protected output: GainNode;
   constructor(ctx: AudioContext, prefix?: string) {
-    super(ctx, prefix)
+    super(ctx, prefix);
     this.output = ctx.createGain();
   }
   connect(target: AudioNode) {
@@ -62,6 +62,7 @@ export interface IPlayable {
 export enum ModuleEnum {
   Oscillator = 'OSC',
   Envelope = 'ADSR',
+  MidiKeyboard = 'MIDIKeys',
 }
 
 // base store interface for module
@@ -86,8 +87,19 @@ export interface IOscillator extends IModule {
   gain: Level;
 }
 
+// midi keyboard module model
+export interface IMidiKeyboard extends IModule {
+  name: ModuleEnum.MidiKeyboard;
+  // starting note of keyboard
+  start: number;
+  // end note of keyboard
+  end: number;
+  // midi-keyboard keys state
+  keys: MidiKeysState;
+}
+
 // union type of all existing modules
-export type Module = IEnvelope | IOscillator;
+export type Module = IEnvelope | IOscillator | IMidiKeyboard;
 
 /*
 * Instruments
@@ -96,6 +108,7 @@ export type Module = IEnvelope | IOscillator;
 // enumeration of instruments
 export enum InstrumentEnum {
   EnvelopedOscillator = 'Enveloped Oscillator',
+  PolyphonicSynth = 'Polyphonic Synthesizer',
 }
 
 // store interface to represent instrument as container of modules
@@ -111,8 +124,19 @@ export interface IEnvelopedOscillator extends OutputAudioDevice, IPlayable {
   oscillator: IOscillator;
 }
 
+// monophonic synth - enveloped oscillator with midi keyboard
+export interface IPolyphonicSynth extends OutputAudioDevice {
+  name: InstrumentEnum.PolyphonicSynth;
+  // amount of simultaneously playable sounds
+  maxVoices: number;
+  // midi keyboard module
+  keyboard: IMidiKeyboard;
+  // envelope used to controle the sound of keys
+  envelope: IEnvelope;
+}
+
 // union type of all existing instruments
-export type Instrument = IEnvelopedOscillator;
+export type Instrument = IEnvelopedOscillator | IPolyphonicSynth;
 
 // store interface for master mixer
 export interface IMasterMixer extends InputAudioDevice, IPlayable {
@@ -163,7 +187,7 @@ export interface IEnveloped extends ILegacyBaseInstrument {
   envelope: IEnvelope;
 }
 // instrument with mide-keyboard
-export interface IMidiKeyboard extends ILegacyBaseInstrument {
+export interface ILegacyMidiKeyboard extends ILegacyBaseInstrument {
   keyboard: MidiKeyboardState;
 }
 
@@ -179,19 +203,10 @@ export interface ILegacyOutputInstrument extends IOutput {
 
 export interface ISimpleOscillator extends ILegacyOutputInstrument, IGain, ILegacyPlayable, ILegacyOscillator { }
 export interface ILegacyEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
-export interface IMonophonicSynth extends ILegacyEnvelopedOscillator, IMidiKeyboard { }
+export interface ILegacyMonophonicSynth extends ILegacyEnvelopedOscillator, ILegacyMidiKeyboard { }
 
-export type ILegacyInstrument = IMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator;
+export type ILegacyInstrument = ILegacyMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator;
 
-export type KeyboardKeyType = 'white' | 'black';
-
-export interface KeyboardKey {
-  midiNumber: number;
-  fullName: string;
-  shortName: string;
-  type: KeyboardKeyType;
-  frequency: Frequency;
-}
 
 export interface MidiKeyboardState {
   // amount of simultaneously playable sounds

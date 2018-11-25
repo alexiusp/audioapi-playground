@@ -1,4 +1,4 @@
-import { Instrument, InstrumentEnum, IInstrument, Module, ModuleEnum, IEnvelope, IOscillator } from '../../models/base';
+import { Instrument, InstrumentEnum, IInstrument, Module, ModuleEnum, IEnvelope, IOscillator, IMidiKeyboard } from '../../models/base';
 
 export function normalizeInstrument(instrument: Instrument) {
   switch (instrument.name) {
@@ -8,6 +8,14 @@ export function normalizeInstrument(instrument: Instrument) {
         id,
         name,
         modules: [envelope.id, oscillator.id],
+      } as IInstrument;
+    }
+    case InstrumentEnum.PolyphonicSynth: {
+      const { id, name, envelope, keyboard } = instrument;
+      return {
+        id,
+        name,
+        modules: [envelope.id, keyboard.id],
       } as IInstrument;
     }
   }
@@ -35,6 +43,16 @@ export function normalizeModule(module: Module) {
         gain,
         type,
       } as IOscillator;
+    }
+    case ModuleEnum.MidiKeyboard: {
+      const { id, name, start, end, keys } = module;
+      return {
+        id,
+        name,
+        start,
+        end,
+        keys,
+      } as IMidiKeyboard;
     }
   }
 }

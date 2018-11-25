@@ -21,7 +21,10 @@ export function Module(props: Props) {
       return (<div>Envelope {props.name}</div>);
     case ModuleEnum.Oscillator:
       return (<div>Oscillator {props.name}</div>);
+    case ModuleEnum.MidiKeyboard:
+      return (<div>MIDI Keyboard {props.name}</div>);
   }
+  return <div>Unknown module</div>
 }
 
 export const mapStateToProps = (state: IState, props: OwnProps) => {

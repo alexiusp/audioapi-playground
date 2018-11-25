@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import { parseLevel, throttledCallback } from '../../utils/utils';
 import IState from '../../store/state';
-import { IMonophonicSynth, IOutput, IEnvelope, IInput } from '../../models/base';
+import { ILegacyMonophonicSynth, IOutput, IEnvelope, IInput } from '../../models/base';
 import { DataCallback, ID, Level, Time } from '../../models/types';
 import { getLegacyInstrument, getOutputs } from '../../store/instruments/selectors';
 import {
@@ -39,7 +39,7 @@ export interface Props extends OwnProps {
 }
 
 export function MonophonicSynthUI(props: Props) {
-  const inst = props.instrument as IMonophonicSynth;
+  const inst = props.instrument as ILegacyMonophonicSynth;
   const envelope = props.envelope;
   const outputs = [...props.outputs];
   return (
@@ -114,7 +114,7 @@ export function MonophonicSynthUI(props: Props) {
 }
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
-  const instrument = getLegacyInstrument(state, ownProps.id) as IMonophonicSynth;
+  const instrument = getLegacyInstrument(state, ownProps.id) as ILegacyMonophonicSynth;
   const envelope = instrument.envelope;
   const outputs = getOutputs(state);
   return {

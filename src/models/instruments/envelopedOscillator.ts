@@ -8,8 +8,7 @@ import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
 
 export default class EnvelopedOscillator extends OutputAudioDevice implements IEnvelopedOscillator {
-
-  name = InstrumentEnum.EnvelopedOscillator;
+  name: InstrumentEnum.EnvelopedOscillator;
 
   private _envelope : Envelope;
   public get envelope() : Envelope {
@@ -29,6 +28,7 @@ export default class EnvelopedOscillator extends OutputAudioDevice implements IE
 
   constructor(ctx: AudioContext) {
     super(ctx);
+    this.name = InstrumentEnum.EnvelopedOscillator;
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
     this._oscillator.connect(this._envelope.input);

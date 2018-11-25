@@ -1,6 +1,6 @@
 import { forIn, keys } from 'lodash';
 
-import { ILegacyBaseInstrument, IMidiKeyboard } from '../../models/base';
+import { ILegacyBaseInstrument, ILegacyMidiKeyboard } from '../../models/base';
 import { ID } from '../../models/types';
 import IState from '../state';
 
@@ -34,6 +34,6 @@ export const getLegacyInstrument = (state: IState, id: ID) => getLegacyInstrumen
 export const getOutputs = (state: IState) => getInstrumetsState(state).outputs;
 
 export const getMidiKeyboard = (state: IState, id: ID) => {
-  const instrument = getLegacyInstrument(state, id) as IMidiKeyboard;
+  const instrument = getLegacyInstrument(state, id) as ILegacyMidiKeyboard;
   return instrument.keyboard;
 }

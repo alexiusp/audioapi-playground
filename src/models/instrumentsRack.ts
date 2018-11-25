@@ -20,7 +20,7 @@ export class InstrumentsRack {
   }
 
   public createInstrument(which: InstrumentEnum) {
-    let instrument: Instrument;
+    let instrument: Instrument | undefined;
     switch (which) {
       case InstrumentEnum.EnvelopedOscillator: {
         // instantiate instrument
@@ -32,9 +32,13 @@ export class InstrumentsRack {
         this.modules.set(envelope.id, envelope);
         this.modules.set(oscillator.id, oscillator);
       }
+      // TODO: monophonic synth
     }
-    (instrument! as OutputAudioDevice).connect(Rack.master.input);
-    return instrument!;
+    if (!instrument) {
+      throw new Error('Instrument factory method not defined!');
+    }
+    (instrument as OutputAudioDevice).connect(Rack.master.input);
+    return instrument;
   }
 
   public getInstrument(id: ID) {

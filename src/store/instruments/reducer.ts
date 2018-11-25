@@ -1,6 +1,6 @@
 import { forEach } from 'lodash';
 import IInstrumentsState from './state';
-import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, IMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
+import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, ILegacyMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
 import { InstrumentsAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MIDINoteMap } from '../../utils/midi';

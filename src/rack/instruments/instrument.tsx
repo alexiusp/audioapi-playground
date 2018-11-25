@@ -20,6 +20,8 @@ export function Instrument(props: Props) {
   switch (props.name) {
     case InstrumentEnum.EnvelopedOscillator:
       return (<EnvelopedOscillator id={props.id} />);
+    case InstrumentEnum.PolyphonicSynth:
+      return (<div>Not implemented</div>);
   }
 }
 
