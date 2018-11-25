@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { Callback, ID } from '../../models/types';
+import { Callback, ID } from '../../../models/types';
 import { whiteKeyWidth, blackKeyWidth } from './constants';
-import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../store/instruments/actions/keyboard';
-import { MIDINoteIndex } from '../../utils/midi';
-import IState from '../../store/state';
-import { getMidiKeyboard, getModule } from '../../store/instruments/selectors';
-import { IMidiKeyboard } from '../../models/base';
+import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../../store/instruments/actions/keyboard';
+import { MIDINoteIndex } from '../../../utils/midi';
+import IState from '../../../store/state';
+import { getMidiKeyboard, getModule } from '../../../store/instruments/selectors';
+import { IMidiKeyboard } from '../../../models/base';
 
 export interface OwnProps {
   // instrument id

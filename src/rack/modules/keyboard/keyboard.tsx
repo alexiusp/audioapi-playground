@@ -2,17 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { ID } from '../../models/types';
-import { getMidiKeyboard, getModule } from '../../store/instruments/selectors';
-import IState from '../../store/state';
-import { MIDINoteIndex } from '../../utils/midi';
+import './keyboard.css';
+
+import { IMidiKeyboard } from '../../../models/base';
+import { ID } from '../../../models/types';
+import { getModule } from '../../../store/instruments/selectors';
+import IState from '../../../store/state';
+import { MIDINoteIndex } from '../../../utils/midi';
 
 import { whiteKeyWidth } from './constants';
 import WhiteKey from './whiteKey';
 import BlackKey from './blackKey';
-
-import './keyboard.css';
-import { IMidiKeyboard } from '../../models/base';
 
 export interface OwnProps {
   id: ID;

@@ -3,24 +3,12 @@ import { Panel, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { parseLevel, throttledCallback } from '../../utils/utils';
+import { IInstrument, ModuleEnum } from '../../models/base';
+import { ID } from '../../models/types';
 import IState from '../../store/state';
-import { ILegacyMonophonicSynth, IOutput, IEnvelope, IInput, IInstrument, ModuleEnum } from '../../models/base';
-import { DataCallback, ID, Level, Time } from '../../models/types';
-import { getLegacyInstrument, getOutputs, getInstrument, getModule } from '../../store/instruments/selectors';
-import {
-  setAttackEnvelopeModuleAction,
-  setDecayEnvelopeModuleAction,
-  setSustainEnvelopeModuleAction,
-  setReleaseEnvelopeModuleAction,
-} from '../../store/instruments/actions/envelope';
-import Rack from '../../models/instrumentsRack';
-import RoundKnob from '../../controls/roundKnob';
-import OutputSelector from '../../controls/outputSelector';
-import WaveSelector from '../../controls/waveSelector';
-import Keyboard from '../../controls/keyboard/keyboard';
-import { setFrequencyOscillatorModuleAction, setTypeOscillatorModuleAction } from '../../store/instruments/actions/oscillator';
+import { getInstrument, getModule } from '../../store/instruments/selectors';
 import Envelope from '../modules/Envelope';
+import Keyboard from '../modules/keyboard/keyboard';
 
 export interface OwnProps {
   id: ID;
