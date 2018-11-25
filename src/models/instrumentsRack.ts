@@ -2,6 +2,7 @@ import { ILegacyInstrument, IInput, IConnectable, Instrument, InstrumentEnum, Mo
 import { ID } from './types';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
+import PolyphonicSynth from './instruments/polyphonicSynth';
 
 export class InstrumentsRack {
   private instruments: Map<ID, Instrument>
@@ -31,8 +32,19 @@ export class InstrumentsRack {
         const { envelope, oscillator } = instrument;
         this.modules.set(envelope.id, envelope);
         this.modules.set(oscillator.id, oscillator);
+        break;
       }
-      // TODO: monophonic synth
+      case InstrumentEnum.PolyphonicSynth: {
+        // instantiate instrument
+        instrument = new PolyphonicSynth(this.context);
+        // add instrument to map
+        this.instruments.set(instrument.id, instrument);
+        // register modules
+        const { envelope, keyboard } = instrument;
+        this.modules.set(envelope.id, envelope);
+        this.modules.set(keyboard.id, keyboard);
+        break;
+      }
     }
     if (!instrument) {
       throw new Error('Instrument factory method not defined!');

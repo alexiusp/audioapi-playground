@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { ID } from '../../models/types';
-import { getMidiKeyboard } from '../../store/instruments/selectors';
+import { getMidiKeyboard, getModule } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import { MIDINoteIndex } from '../../utils/midi';
 
@@ -12,6 +12,7 @@ import WhiteKey from './whiteKey';
 import BlackKey from './blackKey';
 
 import './keyboard.css';
+import { IMidiKeyboard } from '../../models/base';
 
 export interface OwnProps {
   id: ID;
@@ -85,7 +86,8 @@ export function Keyboard(props: Props) {
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const id = ownProps.id;
-  const { start, end } = getMidiKeyboard(state, id);
+  const keyboard = getModule(state, id) as IMidiKeyboard;
+  const { start, end } = keyboard;
   return {
     start,
     end,

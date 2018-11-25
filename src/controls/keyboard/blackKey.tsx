@@ -7,7 +7,8 @@ import { whiteKeyWidth, blackKeyWidth } from './constants';
 import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../store/instruments/actions/keyboard';
 import { MIDINoteIndex } from '../../utils/midi';
 import IState from '../../store/state';
-import { getMidiKeyboard } from '../../store/instruments/selectors';
+import { getMidiKeyboard, getModule } from '../../store/instruments/selectors';
+import { IMidiKeyboard } from '../../models/base';
 
 export interface OwnProps {
   // instrument id
@@ -45,7 +46,7 @@ export function BlackKey(props: Props) {
 
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const { id, midi } = ownProps;
-  const { keys } = getMidiKeyboard(state, id);
+  const { keys } = getModule(state, id) as IMidiKeyboard;
   const isPressed = !!keys[midi];
   return {
     isPressed,

@@ -6,6 +6,7 @@ import { ID } from '../../models/types';
 import { getInstrument } from '../../store/instruments/selectors';
 import IState from '../../store/state';
 import EnvelopedOscillator from './envelopedOscillator';
+import PolyphonicSynth from './polyphonicSynth';
 
 export interface OwnProps {
   id: ID;
@@ -21,7 +22,7 @@ export function Instrument(props: Props) {
     case InstrumentEnum.EnvelopedOscillator:
       return (<EnvelopedOscillator id={props.id} />);
     case InstrumentEnum.PolyphonicSynth:
-      return (<div>Not implemented</div>);
+      return (<PolyphonicSynth id={props.id} />);
   }
 }
 
