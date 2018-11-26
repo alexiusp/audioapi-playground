@@ -52,7 +52,7 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     this.keyboard.registerNoteHandlers(this.noteOn, this.noteOff);
   }
 
-  public noteOn(note: number, velocity: Velocity = 127) {
+  public noteOn = (note: number, velocity: Velocity = 127) => {
     // create a voice for a note
     const freq = MIDINoteIndex[note].frequency;
     const gain = velocity / 127;
@@ -66,9 +66,12 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     voice.start();
   }
 
-  public noteOff(note: number) {
+  public noteOff = (note: number) => {
     const freq = MIDINoteIndex[note].frequency;
-    const voiceIndex = findIndex(this._voices, ['frequency', freq]);
+    console.log('voices:', this._voices);
+    const voiceIndex = findIndex(this._voices, (osc: EnvelopedOscillator) => {
+      return osc.oscillator.frequency === freq;
+    });
     if (voiceIndex < 0) {
       throw new Error('Note was not pressed!');
     }

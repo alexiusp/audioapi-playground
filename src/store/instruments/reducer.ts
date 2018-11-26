@@ -1,6 +1,6 @@
 import { forEach } from 'lodash';
 import IInstrumentsState from './state';
-import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, ILegacyMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
+import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, ILegacyMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable, IMidiKeyboard } from '../../models/base';
 import { InstrumentsAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MIDINoteMap } from '../../utils/midi';
@@ -10,6 +10,7 @@ import { MODULE_ENVELOPE_ATTACK_SET, MODULE_ENVELOPE_DECAY_SET, MODULE_ENVELOPE_
 import { MODULE_OSCILLATOR_TYPE_SET, MODULE_OSCILLATOR_FREQUENCY_SET, MODULE_OSCILLATOR_VOLUME_SET, MODULE_OSCILLATOR_PLAY_START, MODULE_OSCILLATOR_PLAY_STOP } from './actions/oscillator';
 import { Oscillator } from '../../models/modules/oscillator';
 import { INSTRUMENT_CREATE, INSTRUMENT_PLAY_START, INSTRUMENT_PLAY_STOP } from './actions/instrument';
+import { MidiKeyboard } from '../../models/modules/midiKeyboard';
 
 export const initialInstrumentsState: IInstrumentsState = {
   modules: {},
@@ -76,38 +77,6 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const { id, volume } = action.payload;
       const instrument = state.legacyInstruments[id] as IGain;
       instrument.volume = volume;
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case KEYBOARD_KEY_DOWN: {
-      const { id, key, velocity } = action.payload;
-      const instrument = state.legacyInstruments[id] as IMidiKeyboard;
-      const { end, keys, start, sounds } = instrument.keyboard;
-      const pressedKeys = size(keys);
-      console.log('KEYBOARD_KEY_DOWN', pressedKeys, sounds);
-      if (pressedKeys < sounds) {
-        const note = MIDINoteMap[key];
-        keys[note.midiNumber] = velocity;
-        instrument.keyboard = {
-          end,
-          keys,
-          start,
-          sounds,
-        }
-      }
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case KEYBOARD_KEY_UP: {
-      const { id, key } = action.payload;
-      const instrument = state.legacyInstruments[id] as IMidiKeyboard;
-      const note = MIDINoteMap[key];
-      const { end, keys, start, sounds } = instrument.keyboard;
-      delete keys[note.midiNumber];
-      instrument.keyboard = {
-        end,
-        keys,
-        start,
-        sounds,
-      }
       return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     */
@@ -221,6 +190,28 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
         (instrument as IPlayable).stop();
       }
       return state;
+    }
+    case KEYBOARD_KEY_DOWN: {
+      const { id, key, velocity } = action.payload;
+      const module = Rack.getModule(id);
+      if (module) {
+        (module as MidiKeyboard).noteOn(key, velocity);
+        const normalizedModule = normalizeModule(module);
+        console.log('KEYBOARD_KEY_DOWN', normalizeModule);
+        return applyModuleToState(normalizedModule, state);
+      }
+      break;
+    }
+    case KEYBOARD_KEY_UP: {
+      const { id, key } = action.payload;
+      const module = Rack.getModule(id);
+      if (module) {
+        (module as MidiKeyboard).noteOff(key);
+        const normalizedModule = normalizeModule(module);
+        console.log('KEYBOARD_KEY_UP', normalizeModule);
+        return applyModuleToState(normalizedModule, state);
+      }
+      break;
     }
   }
   return state;

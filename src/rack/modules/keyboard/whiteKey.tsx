@@ -6,7 +6,6 @@ import { Callback, ID } from '../../../models/types';
 import IState from '../../../store/state';
 import { whiteKeyWidth } from './constants';
 import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../../store/instruments/actions/keyboard';
-import { MIDINoteIndex } from '../../../utils/midi';
 import { getModule } from '../../../store/instruments/selectors';
 import { IMidiKeyboard } from '../../../models/base';
 
@@ -54,10 +53,9 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   const { id, midi } = ownProps;
-  const keyName = MIDINoteIndex[midi].fullName;
   return {
-    onDown: () => dispatch(keyboardKeyDownAction(id, keyName)),
-    onUp: () => dispatch(keyboardKeyUpAction(id, keyName)),
+    onDown: () => dispatch(keyboardKeyDownAction(id, midi)),
+    onUp: () => dispatch(keyboardKeyUpAction(id, midi)),
   }
 }
 

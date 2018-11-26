@@ -60,6 +60,7 @@ export class MidiKeyboard extends OutputAudioDevice implements IMidiKeyboard {
   }
 
   public noteOn(note: number, velocity: Velocity = 127) {
+    console.log('noteOn', note, velocity);
     if ((note < this.start) || (note > this.end)) {
       throw new Error('Note not in the keyboard range!');
     }

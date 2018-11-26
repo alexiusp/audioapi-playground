@@ -1,8 +1,6 @@
 import { all, takeEvery } from 'redux-saga/effects'
 import Rack from '../../models/instrumentsRack';
 import { INSTRUMENT_SET_OUTPUT, ISetOutputInstrumentAction, } from './actions';
-import { IKeyboardKeyDownAction, IKeyboardKeyUpAction, KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
-import { MIDINoteMap } from '../../utils/midi';
 
 export function* instrumentSetOutputSaga(action: ISetOutputInstrumentAction) {
   const { id, output } = action.payload;
@@ -14,27 +12,8 @@ export function* instrumentSetOutputSaga(action: ISetOutputInstrumentAction) {
   }
 }
 
-export function* keyboardDownSaga(action: IKeyboardKeyDownAction) {
-  const { id, key } = action.payload;
-  const frequency = MIDINoteMap[key].frequency;
-  const instrument = yield Rack.getInstrument(id);
-  if (instrument && instrument.play) {
-    instrument.play(frequency);
-  }
-}
-
-export function* keyboardUpSaga(action: IKeyboardKeyUpAction) {
-  const { id } = action.payload;
-  const instrument = yield Rack.getInstrument(id);
-  if (instrument && instrument.stop) {
-    instrument.stop();
-  }
-}
-
 export default function* instrumentsSaga() {
   return yield all([
     yield takeEvery(INSTRUMENT_SET_OUTPUT, instrumentSetOutputSaga),
-    yield takeEvery(KEYBOARD_KEY_DOWN, keyboardDownSaga),
-    yield takeEvery(KEYBOARD_KEY_UP, keyboardUpSaga),
   ]);
 }
