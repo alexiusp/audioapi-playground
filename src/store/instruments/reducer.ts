@@ -197,7 +197,6 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       if (module) {
         (module as MidiKeyboard).noteOn(key, velocity);
         const normalizedModule = normalizeModule(module);
-        console.log('KEYBOARD_KEY_DOWN', normalizeModule);
         return applyModuleToState(normalizedModule, state);
       }
       break;
@@ -208,7 +207,6 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       if (module) {
         (module as MidiKeyboard).noteOff(key);
         const normalizedModule = normalizeModule(module);
-        console.log('KEYBOARD_KEY_UP', normalizeModule);
         return applyModuleToState(normalizedModule, state);
       }
       break;

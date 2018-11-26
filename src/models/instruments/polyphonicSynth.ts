@@ -68,7 +68,6 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
 
   public noteOff = (note: number) => {
     const freq = MIDINoteIndex[note].frequency;
-    console.log('voices:', this._voices);
     const voiceIndex = findIndex(this._voices, (osc: EnvelopedOscillator) => {
       return osc.oscillator.frequency === freq;
     });
