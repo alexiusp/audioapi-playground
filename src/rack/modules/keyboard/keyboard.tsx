@@ -5,14 +5,13 @@ import { Dispatch } from 'redux';
 import './keyboard.css';
 
 import { IMidiKeyboard } from '../../../models/base';
-import { ID } from '../../../models/types';
+import { ID, MidiKeysState, DataCallback } from '../../../models/types';
 import { getModule } from '../../../store/instruments/selectors';
 import IState from '../../../store/state';
 import { MIDINoteIndex } from '../../../utils/midi';
 
-import { whiteKeyWidth } from './constants';
-import WhiteKey from './whiteKey';
-import BlackKey from './blackKey';
+import { whiteKeyWidth, blackKeyWidth } from './constants';
+import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../../store/instruments/actions/keyboard';
 
 export interface OwnProps {
   id: ID;
@@ -20,36 +19,107 @@ export interface OwnProps {
 }
 
 export interface Props extends OwnProps {
+  keys: MidiKeysState;
   start: number;
   end: number;
+  onDown: DataCallback<number>;
+  onUp: DataCallback<number>;
 }
 
 // offset for drawing the keys
 const keysOffset = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
 
 export class Keyboard extends React.Component<Props> {
+  private mouseDown = false;
+  renderBlackKey = (midi: number) => {
+    const { keys, start } = this.props;
+    const i = midi % 12;
+    const octave = Math.floor((midi - start) / 12)
+    const offset = octave * 7 + keysOffset[i];
+    const x = (offset + 1) * whiteKeyWidth - (blackKeyWidth / 2);
+    const isPressed = !!keys[midi];
+    const keyFill = isPressed ? 'url(#black-pressed)' : 'url(#black)';
+    return (
+      <rect
+        key={midi}
+        onMouseDown={this.onDown}
+        onMouseUp={this.onUp}
+        onMouseEnter={this.onEnter}
+        onMouseLeave={this.onLeave}
+        data-note={midi}
+        x={x}
+        y="0"
+        width={blackKeyWidth}
+        height="60"
+        stroke="#000"
+        fill={keyFill}
+        strokeWidth="0.1"/>
+    )
+  }
+  renderWhiteKey = (midi: number) => {
+    const { keys, start } = this.props;
+    const i = midi % 12;
+    const octave = Math.floor((midi - start) / 12)
+    const offset = octave * 7 + keysOffset[i];
+    const x = offset * whiteKeyWidth;
+    const isPressed = !!keys[midi];
+    const keyFill = isPressed ? 'url(#white-pressed)' : 'url(#white)';
+    return (
+      <rect
+        key={midi}
+        onMouseDown={this.onDown}
+        onMouseUp={this.onUp}
+        onMouseEnter={this.onEnter}
+        onMouseLeave={this.onLeave}
+        data-note={midi}
+        x={x}
+        y="0"
+        width={whiteKeyWidth}
+        height="100"
+        stroke="#000"
+        fill={keyFill}
+        strokeWidth="0.1"/>
+    );
+  }
+  onUp = (e: React.MouseEvent<SVGRectElement>) => {
+    const note = (e.target as SVGRectElement).dataset.note;
+    if (note) {
+      this.mouseDown = false;
+      this.props.onUp(parseInt(note, 10));
+    }
+  }
+  onDown = (e: React.MouseEvent<SVGRectElement>) => {
+    const note = (e.target as SVGRectElement).dataset.note;
+    if (note) {
+      this.mouseDown = true;
+      this.props.onDown(parseInt(note, 10));
+    }
+  }
+  onEnter = (e: React.MouseEvent<SVGRectElement>) => {
+    const note = (e.target as SVGRectElement).dataset.note;
+    if (note && this.mouseDown) {
+      this.props.onDown(parseInt(note, 10));
+    }
+  }
+  onLeave = (e: React.MouseEvent<SVGRectElement>) => {
+    const note = (e.target as SVGRectElement).dataset.note;
+    if (note && this.mouseDown) {
+      this.props.onUp(parseInt(note, 10));
+    }
+  }
   render() {
-    const { className, id, start, end } = this.props;
+    const { className, start, end } = this.props;
     let whiteKeys = [];
     let blackKeys = [];
     for (let index = start; index < end + 1; index++) {
       const note = MIDINoteIndex[index];
-      const i = index % 12;
-      const octave = Math.floor((index - start) / 12)
-      const offset = octave * 7 + keysOffset[i];
       switch (note.type) {
         case 'white': {
-          const key = whiteKeys.length;
-          whiteKeys.push(
-            <WhiteKey id={id} i={offset} key={key} midi={index} />
-          );
+          whiteKeys.push(this.renderWhiteKey(index));
           break;
         }
         default: {
-          const key = blackKeys.length;
-          blackKeys.push(
-            <BlackKey id={id} i={offset} key={key} midi={index} />
-          );
+          blackKeys.push(this.renderBlackKey(index));
           break;
         }
       }
@@ -89,16 +159,19 @@ export class Keyboard extends React.Component<Props> {
 export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const id = ownProps.id;
   const keyboard = getModule(state, id) as IMidiKeyboard;
-  const { start, end } = keyboard;
+  const { start, end, keys } = keyboard;
   return {
+    keys,
     start,
     end,
   }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
-  const id = ownProps.id;
+  const { id } = ownProps;
   return {
+    onDown: (midi: number) => dispatch(keyboardKeyDownAction(id, midi)),
+    onUp: (midi: number) => dispatch(keyboardKeyUpAction(id, midi)),
   }
 }
 
