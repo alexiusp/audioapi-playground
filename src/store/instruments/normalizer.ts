@@ -11,11 +11,11 @@ export function normalizeInstrument(instrument: Instrument) {
       } as IInstrument;
     }
     case InstrumentEnum.PolyphonicSynth: {
-      const { id, name, envelope, keyboard } = instrument;
+      const { id, name, envelope, keyboard, oscillator } = instrument;
       return {
         id,
         name,
-        modules: [envelope.id, keyboard.id],
+        modules: [envelope.id, keyboard.id, oscillator.id],
       } as IInstrument;
     }
   }

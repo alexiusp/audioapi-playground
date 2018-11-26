@@ -133,6 +133,8 @@ export interface IPolyphonicSynth extends OutputAudioDevice {
   keyboard: IMidiKeyboard;
   // envelope used to controle the sound of keys
   envelope: IEnvelope;
+  // oscillator to apply settings to voices
+  oscillator: IOscillator;
 }
 
 // union type of all existing instruments

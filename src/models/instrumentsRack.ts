@@ -40,9 +40,10 @@ export class InstrumentsRack {
         // add instrument to map
         this.instruments.set(instrument.id, instrument);
         // register modules
-        const { envelope, keyboard } = instrument;
+        const { envelope, keyboard, oscillator } = instrument;
         this.modules.set(envelope.id, envelope);
         this.modules.set(keyboard.id, keyboard);
+        this.modules.set(oscillator.id, oscillator);
         break;
       }
     }

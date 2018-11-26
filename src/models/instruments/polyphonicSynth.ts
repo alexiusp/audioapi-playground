@@ -1,17 +1,25 @@
 import { findIndex } from 'lodash';
 
-import { IPolyphonicSynth, IMidiKeyboard, OutputAudioDevice, InstrumentEnum } from '../base';
+import { IPolyphonicSynth, OutputAudioDevice, InstrumentEnum } from '../base';
 import { Frequency, Level, Velocity } from '../types';
 import { Envelope } from '../modules/envelope';
 import { MidiKeyboard } from '../modules/midiKeyboard';
 import { Oscillator } from '../modules/oscillator';
-import { MIDINoteIndex, frequencyToMidiNoteNumber } from '../../utils/midi';
+import { MIDINoteIndex } from '../../utils/midi';
 import EnvelopedOscillator from './envelopedOscillator';
 
 export default class PolyphonicSynth extends OutputAudioDevice implements IPolyphonicSynth {
   name: InstrumentEnum.PolyphonicSynth;
 
   keyboard: MidiKeyboard;
+
+  private _oscillator : Oscillator;
+  public get oscillator() : Oscillator {
+    return this._oscillator;
+  }
+  public set oscillator(v : Oscillator) {
+    this._oscillator = v;
+  }
 
   private _envelope : Envelope;
   public get envelope() : Envelope {
@@ -30,8 +38,9 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
   private _voices: EnvelopedOscillator[];
   private buildVoice(freq: Frequency, gain: Level) {
     const voice = new EnvelopedOscillator(this.context);
+    voice.oscillator.type = this._oscillator.type;
     voice.oscillator.frequency = freq;
-    voice.oscillator.gain = gain;
+    voice.oscillator.gain = gain * this._oscillator.gain;
     const { attack, decay, sustain, release } = this._envelope;
     voice.envelope.attack = attack;
     voice.envelope.decay = decay;
@@ -45,7 +54,7 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     super(ctx);
     this.name = InstrumentEnum.PolyphonicSynth;
     this._envelope = new Envelope(ctx);
-    this._envelope.connect(this.output);
+    this._oscillator = new Oscillator(ctx);
     this._maxVoices = 3;
     this._voices = [];
     this.keyboard = new MidiKeyboard(ctx);

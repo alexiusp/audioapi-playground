@@ -88,8 +88,10 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       let newState = applyInstrumentToState(normalizedInstrument, state);
       forEach(normalizedInstrument.modules, id => {
         const module = Rack.getModule(id);
-        const normalizedModule = normalizeModule(module!);
-        newState = applyModuleToState(normalizedModule, newState);
+        if (module) {
+          const normalizedModule = normalizeModule(module);
+          newState = applyModuleToState(normalizedModule, newState);
+        }
       });
       return newState;
     }

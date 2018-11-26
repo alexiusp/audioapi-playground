@@ -9,6 +9,7 @@ import IState from '../../store/state';
 import { getInstrument, getModule } from '../../store/instruments/selectors';
 import Envelope from '../modules/Envelope';
 import Keyboard from '../modules/keyboard/keyboard';
+import Oscillator from '../modules/Oscillator';
 
 export interface OwnProps {
   id: ID;
@@ -18,6 +19,7 @@ export interface Props extends OwnProps {
   name: string;
   envelope: ID;
   keyboard: ID;
+  oscillator: ID;
 }
 
 export function PolyphonicSynth(props: Props) {
@@ -26,7 +28,10 @@ export function PolyphonicSynth(props: Props) {
       <Panel.Heading>{props.name} {props.id}</Panel.Heading>
       <Panel.Body>
         <Row>
-          <Col xs={12}>
+          <Col xs={6}>
+            <Oscillator id={props.oscillator} />
+          </Col>
+          <Col xs={6}>
             <Envelope id={props.envelope} />
           </Col>
         </Row>
@@ -43,18 +48,26 @@ export const mapStateToProps = (state: IState, ownProps: OwnProps) => {
   const modules = instrument.modules;
   let envelope: string = '';
   let keyboard: string = '';
+  let oscillator: string = '';
   modules.forEach(id => {
     const module = getModule(state, id);
-    if (module.name === ModuleEnum.Envelope) {
-      envelope = id;
-    } else {
-      keyboard = id;
+    switch (module.name) {
+      case ModuleEnum.Envelope:
+        envelope = id;
+        break;
+      case ModuleEnum.MidiKeyboard:
+        keyboard = id;
+        break;
+      case ModuleEnum.Oscillator:
+        oscillator = id;
+        break;
     }
   });
   return {
     name: instrument.name,
     envelope,
     keyboard,
+    oscillator,
   }
 }
 
