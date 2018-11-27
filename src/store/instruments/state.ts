@@ -1,4 +1,4 @@
-import { IInput, ILegacyInstrument, IInstrument, IModule } from '../../models/base';
+import { IInstrument, IModule } from '../../models/base';
 
 export default interface IInstrumentsState {
   // refactored state
@@ -7,10 +7,5 @@ export default interface IInstrumentsState {
   },
   instruments: {
     [id: string]: IInstrument;
-  }
-  // legacy state
-  outputs: IInput[];
-  legacyInstruments: {
-    [id: string]: ILegacyInstrument;
   }
 }

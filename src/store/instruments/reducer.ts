@@ -1,9 +1,8 @@
 import { forEach } from 'lodash';
 import IInstrumentsState from './state';
-import { IOutput, IGain, IConnectable, IInput, ILegacyInstrument, ILegacyOscillator, ILegacyEnvelopedOscillator, ILegacyMidiKeyboard, InstrumentEnum, Instrument, IInstrument, Module, IEnvelope, IOscillator, IPlayable, IMidiKeyboard } from '../../models/base';
-import { InstrumentsAction, INSTRUMENT_ADD, INSTRUMENT_SET_OUTPUT } from './actions';
+import { IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
+import { InstrumentsAction, INSTRUMENT_SET_OUTPUT } from './actions';
 import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
-import { MIDINoteMap } from '../../utils/midi';
 import Rack from '../../models/instrumentsRack';
 import { normalizeInstrument, normalizeModule } from './normalizer';
 import { MODULE_ENVELOPE_ATTACK_SET, MODULE_ENVELOPE_DECAY_SET, MODULE_ENVELOPE_SUSTAIN_SET, MODULE_ENVELOPE_RELEASE_SET } from './actions/envelope';
@@ -15,8 +14,6 @@ import { MidiKeyboard } from '../../models/modules/midiKeyboard';
 export const initialInstrumentsState: IInstrumentsState = {
   modules: {},
   instruments: {},
-  legacyInstruments: {},
-  outputs: [],
 };
 
 function applyInstrumentToState(instrument: IInstrument, state: IInstrumentsState) {
@@ -47,20 +44,6 @@ function applyModuleToState(module: Module, state: IInstrumentsState) {
 
 export function instruments(state: IInstrumentsState = initialInstrumentsState, action: InstrumentsAction) {
   switch (action.type) {
-    case INSTRUMENT_ADD: {
-      const instrument = action.payload;
-      const legacyInstruments = state.legacyInstruments;
-      legacyInstruments[instrument.id] = instrument;
-      const outputs = state.outputs;
-      if ((instrument as IConnectable).type && (instrument as IConnectable).type === "Input") {
-        // outputs.push(instrument as IInput);
-      }
-      return {
-        ...state,
-        legacyInstruments,
-        outputs,
-      }
-    }
     /*
     case INSTRUMENT_SET_OUTPUT: {
       const { id, output } = action.payload;
@@ -71,12 +54,6 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       } else {
         delete instrument.output;
       }
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    case INSTRUMENT_VOLUME_CHANGE: {
-      const { id, volume } = action.payload;
-      const instrument = state.legacyInstruments[id] as IGain;
-      instrument.volume = volume;
       return applyInstrumentToState(instrument as ILegacyInstrument, state);
     }
     */

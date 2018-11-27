@@ -161,64 +161,10 @@ export enum LegacyInstrumentEnum {
   MonophonicSynth,
 }
 
-export type LegacyInstrumentType = "Input" | "Output" | "InOut";
-
 export interface ILegacyBaseInstrument extends IBase {
   instrument: LegacyInstrumentEnum;
 }
 export interface IInput extends ILegacyBaseInstrument {
   type: "Input";
 }
-export interface IOutput extends ILegacyBaseInstrument {
-  output?: ID;
-  type: "Output";
-}
-export type IConnectable = IInput | IOutput;
 
-export interface IGain extends ILegacyBaseInstrument {
-  volume: Level;
-}
-
-// oscillator model
-export interface ILegacyOscillator extends ILegacyBaseInstrument {
-  oscillatorType: OscillatorType;
-  frequency: Frequency;
-}
-// instrument with envelope
-export interface IEnveloped extends ILegacyBaseInstrument {
-  envelope: IEnvelope;
-}
-// instrument with mide-keyboard
-export interface ILegacyMidiKeyboard extends ILegacyBaseInstrument {
-  keyboard: MidiKeyboardState;
-}
-
-// behavior models
-export interface ILegacyPlayable {
-  play: (freq?: Frequency) => void;
-}
-
-export interface ILegacyOutputInstrument extends IOutput {
-  connect: (output: ID) => void;
-  disconnect: () => void;
-}
-
-export interface ISimpleOscillator extends ILegacyOutputInstrument, IGain, ILegacyPlayable, ILegacyOscillator { }
-export interface ILegacyEnvelopedOscillator extends ISimpleOscillator, IEnveloped { }
-export interface ILegacyMonophonicSynth extends ILegacyEnvelopedOscillator, ILegacyMidiKeyboard { }
-
-export type ILegacyInstrument = ILegacyMonophonicSynth | ILegacyEnvelopedOscillator | ISimpleOscillator;
-
-
-export interface MidiKeyboardState {
-  // amount of simultaneously playable sounds
-  sounds: number;
-  // starting note of keyboard
-  start: number;
-  // end note of keyboard
-  end: number;
-  // mide-keyboard keys state
-  keys: {
-    [midiNumber: number]: number;
-  },
-}
