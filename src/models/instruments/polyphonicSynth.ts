@@ -35,8 +35,11 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     return this._maxVoices;
   }
 
-  private _voices: EnvelopedOscillator[];
-  private buildVoice(freq: Frequency, gain: Level) {
+  private _voices: Map<number, EnvelopedOscillator>;
+  private buildVoice(note: number, velocity: Velocity) {
+    // create a voice for a note
+    const freq = MIDINoteIndex[note].frequency;
+    const gain = velocity / 127;
     const voice = new EnvelopedOscillator(this.context);
     voice.oscillator.type = this._oscillator.type;
     voice.oscillator.frequency = freq;
@@ -56,35 +59,38 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
     this._maxVoices = 3;
-    this._voices = [];
+    this._voices = new Map();
     this.keyboard = new MidiKeyboard(ctx);
     this.keyboard.registerNoteHandlers(this.noteOn, this.noteOff);
   }
 
   public noteOn = (note: number, velocity: Velocity = 127) => {
-    // create a voice for a note
-    const freq = MIDINoteIndex[note].frequency;
-    const gain = velocity / 127;
-    const voice = this.buildVoice(freq, gain);
-    // remove first voice and deactive note if voices limit met
-    if (this._voices.length + 1 > this._maxVoices) {
-      const firstVoice: EnvelopedOscillator = this._voices.shift()!;
-      firstVoice.stop();
+    const voice = this.buildVoice(note, velocity);
+    // check if this voice already playing
+    const duplicate = this._voices.get(note);
+    if (duplicate) {
+      duplicate.stop();
+      this._voices.delete(note);
     }
-    this._voices.push(voice);
+    // remove first voice and deactive note if voices limit met
+    if (this._voices.size + 1 > this._maxVoices) {
+      const firstNote = Array.from(this._voices.keys())[0];
+      const firstVoice = this._voices.get(firstNote);
+      if (firstVoice) {
+        firstVoice.stop();
+        this._voices.delete(firstNote);
+      }
+    }
     voice.start();
+    this._voices.set(note, voice);
   }
 
   public noteOff = (note: number) => {
-    const freq = MIDINoteIndex[note].frequency;
-    const voiceIndex = findIndex(this._voices, (osc: EnvelopedOscillator) => {
-      return osc.oscillator.frequency === freq;
-    });
-    if (voiceIndex < 0) {
-      throw new Error('Note was not pressed!');
+    const voice = this._voices.get(note);
+    if (voice) {
+      voice.stop();
+      this._voices.delete(note);
     }
-    const voice = this._voices.splice(voiceIndex, 1);
-    voice[0].stop();
   }
 
 }
