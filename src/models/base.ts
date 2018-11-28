@@ -124,7 +124,7 @@ export interface IEnvelopedOscillator extends OutputAudioDevice, IPlayable {
   oscillator: IOscillator;
 }
 
-// monophonic synth - enveloped oscillator with midi keyboard
+// polyphonic synth - enveloped oscillator with midi keyboard
 export interface IPolyphonicSynth extends OutputAudioDevice {
   name: InstrumentEnum.PolyphonicSynth;
   // amount of simultaneously playable sounds
