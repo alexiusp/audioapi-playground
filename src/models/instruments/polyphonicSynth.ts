@@ -1,7 +1,5 @@
-import { findIndex } from 'lodash';
-
 import { IPolyphonicSynth, OutputAudioDevice, InstrumentEnum } from '../base';
-import { Frequency, Level, Velocity } from '../types';
+import { Velocity } from '../types';
 import { Envelope } from '../modules/envelope';
 import { MidiKeyboard } from '../modules/midiKeyboard';
 import { Oscillator } from '../modules/oscillator';
@@ -58,7 +56,7 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     this.name = InstrumentEnum.PolyphonicSynth;
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
-    this._maxVoices = 3;
+    this._maxVoices = 7;
     this._voices = new Map();
     this.keyboard = new MidiKeyboard(ctx);
     this.keyboard.registerNoteHandlers(this.noteOn, this.noteOff);

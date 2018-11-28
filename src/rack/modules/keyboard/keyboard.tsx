@@ -9,9 +9,15 @@ import { ID, MidiKeysState, DataCallback } from '../../../models/types';
 import { getModule } from '../../../store/instruments/selectors';
 import IState from '../../../store/state';
 import { MIDINoteIndex } from '../../../utils/midi';
-
-import { whiteKeyWidth, blackKeyWidth } from './constants';
 import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../../store/instruments/actions/keyboard';
+
+// svg relative with of keys
+export const whiteKeyWidth = 7;
+export const blackKeyWidth = 4;
+// offset for drawing the keys
+const keysOffset = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
+// keyboard to keys characters binding
+export const octaveChars = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'z', 'h', 'u', 'j', 'k', 'o', 'l', 'p', 'ö'];
 
 export interface OwnProps {
   id: ID;
@@ -26,11 +32,10 @@ export interface Props extends OwnProps {
   onUp: DataCallback<number>;
 }
 
-// offset for drawing the keys
-const keysOffset = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
-
 export class Keyboard extends React.Component<Props> {
+
   private mouseDown = false;
+
   renderBlackKey = (midi: number) => {
     const { keys, start } = this.props;
     const i = midi % 12;
@@ -56,6 +61,7 @@ export class Keyboard extends React.Component<Props> {
         strokeWidth="0.1"/>
     )
   }
+
   renderWhiteKey = (midi: number) => {
     const { keys, start } = this.props;
     const i = midi % 12;
@@ -81,6 +87,7 @@ export class Keyboard extends React.Component<Props> {
         strokeWidth="0.1"/>
     );
   }
+
   onUp = (e: React.MouseEvent<SVGRectElement>) => {
     const note = (e.target as SVGRectElement).dataset.note;
     if (note) {
@@ -88,6 +95,7 @@ export class Keyboard extends React.Component<Props> {
       this.props.onUp(parseInt(note, 10));
     }
   }
+
   onDown = (e: React.MouseEvent<SVGRectElement>) => {
     const note = (e.target as SVGRectElement).dataset.note;
     if (note) {
@@ -95,18 +103,58 @@ export class Keyboard extends React.Component<Props> {
       this.props.onDown(parseInt(note, 10));
     }
   }
+
   onEnter = (e: React.MouseEvent<SVGRectElement>) => {
     const note = (e.target as SVGRectElement).dataset.note;
     if (note && this.mouseDown) {
       this.props.onDown(parseInt(note, 10));
     }
   }
+
   onLeave = (e: React.MouseEvent<SVGRectElement>) => {
     const note = (e.target as SVGRectElement).dataset.note;
     if (note && this.mouseDown) {
       this.props.onUp(parseInt(note, 10));
     }
   }
+
+  keyDownHandler = (e: KeyboardEvent) => {
+    // check if key is mapped
+    const key = e.key;
+    const keyNum = octaveChars.indexOf(key);
+    if (keyNum < 0) {
+      return;
+    }
+    // check if key is already pressed
+    const { start, keys } = this.props;
+    const midi = start + keyNum;
+    const isPressed = !!keys[midi];
+    if (isPressed) {
+      return;
+    }
+    this.props.onDown(midi);
+  }
+
+  keyUpHandler = (e: KeyboardEvent) => {
+    const key = e.key;
+    const keyNum = octaveChars.indexOf(key);
+    if (keyNum < 0) {
+      return;
+    }
+    const note = this.props.start + keyNum;
+    this.props.onUp(note);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.keyDownHandler);
+    document.addEventListener('keyup', this.keyUpHandler);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyDownHandler);
+    document.removeEventListener('keyup', this.keyUpHandler);
+  }
+
   render() {
     const { className, start, end } = this.props;
     let whiteKeys = [];
