@@ -2,14 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import './keyboard.css';
+import './Keyboard.css';
 
-import { IMidiKeyboard } from '../../../models/base';
-import { ID, MidiKeysState, DataCallback } from '../../../models/types';
-import { getModule } from '../../../store/instruments/selectors';
-import IState from '../../../store/state';
-import { MIDINoteIndex } from '../../../utils/midi';
-import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../../store/instruments/actions/keyboard';
+import { IMidiKeyboard } from '../../models/base';
+import { ID, MidiKeysState, DataCallback } from '../../models/types';
+import { getModule } from '../../store/instruments/selectors';
+import IState from '../../store/state';
+import { MIDINoteIndex } from '../../utils/midi';
+import { keyboardKeyDownAction, keyboardKeyUpAction } from '../../store/instruments/actions/keyboard';
 
 // svg relative with of keys
 export const whiteKeyWidth = 7;

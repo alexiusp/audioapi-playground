@@ -8,7 +8,7 @@ import { ID } from '../../models/types';
 import IState from '../../store/state';
 import { getInstrument, getModule } from '../../store/instruments/selectors';
 import Envelope from '../modules/Envelope';
-import Keyboard from '../modules/keyboard/keyboard';
+import Keyboard from '../modules/Keyboard';
 import Oscillator from '../modules/Oscillator';
 
 export interface OwnProps {
