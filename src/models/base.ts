@@ -1,5 +1,7 @@
-import { getUID } from '../utils/utils';
 import { ID, Time, Level, Frequency, MidiKeysState, NoteHandler } from './types';
+import { Gain } from './base/gain';
+import { OutputAudioDevice } from './base/OutputAudioDevice';
+import { InputAudioDevice } from './base/InputAudioDevice';
 
 // common abstract models
 
@@ -8,61 +10,25 @@ export interface IBase {
   id: ID;
 }
 
-// device we can connect to
+// device with input we can connect to
 export interface IInputDevice {
-  input: AudioNode;
+  input: Gain;
 }
 
 export type BaseInputTarget = 'default';
-
 // device with custom inputs
 export interface IInputTarget {
   getInput: (which?: BaseInputTarget) => AudioNode | AudioParam;
 }
 
-// base audio device wrapper class
-export class BaseAudioDevice implements IBase {
-  public id: ID;
-  private _context: AudioContext;
-  constructor(ctx: AudioContext, prefix?: string) {
-    this.id = getUID(prefix);
-    this._context = ctx;
-  }
-  get context() {
-    return this._context;
-  }
+// device with output that can be connected to somewhere
+export interface IOutputDevice {
+  output: Gain;
 }
 
-export class OutputAudioDevice extends BaseAudioDevice {
-  protected output: GainNode;
-  protected connected: IInputTarget[];
-  constructor(ctx: AudioContext, prefix?: string) {
-    super(ctx, prefix);
-    this.output = ctx.createGain();
-    this.connected = [];
-  }
-  connect(target: AudioNode) {
-    this.output.connect(target);
-  }
-  connectInput(target: IInputTarget) {
-    const input = target.getInput('default');
-    this.output.connect(input as AudioNode);
-    this.connected.push(target);
-  }
-  disconnect(target: AudioNode) {
-    this.output.disconnect(target);
-  }
-}
-
-export class InputAudioDevice extends BaseAudioDevice implements IInputDevice, IInputTarget {
-  input: GainNode;
-  constructor(ctx: AudioContext, prefix?: string) {
-    super(ctx, prefix)
-    this.input = ctx.createGain();
-  }
-  getInput(target: BaseInputTarget = 'default') {
-    return this.input;
-  }
+export interface IOutputConnect {
+  connect: (target: IInputTarget) => void;
+  disconnect: (target: IInputTarget) => void;
 }
 
 // base module/instrument with play controls

@@ -1,8 +1,8 @@
 import {
-  OutputAudioDevice,
   IEnvelopedOscillator,
   InstrumentEnum,
 } from '../base';
+import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { Time } from '../types';
 import { Envelope } from '../modules/envelope';
 import { Oscillator } from '../modules/oscillator';
@@ -31,7 +31,7 @@ export default class EnvelopedOscillator extends OutputAudioDevice implements IE
     this.name = InstrumentEnum.EnvelopedOscillator;
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
-    this._oscillator.connect(this._envelope.getInput());
+    this._oscillator.connect(this._envelope);
     this._envelope.connect(this.output);
   }
 

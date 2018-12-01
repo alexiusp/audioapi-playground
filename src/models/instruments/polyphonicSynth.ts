@@ -1,4 +1,5 @@
-import { IPolyphonicSynth, OutputAudioDevice, InstrumentEnum } from '../base';
+import { IPolyphonicSynth, InstrumentEnum } from '../base';
+import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { Velocity } from '../types';
 import { Envelope } from '../modules/envelope';
 import { MidiKeyboard } from '../modules/midiKeyboard';

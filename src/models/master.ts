@@ -1,4 +1,5 @@
-import { InputAudioDevice, IMasterMixer } from './base';
+import { IMasterMixer } from './base';
+import { InputAudioDevice } from "./base/InputAudioDevice";
 import { Level } from './types';
 
 export class MasterMixer extends InputAudioDevice implements IMasterMixer {
@@ -11,13 +12,11 @@ export class MasterMixer extends InputAudioDevice implements IMasterMixer {
     this._playing = v;
   }
 
-  private _volume : Level;
   public get volume() : Level {
-    return this._volume;
+    return this.input.volume;
   }
   public set volume(v : Level) {
-    this.input.gain.setValueAtTime(v, this.context.currentTime);
-    this._volume = v;
+    this.input.volume = v;
   }
 
   // osciloscope/frequency bar graph
@@ -31,10 +30,9 @@ export class MasterMixer extends InputAudioDevice implements IMasterMixer {
     this.analyser.maxDecibels = -10;
     // this.analyser.smoothingTimeConstant = 0.85;
     // this.analyser.smoothingTimeConstant = 0;
-    this.input.connect(this.analyser);
+    this.input.getInput().connect(this.analyser);
     this.analyser.connect(ctx.destination);
-    this.input.gain.value = 0;
-    this._volume = 0;
+    this.input.volume = 0;
     this._playing = false;
   }
 

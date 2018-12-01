@@ -1,5 +1,7 @@
-import { IEnvelope, OutputAudioDevice, IInputDevice, IPlayable, ModuleEnum, IInputTarget } from '../base';
+import { IEnvelope, IInputDevice, IPlayable, ModuleEnum, IInputTarget } from '../base';
+import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { Level, Time } from '../types';
+import { Gain } from '../base/gain';
 
 export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevice, IInputTarget, IPlayable {
   name: ModuleEnum.Envelope;
@@ -36,20 +38,18 @@ export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevi
     this._release = v;
   }
 
-  input: GainNode;
-  getInput = () => {
-    return this.input;
-  }
+  input: Gain;
+  getInput = () => this.input.getInput();
 
   constructor(ctx: AudioContext) {
     super(ctx);
+    this.name = ModuleEnum.Envelope;
     this._attack = 0;
     this._decay = 0;
     this._sustain = 1;
     this._release = 0;
     this.input = this.output;
-    this.input.gain.value = 0;
-    this.name = ModuleEnum.Envelope;
+    this.input.volume = 0;
   }
 
   public setEnvelope(attack: Time, decay: Time, sustain: Level, release: Time) {
@@ -61,13 +61,13 @@ export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevi
 
   public start(time?: Time) {
     const startTime = time || this.context.currentTime;
-    this.input.gain.setValueAtTime(0, startTime);
+    this.input.getInput().gain.setValueAtTime(0, startTime);
     // attack
     const attackTime = startTime + this.attack;
-    this.input.gain.linearRampToValueAtTime(1, attackTime);
+    this.input.getInput().gain.linearRampToValueAtTime(1, attackTime);
     // decay to sustain
     const decayTime = attackTime + this.decay;
-    this.input.gain.linearRampToValueAtTime(this.sustain, decayTime);
+    this.input.getInput().gain.linearRampToValueAtTime(this.sustain, decayTime);
     return decayTime;
   }
 
@@ -75,7 +75,7 @@ export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevi
     const stopTime = time || this.context.currentTime;
     // release phase start
     const releaseTime = stopTime + this.release;
-    this.input.gain.linearRampToValueAtTime(0, releaseTime);
+    this.input.getInput().gain.linearRampToValueAtTime(0, releaseTime);
     return releaseTime;
   }
 

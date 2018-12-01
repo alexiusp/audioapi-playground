@@ -1,4 +1,5 @@
-import { IMidiKeyboard, OutputAudioDevice, ModuleEnum } from '../base';
+import { IMidiKeyboard, ModuleEnum } from '../base';
+import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { MidiKeysState, Velocity, NoteHandler } from '../types';
 
 export class MidiKeyboard extends OutputAudioDevice implements IMidiKeyboard {

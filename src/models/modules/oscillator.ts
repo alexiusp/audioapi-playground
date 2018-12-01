@@ -1,7 +1,8 @@
-import { OutputAudioDevice, IPlayable, IOscillator, ModuleEnum, IInputTarget, BaseInputTarget } from '../base';
+import { IPlayable, IOscillator, ModuleEnum, IInputTarget, BaseInputTarget } from '../base';
+import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { Frequency, Level, Time } from '../types';
 
-export type OscillatorInputTarget = BaseInputTarget | 'frequency' | 'gain';
+export type OscillatorInputTarget = BaseInputTarget | 'frequency';
 
 export class Oscillator extends OutputAudioDevice implements IOscillator, IInputTarget, IPlayable {
   name: ModuleEnum.Oscillator;
@@ -29,18 +30,18 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IInput
   }
 
   public get gain() : Level {
-    const gain = this.output.gain.value;
-    return parseFloat(gain.toFixed(2));
+    return this.output.volume;
   }
   public set gain(v : Level) {
-    this.output.gain.value = v;
+    this.output.volume = v;
   }
 
   constructor(ctx: AudioContext) {
     super(ctx);
+    this.name = ModuleEnum.Oscillator;
+    // default parameters
     this._type = 'sine';
     this._frequency = 440;
-    this.name = ModuleEnum.Oscillator;
   }
 
   public getInput(target: OscillatorInputTarget = 'default') {
@@ -51,10 +52,8 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IInput
         }
         throw new Error('Can not connect to stopped oscillator!');
       }
-      case 'gain':
-        return this.output.gain;
     }
-    return this.output;
+    return this.output.getInput();
   }
 
   private osc?: OscillatorNode;
@@ -62,7 +61,7 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IInput
     this.osc = this.context.createOscillator();
     this.osc.frequency.value = this.frequency;
     this.osc.type = this.type;
-    this.osc.connect(this.output);
+    this.osc.connect(this.output.getInput());
   }
 
   public start(time?: Time) {

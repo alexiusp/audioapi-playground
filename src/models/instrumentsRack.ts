@@ -1,4 +1,5 @@
-import { Instrument, InstrumentEnum, Module, OutputAudioDevice } from './base';
+import { Instrument, InstrumentEnum, Module } from './base';
+import { OutputAudioDevice } from "./base/OutputAudioDevice";
 import { ID } from './types';
 import { MasterMixer } from './master';
 import EnvelopedOscillator from './instruments/envelopedOscillator';
