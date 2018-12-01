@@ -8,9 +8,16 @@ export interface IBase {
   id: ID;
 }
 
-// device or parameter where we can connect to
+// device we can connect to
 export interface IInputDevice {
   input: AudioNode;
+}
+
+export type BaseInputTarget = 'default';
+
+// device with custom inputs
+export interface IInputTarget {
+  getInput: (which?: BaseInputTarget) => AudioNode | AudioParam;
 }
 
 // base audio device wrapper class
@@ -28,30 +35,40 @@ export class BaseAudioDevice implements IBase {
 
 export class OutputAudioDevice extends BaseAudioDevice {
   protected output: GainNode;
+  protected connected: IInputTarget[];
   constructor(ctx: AudioContext, prefix?: string) {
     super(ctx, prefix);
     this.output = ctx.createGain();
+    this.connected = [];
   }
   connect(target: AudioNode) {
     this.output.connect(target);
+  }
+  connectInput(target: IInputTarget) {
+    const input = target.getInput('default');
+    this.output.connect(input as AudioNode);
+    this.connected.push(target);
   }
   disconnect(target: AudioNode) {
     this.output.disconnect(target);
   }
 }
 
-export class InputAudioDevice extends BaseAudioDevice implements IInputDevice {
+export class InputAudioDevice extends BaseAudioDevice implements IInputDevice, IInputTarget {
   input: GainNode;
   constructor(ctx: AudioContext, prefix?: string) {
     super(ctx, prefix)
     this.input = ctx.createGain();
   }
+  getInput(target: BaseInputTarget = 'default') {
+    return this.input;
+  }
 }
 
 // base module/instrument with play controls
 export interface IPlayable {
-  start: (time?: Time) => void;
-  stop: (time?: Time) => void;
+  start: (time?: Time) => Time;
+  stop: (time?: Time) => Time;
 }
 
 /*

@@ -1,7 +1,9 @@
-import { OutputAudioDevice, IPlayable, IOscillator, ModuleEnum } from '../base';
+import { OutputAudioDevice, IPlayable, IOscillator, ModuleEnum, IInputTarget, BaseInputTarget } from '../base';
 import { Frequency, Level, Time } from '../types';
 
-export class Oscillator extends OutputAudioDevice implements IOscillator, IPlayable {
+export type OscillatorInputTarget = BaseInputTarget | 'frequency' | 'gain';
+
+export class Oscillator extends OutputAudioDevice implements IOscillator, IInputTarget, IPlayable {
   name: ModuleEnum.Oscillator;
 
   private _type : OscillatorType;
@@ -41,6 +43,20 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IPlaya
     this.name = ModuleEnum.Oscillator;
   }
 
+  public getInput(target: OscillatorInputTarget = 'default') {
+    switch (target) {
+      case 'frequency': {
+        if (this.osc) {
+          return this.osc;
+        }
+        throw new Error('Can not connect to stopped oscillator!');
+      }
+      case 'gain':
+        return this.output.gain;
+    }
+    return this.output;
+  }
+
   private osc?: OscillatorNode;
   protected init() {
     this.osc = this.context.createOscillator();
@@ -55,6 +71,7 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IPlaya
       throw new Error('Failed to create an Oscillator');
     }
     this.osc.start(time);
+    return time || 0;
   }
 
   public stop(time?: Time) {
@@ -62,6 +79,7 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IPlaya
       throw new Error('Can not stop an Oscillator when it was not started');
     }
     this.osc.stop(time);
+    return time || 0;
   }
 
 }

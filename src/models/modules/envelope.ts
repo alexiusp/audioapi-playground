@@ -1,42 +1,45 @@
-import { IEnvelope, OutputAudioDevice, IInputDevice, IPlayable, ModuleEnum } from '../base';
+import { IEnvelope, OutputAudioDevice, IInputDevice, IPlayable, ModuleEnum, IInputTarget } from '../base';
 import { Level, Time } from '../types';
 
-export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevice, IPlayable {
+export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevice, IInputTarget, IPlayable {
   name: ModuleEnum.Envelope;
 
-  private _attack : Time;
-  public get attack() : Time {
+  private _attack: Time;
+  public get attack(): Time {
     return this._attack;
   }
-  public set attack(v : Time) {
+  public set attack(v: Time) {
     this._attack = v;
   }
 
-  private _decay : Time;
-  public get decay() : Time {
+  private _decay: Time;
+  public get decay(): Time {
     return this._decay;
   }
-  public set decay(v : Time) {
+  public set decay(v: Time) {
     this._decay = v;
   }
 
-  private _sustain : Level;
-  public get sustain() : Level {
+  private _sustain: Level;
+  public get sustain(): Level {
     return this._sustain;
   }
-  public set sustain(v : Level) {
+  public set sustain(v: Level) {
     this._sustain = v;
   }
 
-  private _release : Time;
-  public get release() : Time {
+  private _release: Time;
+  public get release(): Time {
     return this._release;
   }
-  public set release(v : Time) {
+  public set release(v: Time) {
     this._release = v;
   }
 
   input: GainNode;
+  getInput = () => {
+    return this.input;
+  }
 
   constructor(ctx: AudioContext) {
     super(ctx);
@@ -65,6 +68,7 @@ export class Envelope extends OutputAudioDevice implements IEnvelope, IInputDevi
     // decay to sustain
     const decayTime = attackTime + this.decay;
     this.input.gain.linearRampToValueAtTime(this.sustain, decayTime);
+    return decayTime;
   }
 
   public stop(time?: Time) {

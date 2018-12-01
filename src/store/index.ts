@@ -16,6 +16,6 @@ const store: Store<IState, Action> = createStore(
 sagaMiddleware.run(rootSaga);
 
 // create default instruments
-store.dispatch(createInstrumentAction(InstrumentEnum.EnvelopedOscillator));
+// store.dispatch(createInstrumentAction(InstrumentEnum.EnvelopedOscillator));
 store.dispatch(createInstrumentAction(InstrumentEnum.PolyphonicSynth));
 export default store;

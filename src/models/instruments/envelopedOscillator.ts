@@ -31,18 +31,20 @@ export default class EnvelopedOscillator extends OutputAudioDevice implements IE
     this.name = InstrumentEnum.EnvelopedOscillator;
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
-    this._oscillator.connect(this._envelope.input);
+    this._oscillator.connect(this._envelope.getInput());
     this._envelope.connect(this.output);
   }
 
   public start(time?: Time) {
     this.envelope.start(time);
     this.oscillator.start(time);
+    return time || 0;
   }
 
   public stop(time?: Time) {
     const releaseTime = this.envelope.stop(time);
     this.oscillator.stop(releaseTime);
+    return releaseTime;
   }
 
 }

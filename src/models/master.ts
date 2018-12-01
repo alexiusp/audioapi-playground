@@ -48,11 +48,13 @@ export class MasterMixer extends InputAudioDevice implements IMasterMixer {
   public start(volume: Level = 1) {
     this.playing = true;
     this.volume = volume;
+    return 0;
   }
 
   public stop() {
     this.playing = false;
     this.volume = 0;
+    return 0;
   }
 
 }
