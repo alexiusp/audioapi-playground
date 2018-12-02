@@ -136,26 +136,3 @@ export interface IMasterMixer extends InputAudioDevice, IPlayable {
   volume: Level;
   playing: boolean;
 }
-
-
-
-
-
-
-
-
-
-export enum LegacyInstrumentEnum {
-  MasterMixer,
-  SimpleOscillator,
-  EnvelopedOscillator,
-  MonophonicSynth,
-}
-
-export interface ILegacyBaseInstrument extends IBase {
-  instrument: LegacyInstrumentEnum;
-}
-export interface IInput extends ILegacyBaseInstrument {
-  type: "Input";
-}
-

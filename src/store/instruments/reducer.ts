@@ -1,14 +1,16 @@
 import { forEach } from 'lodash';
-import IInstrumentsState from './state';
+
 import { IInstrument, Module, IEnvelope, IOscillator, IPlayable } from '../../models/base';
-import { InstrumentsAction, INSTRUMENT_SET_OUTPUT } from './actions';
-import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import Rack from '../../models/instrumentsRack';
+
+import IInstrumentsState from './state';
+import { InstrumentsAction } from './actions';
 import { normalizeInstrument, normalizeModule } from './normalizer';
+import { KEYBOARD_KEY_DOWN, KEYBOARD_KEY_UP } from './actions/keyboard';
 import { MODULE_ENVELOPE_ATTACK_SET, MODULE_ENVELOPE_DECAY_SET, MODULE_ENVELOPE_SUSTAIN_SET, MODULE_ENVELOPE_RELEASE_SET } from './actions/envelope';
 import { MODULE_OSCILLATOR_TYPE_SET, MODULE_OSCILLATOR_FREQUENCY_SET, MODULE_OSCILLATOR_VOLUME_SET, MODULE_OSCILLATOR_PLAY_START, MODULE_OSCILLATOR_PLAY_STOP } from './actions/oscillator';
-import { Oscillator } from '../../models/modules/oscillator';
 import { INSTRUMENT_CREATE, INSTRUMENT_PLAY_START, INSTRUMENT_PLAY_STOP } from './actions/instrument';
+import { Oscillator } from '../../models/modules/oscillator';
 import { MidiKeyboard } from '../../models/modules/midiKeyboard';
 import { OutputAudioDevice } from '../../models/base/OutputAudioDevice';
 
@@ -45,19 +47,6 @@ function applyModuleToState(module: Module, state: IInstrumentsState) {
 
 export function instruments(state: IInstrumentsState = initialInstrumentsState, action: InstrumentsAction) {
   switch (action.type) {
-    /*
-    case INSTRUMENT_SET_OUTPUT: {
-      const { id, output } = action.payload;
-      let instruments = state.legacyInstruments;
-      const instrument = instruments[id] as IOutput;
-      if (output) {
-        instrument.output = output;
-      } else {
-        delete instrument.output;
-      }
-      return applyInstrumentToState(instrument as ILegacyInstrument, state);
-    }
-    */
     // new actions
     case INSTRUMENT_CREATE: {
       const instrumentClass = action.payload;

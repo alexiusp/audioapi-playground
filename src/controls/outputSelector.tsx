@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
 import { DataCallback, ID } from '../models/types';
-import { IInput } from '../models/base';
 
 export interface Props {
   id: string;
   active?: ID;
-  options?: IInput[];
+  // options?: IInput[];
   onSelect: DataCallback;
 }
 
 export default function OutputSelector(props: Props) {
   let outputOptions: JSX.Element[] = [];
+  /*
   if (props.options && props.options.length > 0) {
     outputOptions = props.options.map((instrument: IInput) => {
       const isActive = !!props.active && (props.active === instrument.id);
@@ -25,6 +25,7 @@ export default function OutputSelector(props: Props) {
       );
     });
   }
+  */
   outputOptions.unshift(
     (<MenuItem active={!props.active} key="none" eventKey={null}>None</MenuItem>)
   )
