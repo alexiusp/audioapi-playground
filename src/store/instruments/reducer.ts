@@ -10,6 +10,7 @@ import { MODULE_OSCILLATOR_TYPE_SET, MODULE_OSCILLATOR_FREQUENCY_SET, MODULE_OSC
 import { Oscillator } from '../../models/modules/oscillator';
 import { INSTRUMENT_CREATE, INSTRUMENT_PLAY_START, INSTRUMENT_PLAY_STOP } from './actions/instrument';
 import { MidiKeyboard } from '../../models/modules/midiKeyboard';
+import { OutputAudioDevice } from '../../models/base/OutputAudioDevice';
 
 export const initialInstrumentsState: IInstrumentsState = {
   modules: {},
@@ -62,6 +63,7 @@ export function instruments(state: IInstrumentsState = initialInstrumentsState, 
       const instrumentClass = action.payload;
       const instrument = Rack.createInstrument(instrumentClass);
       const normalizedInstrument = normalizeInstrument(instrument);
+      normalizedInstrument.output = (instrument as OutputAudioDevice).output.id;
       let newState = applyInstrumentToState(normalizedInstrument, state);
       forEach(normalizedInstrument.modules, id => {
         const module = Rack.getModule(id);

@@ -1,4 +1,4 @@
-import { IInputTarget, IOutputConnect } from '../base';
+import { IInputTarget, IOutputConnect, BaseInputTarget } from '../base';
 import { BaseAudioDevice } from "../base/BaseAudioDevice";
 import { Level } from '../types';
 
@@ -11,7 +11,7 @@ export class Gain extends BaseAudioDevice implements IInputTarget, IOutputConnec
     return parseFloat(volume.toFixed(2));
   }
   public set volume(v : Level) {
-    this.gain.gain.setValueAtTime(v, this.context.currentTime);
+    this.gain.gain.value = v;
   }
 
   constructor(ctx: AudioContext) {
@@ -19,16 +19,16 @@ export class Gain extends BaseAudioDevice implements IInputTarget, IOutputConnec
     this.gain = ctx.createGain();
   }
 
-  public getInput = () => {
+  public getInput = (which = 'default') => {
     return this.gain;
   }
 
-  public connect = (target: IInputTarget) => {
-    this.gain.connect(target.getInput() as AudioNode);
+  public connect = (target: IInputTarget, which: BaseInputTarget = 'default') => {
+    this.gain.connect(target.getInput(which) as AudioNode);
   }
 
-  public disconnect = (target: IInputTarget) => {
-    this.gain.disconnect(target.getInput() as AudioNode);
+  public disconnect = (target: IInputTarget, which: BaseInputTarget = 'default') => {
+    this.gain.disconnect(target.getInput(which) as AudioNode);
   }
 
 }

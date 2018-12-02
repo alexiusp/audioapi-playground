@@ -22,6 +22,7 @@ export function normalizeInstrument(instrument: Instrument) {
 }
 
 export function normalizeModule(module: Module) {
+  const connected = module.connected;
   switch (module.name) {
     case ModuleEnum.Envelope: {
       const { id, name, attack, decay, sustain, release } = module;
@@ -32,6 +33,7 @@ export function normalizeModule(module: Module) {
         decay,
         sustain,
         release,
+        connected,
       } as IEnvelope;
     }
     case ModuleEnum.Oscillator: {
@@ -42,6 +44,7 @@ export function normalizeModule(module: Module) {
         frequency,
         gain,
         type,
+        connected,
       } as IOscillator;
     }
     case ModuleEnum.MidiKeyboard: {
@@ -52,6 +55,7 @@ export function normalizeModule(module: Module) {
         start,
         end,
         keys,
+        connected,
       } as IMidiKeyboard;
     }
   }

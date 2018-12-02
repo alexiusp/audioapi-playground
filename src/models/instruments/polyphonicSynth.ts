@@ -57,6 +57,8 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     this.name = InstrumentEnum.PolyphonicSynth;
     this._envelope = new Envelope(ctx);
     this._oscillator = new Oscillator(ctx);
+    this._oscillator.connect(this._envelope);
+    this._envelope.connect(this.output);
     this._maxVoices = 7;
     this._voices = new Map();
     this.keyboard = new MidiKeyboard(ctx);

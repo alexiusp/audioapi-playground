@@ -17,7 +17,7 @@ export interface IInputDevice {
 
 export type BaseInputTarget = 'default';
 // device with custom inputs
-export interface IInputTarget {
+export interface IInputTarget extends IBase {
   getInput: (which?: BaseInputTarget) => AudioNode | AudioParam;
 }
 
@@ -26,9 +26,13 @@ export interface IOutputDevice {
   output: Gain;
 }
 
+export interface IConnected {
+  connected: string[];
+}
+
 export interface IOutputConnect {
-  connect: (target: IInputTarget) => void;
-  disconnect: (target: IInputTarget) => void;
+  connect: (target: IInputTarget, which: BaseInputTarget) => void;
+  disconnect: (target: IInputTarget, which: BaseInputTarget) => void;
 }
 
 // base module/instrument with play controls
@@ -49,7 +53,7 @@ export enum ModuleEnum {
 }
 
 // base store interface for module
-export interface IModule extends IBase {
+export interface IModule extends IBase, IConnected {
   name: ModuleEnum;
 }
 
@@ -96,8 +100,12 @@ export enum InstrumentEnum {
 
 // store interface to represent instrument as container of modules
 export interface IInstrument extends IBase {
+  // instrument name
   name: InstrumentEnum;
+  // modules contained
   modules: ID[];
+  // output Gain ID
+  output: ID;
 }
 
 // enveloped oscillator - basic oscillator
