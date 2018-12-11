@@ -143,6 +143,8 @@ export interface IPolyphonicSynth extends OutputAudioDevice {
   envelope: IEnvelope;
   // oscillator to apply settings to voices
   oscillator: IOscillator;
+  // lfo to control the frequency of the oscillator
+  lfo: ILFO;
 }
 
 // union type of all existing instruments

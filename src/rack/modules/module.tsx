@@ -8,6 +8,7 @@ import IState from '../../store/state';
 
 import Envelope from './Envelope';
 import Keyboard from './Keyboard';
+import LFO from './LFO';
 import Oscillator from './Oscillator';
 
 export interface OwnProps {
@@ -28,7 +29,7 @@ export function Module(props: Props) {
     case ModuleEnum.MidiKeyboard:
       return (<Keyboard id={props.id} />);
     case ModuleEnum.LFO:
-      return (<div id={props.id} >LFO</div>);
+      return (<LFO id={props.id} />);
   }
   return <div>Unknown module</div>
 }
