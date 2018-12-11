@@ -27,6 +27,8 @@ export function Module(props: Props) {
       return (<Oscillator id={props.id} />);
     case ModuleEnum.MidiKeyboard:
       return (<Keyboard id={props.id} />);
+    case ModuleEnum.LFO:
+      return (<div id={props.id} >LFO</div>);
   }
   return <div>Unknown module</div>
 }

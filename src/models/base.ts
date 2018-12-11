@@ -16,6 +16,7 @@ export interface IInputDevice {
 }
 
 export type BaseInputTarget = 'default';
+
 // device with custom inputs
 export interface IInputTarget extends IBase {
   getInput: (which?: BaseInputTarget) => AudioNode | AudioParam;
@@ -50,6 +51,7 @@ export enum ModuleEnum {
   Oscillator = 'OSC',
   Envelope = 'ADSR',
   MidiKeyboard = 'MIDIKeys',
+  LFO = 'LFO',
 }
 
 // base store interface for module
@@ -85,8 +87,15 @@ export interface IMidiKeyboard extends IModule {
   keys: MidiKeysState;
 }
 
+// base oscillator module model
+export interface ILFO extends IModule {
+  name: ModuleEnum.LFO;
+  type: OscillatorType;
+  frequency: Frequency;
+}
+
 // union type of all existing modules
-export type Module = IEnvelope | IOscillator | IMidiKeyboard;
+export type Module = IEnvelope | IOscillator | IMidiKeyboard | ILFO;
 
 /*
 * Instruments
@@ -95,6 +104,7 @@ export type Module = IEnvelope | IOscillator | IMidiKeyboard;
 // enumeration of instruments
 export enum InstrumentEnum {
   EnvelopedOscillator = 'Enveloped Oscillator',
+  EnvelopedOscillatorLfo = 'Enveloped Oscillator with LFO',
   PolyphonicSynth = 'Polyphonic Synthesizer',
 }
 
@@ -115,6 +125,13 @@ export interface IEnvelopedOscillator extends OutputAudioDevice, IPlayable {
   oscillator: IOscillator;
 }
 
+export interface IEnvelopedOscillatorLfo extends OutputAudioDevice, IPlayable {
+  name: InstrumentEnum.EnvelopedOscillatorLfo;
+  envelope: IEnvelope;
+  oscillator: IOscillator;
+  lfo: ILFO;
+}
+
 // polyphonic synth - enveloped oscillator with midi keyboard
 export interface IPolyphonicSynth extends OutputAudioDevice {
   name: InstrumentEnum.PolyphonicSynth;
@@ -129,7 +146,7 @@ export interface IPolyphonicSynth extends OutputAudioDevice {
 }
 
 // union type of all existing instruments
-export type Instrument = IEnvelopedOscillator | IPolyphonicSynth;
+export type Instrument = IEnvelopedOscillator | IEnvelopedOscillatorLfo | IPolyphonicSynth;
 
 // store interface for master mixer
 export interface IMasterMixer extends InputAudioDevice, IPlayable {

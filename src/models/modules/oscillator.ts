@@ -3,8 +3,11 @@ import { OutputAudioDevice } from "../base/OutputAudioDevice";
 import { Frequency, Level, Time } from '../types';
 
 export type OscillatorInputTarget = BaseInputTarget | 'frequency';
+export interface IOscillatorInputTarget extends IInputTarget {
+  getInput: (which?: OscillatorInputTarget) => AudioNode | AudioParam;
+}
 
-export class Oscillator extends OutputAudioDevice implements IOscillator, IInputTarget, IPlayable {
+export class Oscillator extends OutputAudioDevice implements IOscillator, IOscillatorInputTarget, IPlayable {
   name: ModuleEnum.Oscillator;
 
   private _type : OscillatorType;
@@ -48,7 +51,7 @@ export class Oscillator extends OutputAudioDevice implements IOscillator, IInput
     switch (target) {
       case 'frequency': {
         if (this.osc) {
-          return this.osc;
+          return this.osc.frequency;
         }
         throw new Error('Can not connect to stopped oscillator!');
       }

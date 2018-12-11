@@ -1,4 +1,4 @@
-import { Instrument, InstrumentEnum, IInstrument, Module, ModuleEnum, IEnvelope, IOscillator, IMidiKeyboard } from '../../models/base';
+import { Instrument, InstrumentEnum, IInstrument, Module, ModuleEnum, IEnvelope, IOscillator, IMidiKeyboard, ILFO } from '../../models/base';
 
 export function normalizeInstrument(instrument: Instrument) {
   switch (instrument.name) {
@@ -16,6 +16,14 @@ export function normalizeInstrument(instrument: Instrument) {
         id,
         name,
         modules: [envelope.id, keyboard.id, oscillator.id],
+      } as IInstrument;
+    }
+    case InstrumentEnum.EnvelopedOscillatorLfo: {
+      const { id, name, envelope, lfo, oscillator } = instrument;
+      return {
+        id,
+        name,
+        modules: [envelope.id, lfo.id, oscillator.id],
       } as IInstrument;
     }
   }
@@ -57,6 +65,16 @@ export function normalizeModule(module: Module) {
         keys,
         connected,
       } as IMidiKeyboard;
+    }
+    case ModuleEnum.LFO: {
+      const { id, name, frequency, type } = module;
+      return {
+        id,
+        name,
+        frequency,
+        type,
+        connected,
+      } as ILFO;
     }
   }
 }

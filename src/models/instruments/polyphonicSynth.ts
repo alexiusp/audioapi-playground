@@ -4,13 +4,23 @@ import { Velocity } from '../types';
 import { Envelope } from '../modules/envelope';
 import { MidiKeyboard } from '../modules/midiKeyboard';
 import { Oscillator } from '../modules/oscillator';
+import { LFOOscillator } from '../modules/lfo';
 import { MIDINoteIndex } from '../../utils/midi';
 import EnvelopedOscillator from './envelopedOscillator';
+import EnvelopedOscillatorLfo from './envOscillatorLfo';
 
 export default class PolyphonicSynth extends OutputAudioDevice implements IPolyphonicSynth {
   name: InstrumentEnum.PolyphonicSynth;
 
   keyboard: MidiKeyboard;
+
+  private _lfo : LFOOscillator;
+  public get lfo() : LFOOscillator {
+    return this._lfo;
+  }
+  public set lfo(v : LFOOscillator) {
+    this._lfo = v;
+  }
 
   private _oscillator : Oscillator;
   public get oscillator() : Oscillator {
@@ -34,12 +44,12 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     return this._maxVoices;
   }
 
-  private _voices: Map<number, EnvelopedOscillator>;
+  private _voices: Map<number, EnvelopedOscillatorLfo>;
   private buildVoice(note: number, velocity: Velocity) {
     // create a voice for a note
     const freq = MIDINoteIndex[note].frequency;
     const gain = velocity / 127;
-    const voice = new EnvelopedOscillator(this.context);
+    const voice = new EnvelopedOscillatorLfo(this.context);
     voice.oscillator.type = this._oscillator.type;
     voice.oscillator.frequency = freq;
     voice.oscillator.gain = gain * this._oscillator.gain;
@@ -48,6 +58,9 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     voice.envelope.decay = decay;
     voice.envelope.sustain = sustain;
     voice.envelope.release = release;
+    const { frequency, type } = this._lfo;
+    voice.lfo.frequency = frequency;
+    voice.lfo.type = type;
     voice.connect(this.output);
     return voice;
   }
@@ -59,6 +72,7 @@ export default class PolyphonicSynth extends OutputAudioDevice implements IPolyp
     this._oscillator = new Oscillator(ctx);
     this._oscillator.connect(this._envelope);
     this._envelope.connect(this.output);
+    this._lfo = new LFOOscillator(ctx);
     this._maxVoices = 7;
     this._voices = new Map();
     this.keyboard = new MidiKeyboard(ctx);
